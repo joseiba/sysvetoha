@@ -1,0 +1,217 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Agregar Factura Venta{% endblock title %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h3>Agregar Factura Venta</h3>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'ventas:list_factura_ventas' %}">Facturas Ventas</a></li>
+                    <li class="breadcrumb-item active">Crear</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- Main content -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <form method="POST">
+                {% csrf_token %}
+                    {% include 'ventas/partials/factura_form_content.html' %}
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+
+<script src="{% static 'base/js/ventas/forms.js' %}"></script>
+<script>
+    var action = '{{ accion|safe }}';
+
+    $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
+
+    $(function () {
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        $("input:checkbox").on('click', function() {
+        // in the handler, 'this' refers to the box clicked on
+            var $box = $(this);
+            if ($box.is(":checked")) {
+                // the name of the box is retrieved using the .attr() method
+                // as it is assumed and expected to be immutable
+                var group = "input:checkbox[name='" + $box.attr("name") + "']";
+                // the checked state of the group/box on the other hand will change
+                // and the current value is retrieved using .prop() method
+
+                if("input:checkbox[name='contado']" == group){
+                    $("input:checkbox[name='pos']").prop("checked", false);
+                    factura.items.contado_pos = "C"
+                    $box.prop("checked", true);
+                }else{
+                    $("input:checkbox[name='contado']").prop("checked", false);
+                    factura.items.contado_pos = "P"
+                    $box.prop("checked", true);
+                }                
+            } else {
+                factura.items.contado_pos = "C"
+                $box.prop("checked", false);
+            }
+        });
+
+        var fecha_inicio = $("#fecha_inicio_timbrado").val()
+        var fecha_fin = $("#fecha_fin_timbrado").val()
+        var nro_tim = $("#nro_timbrado").val()
+        var nro_ruc = $("#ruc_empresa").val()
+
+
+        if (fecha_inicio != "" && fecha_fin != "" && nro_tim != "" && nro_ruc != "") {
+            if (!compareDate(fecha_inicio, fecha_fin)) {
+                Swal.fire({
+                    title: "Notificación",
+                    text: "La fecha inicio y fin del timbrado ha caducado!",
+                    icon: "warning",
+                    button: "Ok",
+                    confirmButtonColor: '#007bff',
+                })
+                $('form').find('#button_registrar').addClass('d-none')
+            } else {
+                $('form').find('#button_registrar').removeClass('d-none')
+            }
+        }
+        else {
+            Swal.fire({
+                title: "Notificación",
+                text: "Agregue los datos de la factura en configuraciones iniciales! ",
+                icon: "warning",
+                button: "Ok",
+                confirmButtonColor: '#007bff',
+            })
+            $("form").find("#button_registrar").addClass("d-none")
+        }
+
+        $('#total').val(0);
+        $('#totalIva').val(0);
+
+        $('#tblFacturaVenta').DataTable({
+            ordering: false,
+            language: {
+                decimal: "",
+                emptyTable: "No hay información",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
+                infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ Entradas",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar:",
+                zeroRecords: "Sin resultados encontrados",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Siguiente",
+                    previous: "Anterior",
+                },
+            },
+        });
+
+        $('#cliente_select').select2({
+            placeholder: 'Seleccione un Cliente',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        });
+        
+        $('#search').select2({
+            ajax: {
+                type: 'POST',
+                url: '/ventas/get_producto_servicio_factura/',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        action: 'search_products'
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    }
+                },
+            },
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
+    })
+
+    function compareDate(fecha_emision, fecha_vencimiento) {
+        var d1 = fecha_emision.split("/");
+        var d2 = fecha_vencimiento.split("/");
+        var c = new Date();
+
+        var from = new Date(d1[2], parseInt(d1[1]) - 1, d1[0]);  // -1 because months are from 0 to 11
+        var to = new Date(d2[2], parseInt(d2[1]) - 1, d2[0]);
+        var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+        if (check >= from && check <= to) {
+            return true
+        }
+        return false
+    }
+
+
+</script>
+{% endblock js_page %}

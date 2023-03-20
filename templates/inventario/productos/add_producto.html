@@ -1,0 +1,240 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'base/plugins/fontawesome-free/css/all.min.css' %}">
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><b>Producto
+                </b></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% if producto %}
+        <form action="{% url 'producto:edit_producto' producto.id %}" method="POST" role="form" id="form">
+            {% else %}
+            <form action="{% url 'producto:add_producto' %}" method="POST" role="form" id="form">
+                {% endif %}
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Nombre Producto<span class="required">*</span></label>
+                                {{form.nombre_producto}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Descripción<span class="required">*</span></label>
+                                {{form.descripcion}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Fecha vencimiento</label>
+                                {{form.fecha_vencimiento}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Precio Compra</label>
+                                {{ form.precio_compra}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Precio Venta<span class="required">*</span></label>
+                                {{form.precio_venta}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Lote</label>
+                                {{form.lote}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo Producto<span class="required">*</span>
+                                    {% if perms.productos.add_tipoproducto %}
+                                    <i class="fa-solid fa-square-plus" 
+                                    onclick="abrir_modal_creacion('/producto/add/tipoProducto/')"></i>
+                                    {%endif%}
+                                </label>
+                                {{ form.tipo_producto}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Stock<span class="required">*</span></label>
+                                {{ form.stock}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Stock minimo<span class="required">*</span></label>
+                                {{form.stock_minimo}}
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Lote</label>
+                            {{form.lote}}
+                        </div>
+                    </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Iva<span class="required">*</span></label>
+                                {{ form.iva}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">{%if deposito%}Editar {%else%}Agregar
+                        {%endif%}</button>
+                </div>
+            </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+    //     $.datepicker.regional['es'] = {
+    //     closeText: 'Cerrar',
+    //     prevText: '< Ant',
+    //     nextText: 'Sig >',
+    //     currentText: 'Hoy',
+    //     monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    //     monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    //     dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    //     dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+    //     dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+    //     weekHeader: 'Sm',
+    //     dateFormat: 'dd/mm/yy',
+    //     firstDay: 1,
+    //     isRTL: false,
+    //     showMonthAfterYear: false,
+    //     yearSuffix: ''
+    // };
+    // $.datepicker.setDefaults($.datepicker.regional['es']);
+
+        $("#datepicker").datepicker({
+            minDate: "+0D",
+        });
+
+        var tipo = $("#tipo_producto").val()
+        if (tipo !== "" && tipo != null) {
+            $.ajax({
+                type: 'GET',
+                url: '/producto/tipoProducto/vence_si_no/',
+                data: { 'tipo': tipo },
+                success: function (response) {
+                    if (response.mensaje == 'S') {
+                        $(".fecha_vencimiento").prop("disabled", false)
+                        $("#lote_id").prop("disabled", false)
+
+                    } else {
+                        $(".fecha_vencimiento").prop("disabled", true)
+                        $("#lote_id").prop("disabled", true)
+                    }
+                }
+            })
+        } else {
+            $(".fecha_vencimiento").prop("disabled", true)
+            $("#lote_id").prop("disabled", true)
+
+        }
+
+        $("#tipo_producto").change(function () {
+            var tipo = $("#tipo_producto").val()
+            if (tipo !== "" && tipo != null) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/producto/tipoProducto/vence_si_no/',
+                    data: { 'tipo': tipo },
+                    success: function (response) {
+                        if (response.mensaje == 'S') {
+                            $(".fecha_vencimiento").prop("disabled", false)
+                            $("#lote_id").prop("disabled", false)
+
+                        } else {
+                            $(".fecha_vencimiento").prop("disabled", true)
+                            $("#lote_id").prop("disabled", true)
+                        }
+                    }
+                })
+            } else {
+                $(".fecha_vencimiento").prop("disabled", true)
+                $("#lote_id").prop("disabled", true)
+
+            }
+        })
+
+        $("input[name='precio_venta'], input[name='precio_compra']").change(function () {
+            var precio_venta = $("input[name='precio_venta']").val()
+            var p_venta = precio_venta.split('.')
+            var p_v_concat = ""
+            for (let index = 0; index < p_venta.length; index++) {
+                p_v_concat += p_venta[index];
+            }
+
+            var precio_compra = $("input[name='precio_compra']").val()
+            var p_compra = precio_compra.split('.')
+            var p_c_concat = ""
+            for (let index = 0; index < p_compra.length; index++) {
+                p_c_concat += p_compra[index];
+            }
+            if (precio_compra != "" && precio_venta) {
+                if (parseFloat(p_c_concat) > parseFloat(p_v_concat)) {
+                    swal({
+                        title: "Notificacion",
+                        text: "El precio de venta es menor al precio de compra",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                }
+            }
+        })
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        $("input[name='precio_compra']").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                });
+            }
+        });
+
+        $("input[name='precio_venta']").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                });
+            }
+        });
+
+    })
+</script>

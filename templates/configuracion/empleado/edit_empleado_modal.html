@@ -1,0 +1,68 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel" >Editar Empleado</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'edit_empleado' emp.id %}" method="post">
+            {% csrf_token %}
+            <div class="row p-2">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Nombre<span
+                            class="required">*</span></label>
+                        {{ form.nombre_emp }}
+                    </div>                   
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label >Apellido<span
+                            class="required">*</span></label>
+                        {{ form.apellido_emp }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Nro. Cédula<span
+                            class="required">*</span></label>
+                        {{ form.ci_empe }}
+                    </div>                 
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label >Disponible<span
+                            class="required">*</span></label>
+                        {{ form.disponible }}
+                    </div>                   
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Servicio<span
+                            class="required">*</span></label>
+                            {{ form.id_servicio}}
+                        {% if perms.configuracion.add_servicio %}  
+                            <i class="fa-solid fa-square-plus"  
+                            onclick="abrir_modal_creacion('/configuracion/addServicioFromEmpleado/')"></i>
+                        {% endif %}
+                    </div>
+                   
+            </div>
+            <div class="modal-footer float-rigth">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+    });
+</script>

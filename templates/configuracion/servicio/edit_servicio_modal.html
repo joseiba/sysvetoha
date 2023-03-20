@@ -1,0 +1,61 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel" >Editar Servicio Clinico</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'edit_servicio' servicios.id  %}" method="post">
+            {% csrf_token %}
+            <div class="row p-2">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Nombre Servicio<span class="required">*</span></label>
+                        {{ form.nombre_servicio }}
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Precio Servicio<span class="required">*</span></label>
+                        {{ form.precio_servicio }}
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Tiempo por servicio<span class="required">*</span></label>
+                        {{ form.min_serv }}
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+        $("input[name='precio_servicio']").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                });
+            }
+        });
+    });
+</script>

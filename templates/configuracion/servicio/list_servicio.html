@@ -1,0 +1,229 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Lista Servicios Clinicos {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Lista de Servicios
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item active">Servicios</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">            
+            <div class="card-header">
+              <div class="float-left">
+                <form >
+                  <div class="input-group">
+                      <input type="search" class="form-control form-control-lg" id="searchTerm"
+                      ata-toggle="tooltip" data-placement="top"
+                      title="Buscar por nombre de servicio"
+                      placeholder="Buscar por nombre de servicio">
+                      <div class="input-group-append">
+                          <button type="button" id="busqueda" class="btn btn-lg btn-default">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </div>
+                  </div>
+              </form>                  
+              </div>
+              {% if perms.configuracion.add_servicio %}  
+              <div class="float-right">
+                <button type="button" class="btn btn-block btn-primary" onclick="abrir_modal_creacion('/configuracion/addServicio/')">Agregar nuevo registro</button>
+              </div>
+              {% endif %}
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="list_servicios" class="table table-bordered table-hover" style="margin: auto;">
+                <thead>
+                <tr>
+                  <th>Nombre del servicio</th>
+                  <th>Precio del servicio</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>                   
+                </tbody>   
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+<div class="modal fade" id="creacion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="eliminacion" role="dialog">
+
+</div>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+    $(function () {
+        $('input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+        var get_list = function (busqueda) {
+            $("#list_servicios").DataTable({
+                destroy: true,
+                //dom: 'Bfrtip',
+                // buttons: [                
+                //     {
+                //         extend: 'pdfHtml5',
+                //         text: 'Exportar PDF',
+                //         exportOptions: {
+                //             columns: [0,1]
+                //         }
+                //     },
+                // ],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/configuracion/get_list_servicio_ajax/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: {'busqueda': busqueda},
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Nombre del servicio',
+                        data: 'nombre',
+                    },
+                    {
+                        name: 'Precio del servicio',
+                        data: 'precio',
+                        render: function(data){
+                            return 'Gs. ' + data
+                        }
+                    },                    
+                    {
+                        name: 'Acciones',
+                        data: 'id',
+                        render: function (data) {
+                            var buttons = ""
+
+                            {% if perms.servicio.change_servicio %}
+                                buttons += ' <button class="btn btn-warning mr-2" onclick="abrir_modal_edicion(\'/configuracion/editServicio/' + data  + '/\');">\
+                                                        Editar\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.servicio.delete_servicio %}
+                                buttons += '<button class="btn btn-danger" onclick="eliminar_registro(\'/configuracion/bajaServicio/' + data + '/\', \'/configuracion/listServicio/\');">\
+                                                        Bajar servicio\
+                                                    </button>';
+                            {% endif %}
+
+                            return buttons;                            
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [2], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {                    
+                    decimal: "",
+                    emptyTable: "Sin resultados encontrados",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+        
+        get_list(query);
+
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else{
+                get_list(busqueda)
+            }
+        }) 
+
+        {% if messages %}
+        
+            {% for message in messages %}
+              var text = "{{ message }}";
+              add_edit_registro(text);
+            {% endfor %}
+        {% endif %}
+    })
+</script>
+
+
+{% endblock js_page %}

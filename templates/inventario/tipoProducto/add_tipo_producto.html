@@ -1,0 +1,38 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><b>Tipo de Producto
+                </b></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% if from_add != 'S' %}
+        <form action="{% url 'producto:add_tipo_producto' %}" method="POST" role="form" id="form">
+        {% else %}
+        <form action="{% url 'producto:add_tipo_producto_from_producto' %}" method="POST" role="form" id="form">
+            {% endif %}
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{form.nombre_tipo.label}}<span class="required"> *</span></label>
+                            {{form.nombre_tipo}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>{{form.vence.label}}<span class="required"> *</span></label>
+                            {{form.vence}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>

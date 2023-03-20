@@ -1,0 +1,33 @@
+<div></div>
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel" >Editar Ciudad</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'edit_ciudad' ciudad.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mt-3 mr-3 ml-3">
+                <label class="label-align">Nombre Ciudad<span
+                        class="required">*</span></label>
+                <div class="">
+                    {{ form.nombre_ciudad }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+    });
+</script>

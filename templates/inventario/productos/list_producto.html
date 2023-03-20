@@ -1,0 +1,219 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Lista Productos {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Lista de Productos
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+          <li class="breadcrumb-item active">Productos</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            {% if perms.productos.add_productos %}
+            <button class="btn btn-primary float-right" onclick="abrir_modal_creacion('/producto/add/');">
+              Agregar Producto
+            </button>
+            {% endif %}
+
+            <div class="float-left">
+              <div class="wrap">
+                <div class="input-group">
+                  <input type="search" class="form-control searchTerm" id="searchTerm"
+                    placeholder="Buscar por nombre de producto, codigo" data-toggle="tooltip" data-placement="top"
+                    title="Buscar por nombre de producto, codigo">
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-default searchButton" type="button" id="busqueda">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="list_producto" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nombre Producto</th>
+                  <th>Descripción</th>
+                  <th>Stock Total</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="creacion" role="dialog"></div>
+
+<div class="modal fade" id="edicion" role="dialog">
+</div>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+  $(function () {
+    $('input').on("cut copy paste", function (e) {
+      e.preventDefault();
+    });
+
+    var get_list = function (busqueda) {
+      $("#list_producto").DataTable({
+        destroy: true,
+        searching: false,
+        pageLength: 10,
+        ajax: {
+          url: "/producto/list_general_ajax/",
+          type: 'GET',
+          datatype: 'json',
+          data: { 'busqueda': busqueda },
+          error: function (data) {
+            $.fn.DataTable.ext.errorMode = 'none'
+          }
+        },
+        columns: [
+          {
+            name: 'Codigo',
+            data: 'codigo',
+          },
+          {
+            name: 'Nombre Producto',
+            data: 'nombre',
+          },
+          {
+            name: 'Descripción',
+            data: 'descripcion',
+          },
+          {
+            name: 'Stock Total',
+            data: 'stock_total',
+          },
+          {
+            name: 'Acciones',
+            data: 'id',
+            render: function (data) {
+              console
+              var buttons = "";
+              {% if perms.productos.change_producto %}
+              buttons += '<button class="btn btn-warning btn-circle btn-sm" onclick="abrir_modal_edicion(\'/producto/edit/' + data + '/\')">\
+                                            <a style="color: black"> Editar </a>\
+                                        </button>';
+              {% endif %}
+
+              // {% if perms.productos.view_producto %}
+              // buttons += '<button class="btn btn-primary" >\
+              //                               <a href="/producto/listDetalle/' + data + '/" style="color: white">\
+              //                                   Ver Detalle\
+              //                               </a>\
+              //                           </button >';
+              // {% endif %}
+
+
+              return buttons;
+            }
+          }
+
+        ],
+        columnDefs: [{
+          targets: [2, 4], // column index (start from 0)
+          orderable: false, // set orderable false for selected columns
+        }],
+        language: {
+          decimal: "",
+          emptyTable: "Sin resultados encontrados",
+          info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+          infoEmpty: "Mostrando 0 de 0 Entradas",
+          infoFiltered: "(Filtrado de _MAX_ total entradas)",
+          infoPostFix: "",
+          thousands: ",",
+          lengthMenu: "Mostrar _MENU_ Entradas",
+          loadingRecords: "Cargando...",
+          processing: "Procesando...",
+          search: "Buscar:",
+          zeroRecords: "Sin resultados encontrados",
+          paginate: {
+            first: "Primero",
+            last: "Ultimo",
+            next: "Siguiente",
+            previous: "Anterior",
+          },
+        },
+
+      })
+
+    }
+
+    var query = ""
+
+    get_list(query);
+
+    $("#searchTerm").change(function () {
+      var busqueda = $("#searchTerm").val()
+      sessionStorage.setItem("busqueda", busqueda)
+    })
+
+    $("#busqueda").click(function () {
+      var busqueda = sessionStorage.getItem("busqueda")
+      if (busqueda == "" || busqueda == undefined || busqueda == null) {
+        busqueda = "";
+        get_list(busqueda)
+      }
+      else {
+        get_list(busqueda)
+      }
+    })
+
+    {% if messages %}
+      {% for message in messages %}
+        var text = "{{ message }}";
+        add_edit_registro(text);
+      {% endfor %}
+    {% endif %}
+  })
+</script>
+{% endblock js_page %}

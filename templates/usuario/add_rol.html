@@ -1,0 +1,265 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Agregar Rol{% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+
+
+<style>
+
+</style>
+{% endblock stylesheets %}
+{% block content %}
+
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Agregar Roles
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item active">Roles</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">                        
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9 col-md-6 col-sm-6 card-body pt-0">
+                        <div class="tile">
+                            <h3 class="tile-title">Roles</h3>
+                            <div class="tile-body">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre</label>
+                                        {{ form.name }}
+                                    </div>
+                                    <div class="overflow-auto" style="height: 200px">
+                                        <button type="button" class="btn btn-success btn-sm" id="select_all">Seleccionar todo</button>
+                                        <button type ="reset" class="btn btn-secondary btn-sm" id="">Deseleccionar todo</button>
+                                        <ul class="list-unstyled">
+                                            {% for check in form.permissions %}
+                                            <li>
+                                                {{ check.tag }}
+                                                {{ check.choice_label }}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>                                            
+                                    </div>
+                                    <div class="tile-footer mt-4">
+                                        <button class="btn btn-primary" type="submit">
+                                            Registrar
+                                        </button>&nbsp;&nbsp;&nbsp;                                   
+                                    </div>
+                                </form>
+                            </div>
+        
+                        </div>
+                    </div>
+        
+                    <div class="col-9 col-md-5 col-sm-6 card-body pt-0">                            
+                        <div class="tile">                                
+                            <div class="tile-body">
+                                <div class="table-responsive">
+                                    <h3 class="tile-title">Lista de Roles</h3>
+                                    <div class="float-left mb-2">
+                                        <div class="wrap">
+                                            <div class="input-group">
+                                                <input type="search" class="form-control" id="searchTerm"  data-toggle="tooltip" data-placement="top"
+                                                title="Buscar por rol"
+                                                placeholder="Buscar por rol"/>
+                                                <div class="input-group-append">
+                                                    <button type="button" id="busqueda" class="btn btn-default">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-hover" id="Table">
+                                        <thead>
+                                            <tr  style="font-size: medium;">
+                                                <th >Id</th>
+                                                <th >Rol</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+        
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- validator -->
+
+
+<script>
+    $(function () {
+        $('#select_all').click(function() {
+            // Si esta seleccionado (si la propiedad checked es igual a true)
+            if (!$(this).prop('checked')) {
+                // Selecciona cada input que tenga la clase .checar
+                $('input[name="permissions"]').prop('checked', true);
+            }
+        });
+
+        $('#deselect_all').click(function() {
+            // Si esta seleccionado (si la propiedad checked es igual a true)
+            if ($('input[name="permissions"]').prop('checked')) {
+                // Selecciona cada input que tenga la clase .checar
+                $('input[name="permissions"]').prop('checked', false);
+            }
+        });
+
+
+        $('#group_select').select2({
+            placeholder: 'Seleccione un Rol de Permisos',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        });
+
+        var get_list = function (busqueda) {
+            console.log("estoy aqui")
+            $("#Table").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/usuario/get_group_list/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: { 'busqueda': busqueda },
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Id',
+                        data: 'id',
+                    },
+                    {
+                        name: 'Rol',
+                        data: 'rol',
+                    },
+                    {
+                        name: 'Acciones',
+                        data: 'id',
+                        render: function (data) {
+                            return '<button  class="btn btn-warning btn-circle btn-sm">\
+                                                        <a href="/usuario/editRol/' + data + '/" style="color: black">\
+                                                            Editar\
+                                                        </a>\
+                                                    </button>\
+                                    <button  class="btn btn-danger btn-circle btn-sm">\
+                                        <a href="/usuario/eliminarRol/' + data + '/" style="color: white">\
+                                            Dar de Baja\
+                                        </a>\
+                                    </button>';
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [2], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+
+        get_list(query);
+
+        $("#searchTerm").change(function () {
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function () {
+            var busqueda = sessionStorage.getItem("busqueda")
+            if (busqueda == "" || busqueda == undefined || busqueda == null) {
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else {
+                get_list(busqueda)
+            }
+        })
+
+        {% if messages %}
+            {% for message in messages %}
+                var text = "{{ message }}";
+                add_edit_registro(text);
+            {% endfor %}
+          {% endif %}
+    })
+</script>
+{% endblock js_page %}

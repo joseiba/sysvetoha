@@ -1,0 +1,311 @@
+{% comment %} <div class="row">
+    <div class="col-md-12">
+        <div class="card card-secondary">
+            <div class="card-header">
+                <h3 class="card-title">Datos de la Venta</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-shopping-cart"></i> Cabecera
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Número de Factura:</label>
+                                            <input type="text" class="form-control" id="numero_factura" readonly  value="{{ numero_factura }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input type="hidden" name="action" value="add">
+                                        <div class="form-group">
+                                            <label>Cliente:</label>
+                                            {{ form.cliente }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Fecha Venta:</label>
+                                            {{ form.fecha_venta }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Condición de Venta:</label>
+                                            {{ form.condicion_venta }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" id="form_plazo" style="display:none;">
+                                        <div class="form-group">
+                                            <label for="plazo">Plazo:</label>
+                                            <select name="plazo" id="plazo" class="form-control" >
+                                                <option value="30">30 Días</option>
+                                                <option value="60">60 Días</option>
+                                                <option value="90">90 Días</option>
+                                                <option value="120">120 Días</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Monto a Pagar:</label>
+                                            {{ form.monto_total }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>IVA 10%:</label>
+                                            {{ form.total_iva_10 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" id="form_medio_cobro" style="display:visibility;" >
+                                        <div class="form-group">
+                                            <label for="medio_cobro">Medio de Cobro:</label>
+                                            <select name="medio_cobro" id="medio_cobro" class="form-control" >
+                                                <option value="Efectivo">Efectivo</option>
+                                                <option value="Cheque">Cheque</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" id="form_banco" style="display:none;">
+                                        <div class="form-group">
+
+                                            <label form="banco"><strong>Banco:</strong></label>
+                                            <select class="form-control" name = "banco" id="banco" >
+                                                {% for banco in bancos %}
+                                                    <option value="{{ banco.id }}">{{ banco.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" id="numero_cheque" style="display:none;">
+                                        <div class="form-group">
+                                            <label>Número de Cheque:</label>
+                                            {{ form.numero_cheque }}
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-boxes"></i> Detalle de Telas</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Buscador de Telas:</label>
+                                            <div class="input-group">
+                                                <!--<input type="text" class="form-control" name="search"
+                                                placeholder="Ingrese la descripción del producto" autocomplete="off">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-danger btn-flat"><i class="fas fa-times"></i></button>
+                                                </div>-->
+                                                <select class="form-control select2" style="width:100%" name="search">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <!--<div class="card-body table-responsive p-0">-->
+                                            <table class="table table-hover text-nowrap" id="table_telas">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tela</th>
+                                                        <th>Código</th>
+                                                        <th>Precio Unitario</th>
+                                                        <th>Metraje</th>
+                                                        <th>SubTotal</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                            
+                            <a class="btn btn-danger float-right" href="{% url 'ventas:ventas_list' %}">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
+<div class="card-body">
+<div class="tile mb-4">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card">
+                <h6 class="card-header">Detalle Factura</h6>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label> <strong> Buscar:</strong> </label>
+                        <span class="input-group-append">
+                            <select class="form-control" id="search">
+                            </select>
+                        </span>
+                    </div>
+                    <div class="table-responsive">
+                        <button type="button"
+                            class="mb-2 py-0 btn btn-danger btn-sm btnRemoveAll"
+                            style="height: 20px; align-content: center">
+                            <label>Eliminar todo</label>
+                        </button>
+                        <table class="table table-bordered" id="tblFacturaVenta"
+                            style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <td>Cod</td>
+                                    <td>Nombre Producto</td>
+                                    <td>Descripción</td>
+                                    <td>Precio</td>
+                                    <td>Cantidad</td>
+                                    <td>SubTotal</td>
+                                    <td>Eliminar</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <h6 class="card-header">Factura</h6>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label><strong>Tipo de Pago</strong></label>
+                        <div class="field item">
+                            <div class="d-flex">
+                                <label><strong>Efectivo:</strong></label>
+                                <input class="ml-2" type="checkbox"
+                                    value="C" name="contado"
+                                    >
+                            </div>
+                            <div class="ml-4 d-flex">
+                                <label><strong>Pos:</strong></label>
+                                <input class="ml-2" type="checkbox"
+                                    value="P" name="pos">
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Timbrado</strong></label>
+                        <div class="field item">
+                            <input class="form-control" type="text"
+                                value="{{confi.nro_timbrado|default_if_none:'-'}}" id="nro_timbrado"
+                                readonly="readonly" disabled="disabled">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Fecha Inicio Timbrado</strong></label>
+                        <div class="field item">
+                            <input class="form-control" type="text"
+                                value="{{confi.fecha_inicio_timbrado|default_if_none:'-'}}"
+                                id="fecha_inicio_timbrado" readonly="readonly"
+                                disabled="disabled">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Fecha Fin Timbrado</strong></label>
+                        <div class="field item">
+                            <input class="form-control" type="text"
+                                value="{{confi.fecha_fin_timbrado|default_if_none:'-'}}" id="fecha_fin_timbrado"
+                                readonly="readonly" disabled="disabled">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Ruc Empresa</strong></label>
+                        <div class="field item">
+                            <input class="form-control" type="text"
+                                value="{{confi.ruc_empresa|default_if_none:'-'}}" id="ruc_empresa"
+                                readonly="readonly" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Número Factura</strong></label>
+
+                        <div class="field item">
+                            <input class="form-control" type="text" name="nro_factura" value="{{ nro_factura }}" readonly disabled>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Cliente<span
+                            class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                            title="Campo Obligatorio">*</span></strong></label>
+                        <div class="field item">
+                            {{ form.id_cliente }}
+                        </div>
+
+                    </div>
+                    <fieldset disabled>
+                        <div class="form-group d-none">
+                            <label><strong>Total Iva: </strong></label>
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"
+                                        style="font-weight: bold;">Gs.</div>
+                                </div>
+                                <input type="text" class="form-control" id="totalIva"
+                                    style="font-weight: bold;">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset disabled>
+                        <div class="form-group">
+                            <label><strong>Total a pagar: </strong></label>
+                            <!--<label><strong>Total a pagar IVA incluído: </strong></label>-->
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"
+                                        style="font-weight: bold;">Gs.</div>
+                                </div>
+                                <input type="text" class="form-control" id="total"
+                                    style="font-weight: bold;">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+<div>
+<div class="modal-footer">
+
+    <a class="btn btn-secondary" href="{% url 'ventas:list_factura_ventas' %}">
+        <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
+    &nbsp;&nbsp;&nbsp;
+    {% comment %} {% if caja_abierta == "S" %} {% endcomment %}
+    <button type="submit" class="btn btn-primary" id="button_registrar"
+        style="color: white"><i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
+        Factura
+    </button>
+    {% comment %} {% endif %}                                         {% endcomment %}
+    
+</div>

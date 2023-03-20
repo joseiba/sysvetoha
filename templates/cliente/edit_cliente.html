@@ -1,0 +1,123 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Editar Cliente {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Editar Cliente
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'list_cliente' %}">Lista de Clientes</a></li>
+            <li class="breadcrumb-item active">Editar</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">            
+            <div class="card-header">
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">Cliente</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form action="{% url 'edit_cliente' id %}" method="POST">
+                    {% csrf_token %}
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label>Nombre<span class="required">*</span></label>
+                            {{ form.nombre_cliente }}
+                        </div>
+                        <div class="form-group">
+                            <label>Apellido<span class="required">*</span></label>
+                            {{ form.apellido_cliente }}
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección<span class="required">*</span></label>
+                            {{ form.direccion }}
+                        </div>
+                        <div class="form-group">
+                            <label>Nro. Cédula<span class="required">*</span></label>
+                            {{ form.cedula }}
+                        </div>
+                        <div class="form-group">
+                            <label>Nro. RUC</label>
+                            {{ form.ruc }}
+                        </div>
+                        <div class="form-group">
+                            <label>Telefono<span class="required">*</span></label>
+                            {{ form.telefono }}
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="form-group">
+                            <label>Cuidad<span class="required">*</span></label>
+                            {{ form.id_ciudad }}
+                        </div>
+                      </div>
+                      <!-- /.card-body -->
+      
+                      <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Editar</button>
+                        <button type="button" class="btn btn-secondary">
+                            <a href="{% url 'list_cliente' %}" style="color: white;">Volver</a>
+                        </button>
+                      </div>
+                    </form>
+                  </div>      
+            </div>
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+    $(function () {
+        $('input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+    })
+</script>
+
+
+{% endblock js_page %}

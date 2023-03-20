@@ -1,0 +1,245 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Lista de Facturas Ventas {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Lista de Facturas Ventas
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+                    <li class="breadcrumb-item active">Ventas</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="float-left">
+                            <form>
+                                <div class="input-group">
+                                    <input type="search" class="form-control form-control-lg" id="searchTerm"
+                                        data-toggle="tooltip" data-placement="top" autocomplete="off"
+                                        title="Busca por nº de factura, nº timbrado, nombre del cliente, ruc o cedula"
+                                        placeholder="Busca por nº de factura, nº timbrado, nombre del cliente, ruc o cedula" />
+                                    <div class="input-group-append">
+                                        <button type="button" id="busqueda" class="btn btn-lg btn-default">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="float-right">
+                            {% comment %} {% if perms.factura.view_facturacabeceraventa %}
+                                <button type="submit" class="btn btn-success">
+                                    <a href="{% url 'ventas:list_facturas_ventas_anuladas' %}" style="color: white;">Ver facturas anuladas</a>
+                                </button>
+
+                            {% endif %}
+                            {% if perms.factura.add_facturacabeceraventa and caja_abierta == "S" %} {% endcomment %}
+                                <button type="submit" class="btn btn-primary">
+                                    <a href="{% url 'ventas:add_factura_venta' %}" style="color: white;">Agregar nueva factura</a>
+                                </button>
+                            {% comment %} {% endif %} {% endcomment %}
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="list_factura_ventas" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nº Factura</th>
+                                    <th>Fecha emisión</th>
+                                    <th>Cliente</th>
+                                    <th>Importe Total</th>
+                                    <th>Acción</th>                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                <!-- /.card-body -->
+                </div>
+            <!-- /.card -->
+            </div>
+        <!-- /.col -->
+        </div>
+    <!-- /.row -->
+    </div>
+<!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<script>
+    $(function () {
+
+        $('input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });        
+        var caja_abierta = '{{ caja_abierta|safe }}';
+
+        var get_list = function (busqueda) {
+            $("#list_factura_ventas").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/ventas/get_list_facturas_ventas/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: {'busqueda': busqueda},
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+                    }
+                },
+                columns: [                      
+                    {
+                        name: 'Nº Factura',
+                        data: 'nro_factura',
+                        render: function(data){
+                            if(data == null){
+                                return '-';
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        name: 'Fecha emisión',
+                        data: 'fecha_emision',
+                        render: function(data){
+                            if(data == null){
+                                return '-';
+                            }
+                            return data;
+                        }
+                    },                   
+                    {
+                        name: 'Cliente',
+                        data: 'cliente',                        
+                    },
+                    {
+                        name: 'Importe Total',
+                        data: 'im_total',
+                        render: function(data){
+                            return ' Gs.'  + add_miles(data)
+                        }
+                    },
+                    {
+                        name: 'Acción',
+                        data: 'id',
+                        render: function (data) {
+                            var buttons = ""
+
+                            /*{% if perms.venta.change_cabeceraventa and caja_abierta == "S" %}
+                                buttons += '<button class="btn btn-warning">\
+                                                        <a href="/factura/editFacturaVenta/' + data + '/" style="color: black">\
+                                                            Editar\
+                                                        </a>\
+                                                    </button>';
+                            {% endif %}*/
+
+                            {% if perms.factura.delete_facturacabeceraventa %}
+                                buttons += '<button class="btn btn-danger" style="color: white" onclick="anular_factura(\'/ventas/anularFacturaVenta/' + data + '/\',\'/ventas/listFacturasVentas\');">Anular\
+                                                    </button> ';
+                            {% endif %}
+                            
+                            /*{% if perms.factura.view_facturacabeceraventa %}
+                                buttons += '<button class="btn btn-primary">\
+                                                        <a target="_blank" style="color: white">\
+                                                            PDF\
+                                                        </a>\
+                                                    </button>';
+                            {% endif %}*/
+                                                    
+                            return buttons;                                                                                                   
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [4], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {                    
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+        
+        get_list(query);
+
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else{
+                get_list(busqueda)
+            }
+        }) 
+    })
+
+</script>
+
+
+{% endblock js_page %}

@@ -1,0 +1,379 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Agregar Configuraciones{% endblock title %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Configuraciones Iniciales</h4>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+                <li class="breadcrumb-item active">Configuraciones Iniciales</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- Main content -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">            
+                    <div class="card-header">
+                        <div class="float-right">
+                            {% if perms.configuracion.view_confiempresa %}
+                                <button type="button" class="btn btn-block btn-primary">
+                                    <a style="color: white;" href="{% url 'configuracion_inicial:list_historial_timbrado' %}">
+                                        Ver Historial Timbrado
+                                    </a>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <form action="{% url 'configuracion_inicial:confi_inicial' %}" method="post">
+                        <div class="card-body">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Nombre Empresa<span class="required">*</span></label>
+                                        {{form.nombre_empresa}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>N° Ruc<span class="required">*</span></label>
+                                        {{form.ruc_empresa}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Monto Inicial Caja (Gs.)<span class="required">*</span></label>
+                                        {{form.apertura_caja_inicial}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Dirección<span class="required">*</span></label>
+                                        {{form.direccion}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>N° de Timbrado<span class="required">*</span></label>
+                                        {{form.nro_timbrado}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Deposito Inicial<span class="required">*</span></label>
+                                        {{form.ubicacion_deposito_inicial}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Ciudad<span class="required">*</span></label>
+                                        {{form.cuidad}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha Inicio Timbrado<span class="required">*</span></label>
+                                        {{form.fecha_inicio_timbrado}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Días a Vencer Productos<span class="required">*</span></label>
+                                        {{form.dias_a_vencer}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Teléfono<span class="required">*</span></label>
+                                        {{form.telefono}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha Fin Timbrado<span class="required">*</span></label>
+                                        {{form.fecha_fin_timbrado}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Días Aviso Proximas Vacunaciones<span class="required">*</span></label>
+                                        {{form.dias_alert_vacunas}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <a href="{% url 'index'%}" style="color: white;">Volver</a>
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="button_registrar">Agregar</button>
+                        </div>
+                    </form>
+                </div>                    
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+
+<script>
+    $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
+    $(document).ready(function () {
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        $('#datePick-emision').datepicker({
+            format: "dd/mm/yyyy",
+            autoclose: true,
+            todayHighlight: true,
+        });
+
+        $('#datePick-vencimiento').datepicker({
+            format: "dd/mm/yyyy",
+            autoclose: true,
+            todayHighlight: true,
+        });
+
+        $('input[name="dias_a_vencer"],  input[name="dias_alert_vacunas"]').TouchSpin({
+            min: 0,
+            max: 1000000000,
+            step: 1,
+            boostat: 5,
+            maxboostedstep: 10,
+        }).keypress(function (e) {
+            return validate_form_text('numbers', e, null);
+        });
+
+        $("input[name='apertura_caja_inicial']").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                });
+            }
+        });
+
+        $("input[name='fecha_inicio_timbrado'], input[name='fecha_fin_timbrado']").change(function () {
+            var fecha_emision = $("input[name='fecha_inicio_timbrado']").val()
+
+            var fecha_vencimiento = $("input[name='fecha_fin_timbrado']").val()
+
+            if(fecha_emision != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_inicio").removeClass('bad')
+            }
+
+            if(fecha_vencimiento != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_fin").removeClass('bad')
+            }
+        })
+
+        var fecha_inicio = $("#datePick-emision").val()
+        var fecha_fin = $("#datePick-vencimiento").val()
+        var nro_timbrado = $("#nro_timbrado").val()
+
+        if (fecha_inicio != "" && fecha_fin != "" && nro_timbrado != "") {
+            if (!compareDate(fecha_inicio, fecha_fin)) {
+                swal({
+                    title: "Notificación",
+                    text: "La fecha inicio y fin del timbrado ha caducado!",
+                    icon: "warning",
+                    button: "Ok",
+                    confirmButtonColor: '#007bff',
+                })
+                $.ajax({
+                    url: "/utiles/poner_vencido_timbrado/",
+                    data: { 'nro_timbrado': nro_timbrado },
+                    success: function (response) {
+                        if (response.mensaje == "OK") {
+                            $("form").find("#button_registrar").addClass("d-none")
+
+                        }
+                        else {
+                            $('form').find('#button_registrar').removeClass('d-none')
+                        }
+                    }
+                })
+            }
+            else {
+                $("form").find("#button_registrar").removeClass("d-none")
+            }
+        }
+        $("input[name='ruc_empresa']").keyup(function () {
+            var ruc = $(this).val();
+
+            if (ruc != "") {
+                $.ajax({
+                    url: '/utiles/validar_ruc/',
+                    type: 'GET',
+                    data: { 'ruc': ruc },
+                    success: function (response) {
+                        if (response.mensaje != "ER") {
+                            if (response.mensaje != "OK") {
+                                swal({
+                                    title: "Notificación",
+                                    text: "El ruc ingresado ya existe!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                    confirmButtonColor: '#007bff',
+                                })
+                                $('form').find('#button_registrar').addClass('d-none')
+                            } else {
+                                $('form').find('#button_registrar').removeClass('d-none')
+                            }
+                        }
+                        else {
+                            Swal({
+                                title: "Notificación",
+                                text: "ha ocurrido un error, intenlo de nuevo",
+                                icon: "error",
+                                button: "Ok",
+                                confirmButtonColor: '#007bff',
+                            })
+                            $('form').find('#button_registrar').addClass('d-none')
+                        }
+                    },
+                    error: function (error) {
+
+                    },
+                })
+            }
+        })
+
+        $("input[name='nro_timbrado']").keyup(function () {
+            var nro_timbrado = $("input[name='nro_timbrado']").val()
+            if (nro_timbrado != "") {
+                $.ajax({
+                    url: "/utiles/validate_nro_timbrado/",
+                    data: { 'nro_timbrado': nro_timbrado },
+                    success: function (response) {
+                        if (response.mensaje == "OK") {
+                            Swal({
+                                title: "Notificación",
+                                text: "El Timbrado introducido ya ha vencido!",
+                                icon: "warning",
+                                button: "Ok",
+                                confirmButtonColor: '#007bff',
+                            })
+                            $('form').find('#button_registrar').addClass('d-none')
+                        }
+                        else {
+                            $("form").find("#button_registrar").removeClass("d-none")
+                        }
+                    }
+                })
+            }
+
+        })
+
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    title: "Notificación",
+                    text: "{{ message }}",
+                    icon: "warning",
+                    button: "Ok",
+                    confirmButtonColor: '#007bff',
+                })
+            {% endfor %}
+        {% endif %}
+
+    });
+
+    function compareDate(fecha_emision, fecha_vencimiento) {
+        var d1 = fecha_emision.split("/");
+        var d2 = fecha_vencimiento.split("/");
+        var c = new Date();
+
+        var from = new Date(d1[2], parseInt(d1[1]) - 1, d1[0]);  // -1 because months are from 0 to 11
+        var to = new Date(d2[2], parseInt(d2[1]) - 1, d2[0]);
+        var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+        if (check >= from && check <= to) {
+            return true
+        }
+        return false
+    }
+
+    // validar entrada
+    function validate_form_text(type, event, regex) {
+        var key = event.keyCode || event.which;
+        var numbers = (key > 47 && key < 58) || key === 8;
+        var numbers_spaceless = (key > 47 && key < 58);
+        var letters = !((key !== 32) && (key < 65) || (key > 90) && (key < 97) || (key > 122 && key !== 241 && key !== 209 && key !== 225 && key !== 233 && key !== 237 && key !== 243 && key !== 250 && key !== 193 && key !== 201 && key !== 205 && key !== 211 && key !== 218)) || key === 8;
+        var letters_spaceless = !((key < 65) || (key > 90) && (key < 97) || (key > 122 && key !== 241 && key !== 209 && key !== 225 && key !== 233 && key !== 237 && key !== 243 && key !== 250 && key !== 193 && key !== 201 && key !== 205 && key !== 211 && key !== 218)) || key === 8;
+        var decimals = ((key > 47 && key < 58) || key === 8 || key === 46);
+
+        if (type === 'numbers') {
+            return numbers;
+        } else if (type === 'letters') {
+            return letters;
+        } else if (type === 'numbers_letters') {
+            return numbers || letters;
+        } else if (type === 'letters_spaceless') {
+            return letters_spaceless;
+        } else if (type === 'letters_numbers_spaceless') {
+            return letters_spaceless || numbers_spaceless;
+        } else if (type === 'decimals') {
+            return decimals;
+        } else if (type === 'regex') {
+            return regex;
+        }
+        return true;
+    }
+</script>
+{% endblock js_page %}

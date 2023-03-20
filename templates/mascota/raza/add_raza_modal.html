@@ -1,0 +1,40 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><b>Razas
+            </b></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% if raza %}
+            <form action="{% url 'mascota:edit_raza' raza.id %}" method="POST" role="form" id="form">
+        {% else %}
+            <form action="{% url 'mascota:add_raza' %}" method="POST" role="form" id="form">
+        {% endif %}
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label>{{form.nombre_raza.label}}<span class="required"> *</span></label>
+                                {{form.nombre_raza}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label>Especie <span class="required"> *</span></label>
+                                {{form.id_especie}}
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">{%if raza%}Editar {%else%}Agregar {%endif%}</button>
+            </div>
+        </form>
+    </div>
+</div>

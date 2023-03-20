@@ -1,0 +1,23 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css' %}">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders" style="background-color:#dc3545 ;">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Anular Factura</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'anular_factura_venta' id %}" method="post">
+            {% csrf_token %}
+            <div class="modal-body" style="font-size: 16px; color: #383232c7;">
+                Estás seguro/a que deseas anular esta factura?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-danger">Anular</button>
+            </div>
+        </form>
+    </div>
+</div>
