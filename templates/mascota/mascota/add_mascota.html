@@ -1,0 +1,268 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Agregar Cliente {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+    .text_align_center {
+        text-align-last: center;
+    }
+
+    .card-pets:hover {
+        box-shadow: 0px 0px 10px 5px #a6a6a6;
+        /* please set the shadow color conveniently */
+    }
+
+    .card-pets {
+        border-radius: 10px !important;
+    }
+
+    .card-img-div {
+        background-color: #278094eb;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .rd-card-img {
+        height: 8rem;
+        width: 8rem;
+        border-radius: 4rem;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        border: 1px solid rgba(52, 73, 94, 0.44);
+        background: #fff;
+        padding: 4px;
+    }
+
+    #imageInput {
+        display: none;
+    }
+
+    .btn-photo {
+        margin-top: 1.3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        width: 135px;
+        height: 35px;
+        font-size: 15px;
+        background-color: #609AB4;
+        border-radius: 0.5rem;
+        font-weight: bold;
+        color: #ffffff;
+        box-shadow: 0px 4px 4px rgba(2, 0, 40, 0.25);
+    }
+
+    .spacing-button {
+        margin-left: 1.9rem;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Agregar Mascota
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'mascota:list_mascotas' %}">Lista de Mascotas</a></li>
+            <li class="breadcrumb-item active">Agregar</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="x_content">
+        <div class="">
+            <form enctype="multipart/form-data" action="{% url 'mascota:add_mascota' %}" method="POST">
+
+
+                {% csrf_token %}
+                    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+
+            <!-- Profile Image -->
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="card-img-top rd-card-img profile-pic"
+                     src="{% static 'base/img/test.jfif' %}" alt="">
+                </div>                
+                  <div class="text_align_center" style="display: grid">
+                    <div class="btn btn-outline-primary">
+                      <span for="imageInput">Agregar Foto</span>
+                      <input type="file" name="imagen" accept="image/*" id="imageInput">
+                    </div>
+                  <label class="btn btn-outline-danger mt-3"
+                      id="delete-photo">Eliminar
+                      Foto</label>      
+                  </div>                          
+                </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card --> 
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card">                                    
+              <div class="card-body">
+                <div class="tab-content">                  
+                  <div class="tab-pane d-block" >
+                    <form class="form-horizontal">
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Nombre de la mascota
+                          <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-10">
+                          {{ form.nombre_mascota}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Tatuaje</label>
+                        <div class="col-sm-10">
+                          {{ form.tatuaje }}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputName2" class="col-sm-2 col-form-label">Sexo
+                          <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-10">
+                          {{ form.sexo}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputExperience" class="col-sm-2 col-form-label">Edad</label>
+                        <div class="col-sm-10">
+                            {{ form.edad }}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Color Pelaje</label>
+                        <div class="col-sm-10">
+                          {{ form.color_pelaje}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Peso
+                          <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-10">
+                          {{ form.peso}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Fecha Nacimiento</label>
+                        <div class="col-sm-10">
+                          {{ form.fecha_nacimiento}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Raza
+                          <span class="required">*</span>
+
+                        </label>
+                        <div class="col-sm-10">
+                          {{ form.id_raza}}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Dueño
+                          <span class="required">*</span>
+                        </label>
+                        <div class="col-sm-10">
+                          {{ form.id_cliente}}
+                        </div>
+                      </div>
+                      <div style="color:red;">(*) Campos a completar</div>
+                      <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                          <button type='submit' class="btn btn-primary">Agregar</button>
+                          <button type='reset' class="btn btn-success">Reset</button>
+                          <button type='button' class="btn btn-secondary">
+                              <a href="{% url 'mascota:list_mascotas' %}" style="color: #fff;">
+                                  Volver
+                              </a>
+                          </button>                        
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+                 
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+    $(function () {
+        $('input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+        var readURL = function (input) {
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                  $('.profile-pic').attr('src', e.target.result);
+              }
+
+              reader.readAsDataURL(input.files[0]);
+          }
+      }
+
+
+      $(document).on('change', "#imageInput", function () {
+          readURL(this);
+      });
+
+      $("#delete-photo").click(function () {
+          var urlPhoto = "{% static 'base/img/test.jfif' %}";
+          $('.profile-pic').removeAttr('src');
+          $('.profile-pic').attr('src', urlPhoto);
+      })
+
+
+      $('form input').on("cut copy paste", function (e) {
+          e.preventDefault();
+      });
+    })
+</script>
+
+
+{% endblock js_page %}

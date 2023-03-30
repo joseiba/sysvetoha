@@ -8,8 +8,8 @@ from datetime import date, datetime
 import json
 import math
 
-from .models import Especie, Raza
-from .forms import EspecieForm, RazaForm
+from .models import Especie, Mascota, Raza
+from .forms import EspecieForm, MascotaForm, RazaForm
 
 # Create your views here.
 
@@ -182,4 +182,51 @@ def search_raza(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
-    return render(request, "mascota/raza/list_raza.html", context)    
+    return render(request, "mascota/raza/list_raza.html", context)
+
+
+@login_required()
+@permission_required('mascota.view_mascota')
+def list_mascotas(request):
+    mascotas = Mascota.objects.all().order_by('-last_modified')
+    paginator = Paginator(mascotas, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj}
+    return render(request, "mascota/mascota/list_mascota.html", context)
+
+
+date = datetime.now()
+# Create your views here.
+@login_required()
+@permission_required('mascota.add_mascota')
+def add_mascota(request):
+    form = MascotaForm    
+    if request.method == 'POST':
+        form = MascotaForm(request.POST, request.FILES)
+        if form.is_valid():           
+            form.save()
+            messages.success(request, 'Se ha agregado correctamente!')
+            return redirect('/mascota/add')
+    context = {'form' : form}
+    return render(request, 'mascota/mascota/add_mascota.html', context)
+
+
+@login_required()
+@permission_required('mascota.view_mascota')
+def edit_mascota(request, id):
+    mascota = Mascota.objects.get(id=id)
+    form = MascotaForm(instance=mascota)
+    if request.method == 'POST':
+        form = MascotaForm(request.POST, request.FILES, instance=mascota)
+        if not form.has_changed():
+            messages.info(request, "No has hecho ningun cambio!")
+            return redirect('/mascota/edit/' + str(id))
+        if form.is_valid():
+            mascota = form.save(commit=False)
+            mascota.save()
+            messages.success(request, 'Se ha editado correctamente!')
+            return redirect('/mascota/edit/' + str(id))
+
+    context = {'form': form, 'mascota': mascota}
+    return render(request, 'mascota/mascota/edit_mascota.html', context)

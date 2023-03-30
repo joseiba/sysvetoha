@@ -15,7 +15,7 @@ class ClienteFormTest(LiveServerTestCase):
         time.sleep(2)
 
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/configuracion/listCiudades/')
+        driver.get(URL_BASE_TEST_FUNTIONAL + '/vetohouracion/listCiudades/')
         time.sleep(2)
 
         add = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-block btn-primary']")

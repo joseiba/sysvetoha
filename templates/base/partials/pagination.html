@@ -1,0 +1,34 @@
+<div class="pagination">
+    <div class="clearfix"></div>
+    <span class="step-links d-inline-flex">
+        <span class="current">
+            Páginas {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+        <div class="clearfix"></div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div  style="align-items: center;">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+            {% endif %}
+            
+            <div class="d-inline-flex" >
+                {% for i in page_obj.paginator.page_range %}
+                {% if i.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}" style="padding: .6rem;">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            </div>
+            
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">ultimo &raquo;</a>
+            {% endif %}
+
+        </div>
+        {% endif %}
+    </span>
+</div>

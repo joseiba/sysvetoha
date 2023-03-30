@@ -17,19 +17,19 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Nombre<span class="required"></span></label>
+                            <label>Nombre<span class="required">*</span></label>
                             {{ form.nombre_cliente}}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Apellido<span class="required"></span></label>
+                            <label>Apellido<span class="required">*</span></label>
                             {{form.apellido_cliente}}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Cédula<span class="required"></span></label>
+                            <label>Cédula<span class="required">*</span></label>
                             {{form.cedula}}
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Teléfono<span class="required"></span></label>
+                            <label>Teléfono<span class="required">*</span></label>
                             {{form.telefono}}
                         </div>
                     </div>
@@ -57,18 +57,20 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Ciudad<span class="required"></span></label>
+                            <label>Ciudad<span class="required">*</span></label>
                             {{ form.id_ciudad}}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Dirección<span class="required"></span></label>
+                            <label>Dirección<span class="required">*</span></label>
                             {{form.direccion}}
                         </div>
                     </div>
                 </div>
+                <div style="color:red;">(*) Campos a completar</div>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">{%if cliente%}Editar {%else%}Agregar{%endif%}</button>
