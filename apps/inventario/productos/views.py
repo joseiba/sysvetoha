@@ -16,6 +16,7 @@ from apps.inventario.depositos.models import Deposito
 from apps.inventario.productos.forms import ProductoForm
 from apps.inventario.productos.models import Producto, Inventario, HistoricoProductoPrecio, ProductoStock
 from apps.configuracion.configuracion_inicial.models import ConfiEmpresa
+from apps.ventas.models import CabeceraVenta, DetalleVenta
 
 date = datetime.now()
 
@@ -207,6 +208,7 @@ def edit_producto(request, id):
 @login_required()
 @permission_required('productos.view_producto')
 def list_productos_general(request):
+    sum_anular_factura_venta_to_producto()
     return render(request, "inventario/productos/list_producto_general.html")
 
 
@@ -280,6 +282,26 @@ def poner_vencido_producto():
                         p.save()
         except Exception as e:
             pass
+
+
+def sum_anular_factura_venta_to_producto():
+    factVenta = CabeceraVenta.objects.exclude(is_active="S").all()
+    if factVenta is not None:
+        for fv in factVenta:
+            if(fv.factura_anulada == 'N'):
+                fv.factura_anulada = "S"
+                fv.save()
+                facDe = DetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facDe:
+                    try:
+                        if factDet.tipo == 'P':
+                            prod = Producto.objects.get(id=factDet.id_producto.id)
+                            prod.stock = prod.stock + factDet.cantidad
+                            prod.stock_total = prod.stock_total + factDet.cantidad                            
+                            prod.save()
+                    except Exception as e:
+                        pass
+
 
 @login_required()
 @permission_required('producto.view_producto')
@@ -453,7 +475,7 @@ def search_producto(request):
 def list_ajustar_inventario(request):
     #add_factura_to_producto()
     #rest_factura_venta_to_producto()
-    #sum_anular_factura_venta_to_producto()
+    sum_anular_factura_venta_to_producto()
     poner_vencido_producto()
     return render(request, "inventario/productos/list_ajuste_inventario.html")
 

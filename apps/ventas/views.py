@@ -152,12 +152,12 @@ def add_factura_venta(request):
                     detalle.id_factura_venta_id = factura.id
                     producto = Producto.objects.get(id=i['codigo_producto'])
                     detalle.id_producto_id = producto.id
-                    #detalle.tipo = i['tipo']
+                    detalle.tipo = i['tipo']
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
                     detalle.subtotal = "Gs. " + "{:,}".format(int(i['subtotal'])).replace(",",".")
                     detalle.save()
-                    producto.stock -= int(i['cantidad'])
+                    producto.stock_total -= int(i['cantidad'])
                     producto.save()
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
@@ -221,7 +221,7 @@ def edit_factura_venta(request, id):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi}
+    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi, 'venta':factVenta}
     return render(request, 'ventas/edit_factura_venta.html', context)
 
 
