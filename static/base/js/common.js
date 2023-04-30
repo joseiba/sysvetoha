@@ -100,6 +100,16 @@ function add_edit_registro(text) {
 	});
 }
 
+function warning_registro(text) { 
+	Swal.fire({
+		title: 'Notificación',
+		text: text,
+		icon: 'warning',
+		confirmButtonColor: '#007bff',
+	});
+}
+
+
 function submit_with_ajax(url, title, content, parameters, callback) {
     Swal.fire({
         title: title,

@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block title %} Agregar Cliente {% endblock title %}
+{% block title %} Agregar Mascota {% endblock title %}
 
 {% block css %}
 {{ block.super }}
@@ -93,7 +93,7 @@
         <div class="">
             <form enctype="multipart/form-data" action="{% url 'mascota:add_mascota' %}" method="POST">
 
-
+              
                 {% csrf_token %}
                     <section class="content">
       <div class="container-fluid">
@@ -108,14 +108,14 @@
                      src="{% static 'base/img/test.jfif' %}" alt="">
                 </div>                
                   <div class="text_align_center" style="display: grid">
-                    <div class="btn btn-outline-primary">
+                    <label class="btn btn-outline-primary" id="change_picture"  >
                       <span for="imageInput">Agregar Foto</span>
-                      <input type="file" name="imagen" accept="image/*" id="imageInput">
-                    </div>
-                  <label class="btn btn-outline-danger mt-3"
+                      {{ form.imagen }}
+                  </label>   
+                  <button type="button" class="btn btn-outline-danger"
                       id="delete-photo">Eliminar
-                      Foto</label>      
-                  </div>                          
+                      Foto</button>     
+                  </div>                           
                 </div>
               <!-- /.card-body -->
             </div>
@@ -198,7 +198,6 @@
                       <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
                           <button type='submit' class="btn btn-primary">Agregar</button>
-                          <button type='reset' class="btn btn-success">Reset</button>
                           <button type='button' class="btn btn-secondary">
                               <a href="{% url 'mascota:list_mascotas' %}" style="color: #fff;">
                                   Volver
@@ -261,7 +260,16 @@
       $('form input').on("cut copy paste", function (e) {
           e.preventDefault();
       });
+
+      {% if messages %}
+      {% for message in messages %}
+        var text = "{{ message }}";
+        add_edit_registro(text);
+      {% endfor %}
+    {% endif %}
     })
+
+   
 </script>
 
 

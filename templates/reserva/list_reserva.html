@@ -1,0 +1,165 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Calendario de Reservas {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Calendario de Reservas
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item active">Calendario de Reservas</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">            
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div id='calendar'></div>
+            </div>
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  
+<div class="modal fade" id="creacion" role="dialog"> </div>
+
+<div class="modal fade" id="edicion" role="dialog"> </div>
+
+<div class="modal fade" id="eliminacion" role="dialog">
+
+</div>
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+    $(document).on('click', '#close_button, #close_x', function () {
+      sessionStorage.removeItem("id_cliente")
+      sessionStorage.removeItem("servicio")
+      sessionStorage.removeItem("id_mascota")
+      sessionStorage.removeItem("id_empleado")
+        window.location.reload()
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            locale: 'es',
+            navLinks: true, // can click day/week names to navigate views
+            businessHours: true, // display business hours
+            editable: false,
+            selectable: true,
+            dateClick: function (info) {
+                // leemos las fechas de inicio de evento y hoy
+                var check = moment(info.dateStr).format('YYYY-MM-DD');
+                var today = moment(new Date()).format('YYYY-MM-DD');
+                var d = info.date;
+                var dateValue = d.getDay();                 
+                {% if perms.reserva.add_reserva %}
+                    if(dateValue  === 0 || dateValue === 6){                       
+                        warning_registro("No puedes agendar sabados y domingos!")                                                     
+                    }else{                        
+                        if (check >= today) {
+                            var url = '/reserva/addReserva/'
+                            var today = info.dateStr;
+                            sessionStorage.setItem('fecha_seleccionada', today)
+                            $('#creacion').load(url, today, function () {
+                                $(this).modal('show');
+                            });
+                            calendar.unselect()                   
+                        }
+                        // si no, mostramos una alerta de error
+                        else {
+                            warning_registro("No se pueden crear eventos en fechas pasadas!")                                                     
+                        }
+                    }
+                {% else %}
+                    warning_registro("No tienes permisos para agregar nuevos eventos!")                                                     
+                {% endif %}
+
+            },
+            eventClick: function (arg) {
+                {% if perms.reserva.change_reserva %}
+
+                    var url = '/reserva/editReserva/' + arg.event.groupId;
+                    $('#edicion').load(url, function () {
+                        $(this).modal('show');
+                    });
+                {% else %}
+                    warning_registro("No tienes permisos para editar los eventos!")                         
+                {% endif %}
+
+            },
+            events: [
+                {% for reserva in page_obj %}
+                {
+                    groupId: "{{ reserva.id }}",
+                    title: "{{ reserva.id_servicio.nombre_servicio }}",
+                    start: '{{ reserva.fecha_reserva |  date:"Y-m-d" }}T{{reserva.hora_reserva}}',
+                    color: "{{ reserva.color_estado }}"
+                },
+                {% endfor %}
+            ]   
+        });
+        calendar.render();
+        
+        $(document).on("click", "#menu_toggle", function () {
+            calendar.render();
+        })
+    });
+
+    $(function () {
+        $('input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+    
+        {% if messages %}
+          {% for message in messages %}
+            var text = "{{ message }}";
+            add_edit_registro(text);
+          {% endfor %}
+        {% endif %}
+    })
+</script>
+
+
+{% endblock js_page %}

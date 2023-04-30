@@ -1,0 +1,72 @@
+{% load static %}
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Agregar Proveedor</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"  style="color: black;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'compra:add_proveedor' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mt-3 mr-3 ml-3">
+                <label class="label-align">Nombre Proveedor<span
+                        class="required">*</span></label>
+                <div class="">
+                        {{form.nombre_proveedor}}
+                </div>
+            </div>   
+            <div class="form-group mt-3 mr-3 ml-3">
+                <label class="label-align">Dirección
+                    <span class="required">*</span>
+                </label>
+                <div class="">                 
+                    {{ form.direccion}}
+                </div>
+            </div> 
+
+            <div class="form-group mt-3 mr-3 ml-3">
+                <label class="label-align">Nro. RUC<span
+                        class="required">*</span></label>
+                <div class="">                   
+                        {{form.ruc_proveedor}}
+                </div>
+            </div>
+            <div class="form-group mt-3 mr-3 ml-3 mb-3">
+                <label class="label-align">Telefono<span
+                        class="required">*</span></label>
+                <div class="">                
+                        {{form.telefono}}
+                </div>
+            </div> 
+            
+            <div class="form-group mt-3 mr-3 ml-3">
+                <label class="label-align">Email</label>
+                <div class="">                   
+                        {{form.email}}
+                </div>
+                <div id="alert_email">
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary" id="btn_confirmar">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- validator -->
+
+
+<script>
+    $(function(){
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+   
+    })
+</script>

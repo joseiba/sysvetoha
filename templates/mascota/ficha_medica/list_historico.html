@@ -1,0 +1,236 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Historial {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Historial Ficha Médica
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'mascota:edit_ficha_medica' id_mascota %}">Volver Ficha Médica</a></li>
+            <li class="breadcrumb-item active">Historial</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">                     
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="vacunas_aplicadas" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Fecha Aplicación</th>
+                  <th>Vacuna</th>
+                  <th>Peso</th>
+                </tr>
+                </thead>
+                <tbody>                   
+                </tbody>   
+              </table>
+            </div>
+
+            <div class="card-body">
+                <table id="proximas_vacunas" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>Próxima Vacuna</th>
+                    <th>Fecha</th>
+                  </tr>
+                  </thead>
+                  <tbody>                   
+                  </tbody>   
+                </table>
+              </div>
+            
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  
+<div class="modal fade" id="creacion" role="dialog"> </div>
+
+<div class="modal fade" id="edicion" role="dialog"> </div>
+
+<div class="modal fade" id="eliminacion" role="dialog">
+
+</div>
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+    $(function () {
+
+        var id_ficha = "{{ id_mascota }}"
+
+        $('input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+        var get_list_aplicada = function (busqueda) {
+            $("#vacunas_aplicadas").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/mascota/get_list_historico_vacunas_aplicadas/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: {'busqueda': busqueda},
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+                    }
+                },
+                columns: [                                  
+                    {
+                        name: 'Fecha Aplicación',
+                        data: 'fecha_aplicada',                
+                    },                
+                    {
+                        name: 'Vacuna',
+                        data: 'vacuna_aplicada',                        
+                    },
+                    {
+                        name: 'Peso',
+                        data: 'peso',
+                        render: function(data){
+                            return data
+                        }                
+                    },
+                ],
+                columnDefs: [{
+                    targets: [], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {                    
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+        
+        get_list_aplicada(id_ficha);
+
+        //Proximas vacunas
+        var get_list_proximas = function (busqueda) {
+            $("#proximas_vacunas").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/mascota/get_list_historico_vacunas_proximas/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: {'busqueda': busqueda},
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+                    }
+                },
+                columns: [                                  
+                    {
+                        name: 'Próxima Vacuna',
+                        data: 'proxima_vacuna',                
+                    },
+                    {
+                        name: 'Fecha',
+                        data: 'fecha_proxima',                        
+                    },                   
+                ],
+                columnDefs: [{
+                    targets: [], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {                    
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+        
+        get_list_proximas(id_ficha);
+
+        {% if messages %}
+          {% for message in messages %}
+            var text = "{{ message }}";
+            add_edit_registro(text);
+          {% endfor %}
+        {% endif %}
+    })
+</script>
+
+
+{% endblock js_page %}

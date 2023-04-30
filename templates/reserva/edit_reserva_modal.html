@@ -1,0 +1,484 @@
+{% load static %}
+
+<style>
+    .alert {
+        display: none;
+    }
+    .ui-timepicker-container.ui-timepicker-standard{
+        position: absolute;
+    }
+    .select2{
+        width: 100% !important;
+    }
+</style>
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content" style="box-shadow: 0 10px 20px 0 rgba(0,0,0,.05);">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Reserva</h5>
+            <button type="button" class="close" data-dismiss="modal" id="close_x" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'reserva:edit_reserva' reserva.id %}" method="post" id="form">
+            {% csrf_token %}
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
+                <div class="col-md-12 col-sm-6">
+                    {{form.descripcion}}
+                </div>
+            </div>
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Servicio<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6">
+                    {{form.id_servicio}}
+                </div>
+            </div>
+            <div class="field item form-group d-none" id="id_reserva_hora" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="hora_input">
+                    
+                </div>
+            </div>
+
+            <div class="field item form-group d-none" id="id_reserva_hora_edit" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="hora_input_edit">
+                    
+                </div>
+            </div>
+
+            <div class="field item form-group d-none" id="id_empleado_list" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Empleado
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="empleado_input">
+
+                </div>
+            </div>
+
+            <div class="field item form-group d-none" id="id_empleado_edit" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Empleado
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="empleado_input_edit">
+
+                </div>
+            </div>
+
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Cliente<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6">
+                    {{form.id_cliente}}
+                </div>
+            </div>
+            <div class="field item form-group d-none" id="id_mascota_cliente" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Mascota<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6" id="list_mascota">
+
+                </div>
+            </div>
+            <div class="field item form-group d-none" id="id_list_mascota_edit" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Mascota<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6" id="list_mascota_edit">
+
+                </div>
+            </div>        
+
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Estado<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6">
+                    {{form.estado_re}}
+                </div>
+            </div>
+            {{ form.fecha_reserva}}
+
+            <input type="hidden" id="hora_reserva_id" value="{{ reserva.hora_reserva }}">
+            <input type="hidden" id="empleado_selected" value="{{ reserva.id_empleado.id }}">
+            <input type="hidden" id="id_cliente_selected" value="{{ reserva.id_cliente.id }}">
+            <input type="hidden" id="servicio_selected" value="{{ reserva.id_servicio.id }}">
+            <input type="hidden" id="id_reserva_selected" value="{{ reserva.id }}">
+            <input type="hidden" id="id_mascota_selected" value="{{ reserva.id_mascota.id }}"/>
+
+            <div id="estado_color_reserva">
+
+            </div>
+            <div class="modal-footer">
+                
+                {% if perms.reserva.delete_reserva %}
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButtonModal" data-dismiss="modal"
+                    data-id-reserva="{{reserva.id}}">Eliminar</button>
+                {% endif %}
+                    
+                <button type="submit" class="btn btn-warning" id="edit_button" style="color: #fff;">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- validator -->
+<script>   
+    $(function () {
+
+        $("#estado_re").change(function () {
+            var estado = $("#estado_re").val()
+            var color = "";
+            switch (estado) {
+                case "PEN":
+                    color = "light blue"
+                    break;
+                case "FIN":
+                    color = "green"
+                    break;
+                default:
+                    color = "red"
+                    break;
+            }         
+            var inputColor = "<input type='hidden' name='color_estado' value= '" + color + "'/>";
+            $("#estado_color_reserva").html(inputColor)
+        })
+
+        $(document).on('click', '#confirmDeleteButtonModal', function () {
+                var id = $(this).data("id-reserva")
+                var url = '/reserva/bajaReserva/' + id;
+                sessionStorage.removeItem("id_cliente")
+                sessionStorage.removeItem("servicio")
+                sessionStorage.removeItem("id_mascota")
+                sessionStorage.removeItem("id_empleado")
+                window.location = url;
+            })
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        var id_seleted_cliente = $("#id_cliente_selected").val()
+        var hora_reserva = $("#hora_reserva_id").val()
+        var fecha_reserva = $("#fecha_reserva").val()
+        var servicio = $("#servicio_selected").val()
+        var empleado = $("#empleado_selected").val()
+        var id_reserva = $("#id_reserva_selected").val()
+        var id_mascota_selected = $("#id_mascota_selected").val()
+        sessionStorage.setItem("id_empleado", empleado)
+        sessionStorage.setItem("id_mascota", id_mascota_selected)
+
+        var d1 = fecha_reserva.split("-");
+        var c = new Date();
+
+        var from = new Date(d1[0], parseInt(d1[1]) - 1, d1[2]);  // -1 because months are from 0 to 11
+        var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+        if (check >= from) {
+            $("#form").find("#edit_button").addClass("d-none")  
+        }
+
+        if (id_seleted_cliente !== "" && id_seleted_cliente != null) {
+                var urlValidate = "/reserva/getMascotaSelected"
+                sessionStorage.setItem("id_cliente", id_seleted_cliente)
+                $.ajax({
+                    data: { 'id_cliente': id_seleted_cliente, 'hora_reserva': hora_reserva, "fecha_reserva": fecha_reserva, 'servicio':servicio, 'id_reserva': id_reserva},
+                    url: urlValidate,
+                    success: function (response) {
+                        var mascotas = JSON.parse(response.mascota);
+                        if (response.mensaje != "") {
+                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota">';
+                            $.each(mascotas, function (i, data) {
+                                if (response.mascota_selected == data.id) {
+                                    selectMascota += "<option selected required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                                } else {
+                                    selectMascota += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";                                    
+                                }
+                            });
+
+                            selectMascota += '</select>';
+                            $("#form").find("#id_mascota_cliente").removeClass("d-none");
+                            $("#list_mascota").html(selectMascota)
+
+                            var selectEmp = '<select class="form-control" required="required" name="id_empleado" id="id_empleado">';
+                            var emp = JSON.parse(response.empleados);
+                            $.each(emp, function (i, data) {
+                                if(response.empleado == data.id){
+                                    selectEmp += "<option selected required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                                }else{
+                                    selectEmp += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                                }
+                            });
+
+                            selectEmp += '</select>';
+                            $("#form").find("#id_empleado_list").removeClass("d-none");
+                            $("#empleado_input").html(selectEmp)
+
+                        }
+                        else {
+                            $("#form").find("#id_mascota_cliente").addClass("d-none")
+                        }
+                    },
+                    error: function (response) {
+                    }
+                })
+            }
+
+        $("#id_cliente").change(function () {
+            var id_cliente = $("#id_cliente").val()
+            if (id_cliente !== "" && id_cliente != null) {
+                sessionStorage.setItem("id_cliente", id_cliente)
+                var urlValidate = "/reserva/getMascotaCliente"
+                $.ajax({
+                    data: { 'id_cliente': id_cliente },
+                    url: urlValidate,
+                    success: function (response) {
+                        var mascotas = JSON.parse(response.mascota);
+                        if (response.mensaje != "") {
+                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota_new">\
+                                                    <option required="required">Seleccione la mascota</option>';
+                            $.each(mascotas, function (i, data) {
+                                selectMascota += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                            });
+
+                            selectMascota += '</select>';
+                            $("#form").find("#id_mascota_cliente").addClass("d-none");
+                            $("#form").find("#id_list_mascota_edit").removeClass("d-none");
+                            $("#list_mascota_edit").html(selectMascota)
+                        }
+                        else {                         
+                            warning_registro("Este Cliente no tiene ninguna mascota asignada!") 
+
+                            $("#form").find("#edit_button").addClass("d-none")  
+                            $("#form").find("#id_list_mascota_edit").addClass("d-none")
+                            $("#form").find("#id_mascota_cliente").addClass("d-none")
+
+                        }
+                    },
+                    error: function (response) {
+                    }
+                })
+            }else{
+                $("#form").find("#id_list_mascota_edit").addClass("d-none")
+                $("#form").find("#id_mascota_cliente").addClass("d-none")
+            }
+        })
+
+        if (servicio !== "" && servicio != null) {
+                var urlValidate = "/reserva/getTimeServices"
+                sessionStorage.setItem("servicio", servicio)
+                $.ajax({
+                    data: { 'servicio': servicio },
+                    url: urlValidate,
+                    success: function (response) {
+                        if (response.mensaje != "") {
+                            var inputHora = '<input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">';
+                            $("#form").find("#id_reserva_hora_edit").removeClass("d-none");
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+                            $("#hora_input_edit").html(inputHora)
+                            var timeServ = parseInt(response.tiempo)
+                            sessionStorage.setItem("timeServ", timeServ)
+                            $(".timepicker").timepicker({
+                                interval: timeServ,
+                                minTime: '8',
+                                maxTime: '18:00',
+                                defaultTime: hora_reserva,
+                                startTime: '08:00',
+                                dropdown: true,
+                                scrollbar: true,
+                                zindex: 1151,
+                                timeFormat: 'HH:mm',
+                            });                         
+                        }
+                        else {
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+
+                        }
+                    },
+                    error: function (response) {
+
+                    }
+                })
+            }
+            else{
+                $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+                $("#form").find("#hora_input_edit").addClass("d-none")
+
+            }    
+
+        $("#id_servicio").change(function () {
+            var servicio = $("#id_servicio").val()
+
+            if (servicio !== "" && servicio != null) {
+                sessionStorage.setItem("servicio", servicio)
+
+                var urlValidate = "/reserva/getTimeServices"
+                $.ajax({
+                    data: { 'servicio': servicio },
+                    url: urlValidate,
+                    success: function (response) {
+                        if (response.mensaje != "") {
+                            entro_ser++
+                            var inputHora = '<input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">';
+                            $("#form").find("#id_reserva_hora").removeClass("d-none");
+                            $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+                            $("#hora_input").html(inputHora)
+                            var timeServ = parseInt(response.tiempo)
+                            sessionStorage.setItem("timeServ", timeServ)
+                            $(".timepicker").timepicker({
+                                interval: timeServ,
+                                minTime: '8',
+                                maxTime: '18:00',
+                                defaultTime: '8',
+                                startTime: '08:00',
+                                dropdown: true,
+                                scrollbar: true,
+                                zindex: 1151,
+                                timeFormat: 'HH:mm',
+                            });
+
+                            var empleados = JSON.parse(response.empleado);
+                            var selectEmp = '<select class="form-control" required="required" name="id_empleado" id="id_emleado_new">\
+                                                    <option>Seleccione un empleado</option>';
+                            $.each(empleados, function (i, data) {
+                                selectEmp += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                            });
+
+                            selectEmp += '</select>';
+                            $("#form").find("#id_empleado_edit").removeClass("d-none");
+                            $("#form").find("#id_empleado_list").addClass("d-none")
+                            $("#empleado_input_edit").html(selectEmp)
+                        }
+                        else {
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+                            $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+                            $("#form").find("#id_empleado_edit").addClass("d-none")
+                            $("#form").find("#id_empleado_list").addClass("d-none")
+                        }
+                    },
+                    error: function (response) {  
+                    }
+                })
+                var id_cliente = sessionStorage.getItem("id_cliente")
+                var hora = entro_ser > 1 ? $(".timepicker").val() : "08:00";
+                var id_mascota = sessionStorage.getItem("id_mascota")
+                var empleado = sessionStorage.getItem("id_empleado")
+
+                validar_reserva(fecha_reserva, servicio, hora, id_cliente, id_mascota,empleado)
+            }
+            else{
+                sessionStorage.removeItem("id_empleado")
+                $("#form").find("#edit_button").addClass("d-none")
+                $("#form").find("#id_reserva_hora").addClass("d-none")
+                $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+                $("#form").find("#id_empleado_edit").addClass("d-none")
+                $("#form").find("#id_empleado_list").addClass("d-none")
+            }
+        })
+
+        $(document).on("change", "#id_mascota", function () {
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = $("#id_mascota").val() == "Seleccione la mascota" ? "" : $("#id_mascota").val();
+            var empleado = sessionStorage.getItem("id_empleado")
+            sessionStorage.setItem("id_mascota", id_mascota)
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)            
+        })
+
+        $(document).on("change", "#id_mascota_new", function () {
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = $("#id_mascota_new").val() == "Seleccione la mascota" ? "" : $("#id_mascota_new").val();
+            var empleado = sessionStorage.getItem("id_empleado")
+            sessionStorage.setItem("id_mascota", id_mascota)
+
+            if(id_mascota === ""){
+                $("#form").find("#edit_button").addClass("d-none")
+            }else{
+                validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+            }
+
+        })
+
+        $(document).on('change',"#id_empleado", function() {
+            var empleado = $("#id_empleado").val()
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = sessionStorage.getItem("id_mascota")
+            sessionStorage.setItem("id_empleado", empleado)
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+
+        })
+
+        $(document).on('change',"#id_emleado_new", function() {
+            var empleado = $("#id_emleado_new").val() == "Seleccione un empleado" ? "" : $("#id_emleado_new").val();
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = sessionStorage.getItem("id_mascota")
+            sessionStorage.setItem("id_empleado", empleado)
+            if(empleado === "" ){
+                $("#form").find("#edit_button").addClass("d-none")
+            }else{
+                validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+            }
+
+        })
+
+
+        $(document).on('click', '.ui-menu-item', function(){
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = sessionStorage.getItem("id_mascota")
+            var empleado = sessionStorage.getItem("id_empleado")
+            sessionStorage.setItem("id_mascota", id_mascota)
+
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+        });
+        
+
+        var validar_reserva = function (fecha, servicio, hora, id_cliente, id_mascota, empleado) {
+            if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined) && (empleado != "" && empleado != null && empleado != undefined)) {
+                var urlValidate = "/reserva/validarDatos/"
+                $.ajax({
+                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado, 'id_reserva': id_reserva,'action': 'E'},
+                    url: urlValidate,
+                    success: function (response) {
+                        if (response.mensaje != "") {                          
+                            warning_registro(response.mensaje)
+                            $("#form").find("#edit_button").addClass("d-none")
+                        } else {
+                            $("#form").find("#edit_button").removeClass("d-none")
+                        }
+                    },
+                    error: function (response) {
+
+                    }
+                })
+            }
+        }
+
+        $('#id_cliente').select2({
+            placeholder: 'Seleccione un Cliente',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        });
+    })
+
+</script>
