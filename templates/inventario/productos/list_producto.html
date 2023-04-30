@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block title %} Lista Productos {% endblock title %}
+{% block title %} Producto Central {% endblock title %}
 
 {% block css %}
 {{ block.super }}
@@ -17,13 +17,13 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1>Lista de Productos
+        <h1>Producto Central
         </h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
-          <li class="breadcrumb-item active">Productos</li>
+          <li class="breadcrumb-item active">Producto Central</li>
         </ol>
       </div>
     </div>
@@ -37,38 +37,36 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            {% if perms.productos.add_productos %}
-            <button class="btn btn-primary float-right" onclick="abrir_modal_creacion('/producto/add/');">
-              Agregar Producto
-            </button>
-            {% endif %}
-
-            <div class="float-left">
-              <div class="wrap">
-                <div class="input-group">
-                  <input type="search" class="form-control searchTerm" id="searchTerm"
-                    placeholder="Buscar por nombre de producto, codigo" data-toggle="tooltip" data-placement="top"
-                    title="Buscar por nombre de producto, codigo">
-                  <div class="input-group-append">
-                    <button type="button" class="btn btn-default searchButton" type="button" id="busqueda">
-                      <i class="fa fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div class="card-header">        
           <!-- /.card-header -->
           <div class="card-body">
-            <table id="list_producto" class="table table-bordered table-hover">
+            <table id="list_producto_detalle" class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th>Codigo</th>
                   <th>Nombre Producto</th>
                   <th>Descripción</th>
-                  <th>Stock Total</th>
-                  <th>Acciones</th>
+                  <th>Stock Actual</th>
+                  <th>Deposito</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+
+            <div class="card-body">
+              <h2>Lista de Productos Trasladados</h2> 
+            <table id="list_producto_movido" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nombre Producto</th>
+                  <th>Descripción</th>
+                  <th>Stock Trasladado</th>
+                  <th>Deposito</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,112 +99,170 @@
     $('input').on("cut copy paste", function (e) {
       e.preventDefault();
     });
+    var stock_cero = parseInt("{{stck_cero }}")
+    var list_producto = {
+        detalle: []
+    }
 
-    var get_list = function (busqueda) {
-      $("#list_producto").DataTable({
-        destroy: true,
-        searching: false,
-        pageLength: 10,
-        ajax: {
-          url: "/producto/list_general_ajax/",
-          type: 'GET',
-          datatype: 'json',
-          data: { 'busqueda': busqueda },
-          error: function (data) {
-            $.fn.DataTable.ext.errorMode = 'none'
-          }
-        },
-        columns: [
-          {
+    var producto_movido = {
+        detalle: {}
+    }
+
+    list_producto.detalle = {{ producto_detalle | safe }};
+    producto_movido.detalle = {{ producto_movido | safe }};
+
+$('form input').on("cut copy paste", function (e) {
+    e.preventDefault();
+});
+
+$("#list_producto_detalle").DataTable({
+    destroy: true,
+    dom: 'Bfrtip',
+    buttons: [],
+    searching: false,
+    data: list_producto.detalle,
+    pageLength: 10,
+    paging: false,
+    bPaginate: false,
+    columns: [
+        {
             name: 'Codigo',
-            data: 'codigo',
-          },
-          {
+            data: 'id',
+        },
+        {
             name: 'Nombre Producto',
             data: 'nombre',
-          },
-          {
+        },
+        {
             name: 'Descripción',
             data: 'descripcion',
-          },
-          {
-            name: 'Stock Total',
-            data: 'stock_total',
-          },
-          {
+        },
+        {
+            name: 'Stock Actual',
+            data: 'stock_actual',
+        },
+        {
+            name: 'Deposito',
+            data: 'deposito',
+        },
+        {
             name: 'Acciones',
             data: 'id',
             render: function (data) {
-              console
-              var buttons = "";
-              {% if perms.productos.change_producto %}
-              buttons += '<button class="btn btn-warning btn-circle btn-sm" onclick="abrir_modal_edicion(\'/producto/edit/' + data + '/\')">\
-                                            <a style="color: black"> Editar </a>\
-                                        </button>';
-              {% endif %}
+                {% if perms.producto.add_producto %}
+                    if(stock_cero != 0){
+                        return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/producto/mover/' + data + '/\');">\
+                        Mover\
+                            </button>';
+                    }
+                {% endif %}
 
-              // {% if perms.productos.view_producto %}
-              // buttons += '<button class="btn btn-primary" >\
-              //                               <a href="/producto/listDetalle/' + data + '/" style="color: white">\
-              //                                   Ver Detalle\
-              //                               </a>\
-              //                           </button >';
-              // {% endif %}
-
-
-              return buttons;
+                return "-";
+                
             }
-          }
+        }
 
-        ],
-        columnDefs: [{
-          targets: [2, 4], // column index (start from 0)
-          orderable: false, // set orderable false for selected columns
-        }],
-        language: {
-          decimal: "",
-          emptyTable: "Sin resultados encontrados",
-          info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-          infoEmpty: "Mostrando 0 de 0 Entradas",
-          infoFiltered: "(Filtrado de _MAX_ total entradas)",
-          infoPostFix: "",
-          thousands: ",",
-          lengthMenu: "Mostrar _MENU_ Entradas",
-          loadingRecords: "Cargando...",
-          processing: "Procesando...",
-          search: "Buscar:",
-          zeroRecords: "Sin resultados encontrados",
-          paginate: {
+    ],
+    columnDefs: [{
+        targets: [2, 5], // column index (start from 0)
+        orderable: false, // set orderable false for selected columns
+    }],
+    serverSide: false,
+    language: {
+        decimal: "",
+        emptyTable: "No hay información",
+        info: "",
+        infoEmpty: "",
+        infoFiltered: "(Filtrado de _MAX_ total entradas)",
+        infoPostFix: "",
+        thousands: ",",
+        lengthMenu: "Mostrar _MENU_ Entradas",
+        loadingRecords: "Cargando...",
+        processing: "Procesando...",
+        search: "Buscar:",
+        zeroRecords: "Sin resultados encontrados",
+        paginate: {
             first: "Primero",
             last: "Ultimo",
             next: "Siguiente",
             previous: "Anterior",
-          },
         },
+    },        
+  })
 
-      })
 
-    }
+  $("#list_producto_movido").DataTable({        
+    destroy: true,
+    dom: 'Bfrtip',
+    buttons: [],
+    searching: false,
+    data: producto_movido.detalle,
+    pageLength: 10,        
+    columns: [
+        {
+            name: 'Codigo',
+            data: 'codigo',
+        },
+        {
+            name: 'Nombre Producto',
+            data: 'nombre',
+        },
+        {
+            name: 'Descripción',
+            data: 'descripcion',
+        },
+        {
+            name: 'Stock Trasladado',
+            data: 'stock_movido',
+        },
+        {
+            name: 'Deposito',
+            data: 'deposito',
+        },
+        {
+            name: 'Acciones',
+            data: 'id',
+            render: function (data) {
+                {% if perms.producto.add_producto %}
+                    return '<button class="btn btn-warning">\
+                                                    <a href="/producto/moverGeneral/' + data + '/" style="color: black">\
+                                                        Mover al Central\
+                                                    </a>\
+                                                </button>';
+                {% endif %}
 
-    var query = ""
+                return "-";
+                
+            }
+        }
 
-    get_list(query);
-
-    $("#searchTerm").change(function () {
-      var busqueda = $("#searchTerm").val()
-      sessionStorage.setItem("busqueda", busqueda)
-    })
-
-    $("#busqueda").click(function () {
-      var busqueda = sessionStorage.getItem("busqueda")
-      if (busqueda == "" || busqueda == undefined || busqueda == null) {
-        busqueda = "";
-        get_list(busqueda)
-      }
-      else {
-        get_list(busqueda)
-      }
-    })
+    ],
+    columnDefs: [{
+        targets: [2, 4], // column index (start from 0)
+        orderable: false, // set orderable false for selected columns
+    }],
+    serverSide: false,
+    language: {
+        decimal: "",
+        emptyTable: "No hay información",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        infoEmpty: "Mostrando 0 de 0 Entradas",
+        infoFiltered: "(Filtrado de _MAX_ total entradas)",
+        infoPostFix: "",
+        thousands: ",",
+        lengthMenu: "Mostrar _MENU_ Entradas",
+        loadingRecords: "Cargando...",
+        processing: "Procesando...",
+        search: "Buscar:",
+        zeroRecords: "Sin resultados encontrados",
+        paginate: {
+            first: "Primero",
+            last: "Ultimo",
+            next: "Siguiente",
+            previous: "Anterior",
+        },
+    },
+  });
 
     {% if messages %}
       {% for message in messages %}

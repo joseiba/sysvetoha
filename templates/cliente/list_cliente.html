@@ -162,13 +162,18 @@
                         render: function (data) {
 
                             var buttons = "";
-
+                            {% if perms.cliente.change_cliente %}
                             buttons +=  '<button class="btn btn-warning mr-1" onclick="abrir_modal_edicion(\'/cliente/editCliente/' + data + '/\')">\
                                             <a style="color: black"> Editar </a>\
                                         </button>';
+                                        {% endif %}
+
+                                        {% if perms.cliente.delete_cliente %}
                             buttons += '<button class="btn btn-danger"" onclick="abrir_modal_eliminacion(\'/cliente/bajaCliente/' + data + '/\');">\
                                                         Dar de baja\
                                         </button>';
+
+                                        {% endif %}
                             // {% if perms.cliente.change_cliente %}
                             //     buttons +=  '<button class="btn btn-warning">\
                             //                             <a href="/cliente/editCliente/' + data + '/" style="color: black">\

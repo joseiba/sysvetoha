@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 import time
 
 from apps.usuario.tests import LoginFormTest
-from vetoho.settings import URL_BASE_TEST_FUNTIONAL
+from config.settings import URL_BASE_TEST_FUNTIONAL
 
 class ClienteFormTest(LiveServerTestCase):
 
@@ -15,7 +15,7 @@ class ClienteFormTest(LiveServerTestCase):
         time.sleep(2)
 
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/vetohouracion/listCiudades/')
+        driver.get(URL_BASE_TEST_FUNTIONAL + '/configuracion/listCiudades/')
         time.sleep(2)
 
         add = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-block btn-primary']")

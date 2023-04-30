@@ -104,13 +104,15 @@ a.dropdown-item:hover {
           <div class="card">            
             <div class="card-header">
               <div class="float-left">
-                <form >
+                <form action="{% url 'mascota:search_mascota' %}" method="GET">
                   <div class="input-group">
-                      <input type="search" class="form-control form-control-lg" id="searchTerm"  data-toggle="tooltip" data-placement="top"
+                      <input type="search" class="form-control form-control-lg" id="searchTerm"  
+                      data-toggle="tooltip" data-placement="top"
                       title="Buscar por nombre mascota, nombre o apellido cliente"
+                      name="q" value="{{ request.GET.q }}"
                       placeholder="Buscar"/>
                       <div class="input-group-append">
-                          <button type="button" id="busqueda" class="btn btn-lg btn-default">
+                          <button type="submit" id="busqueda" class="btn btn-lg btn-default">
                               <i class="fa fa-search"></i>
                           </button>
                       </div>
@@ -171,7 +173,7 @@ a.dropdown-item:hover {
                               {% if perms.mascota.view_mascota %}
   
                                   <a class="btn btn-outline-warning ml-3 mr-3 mb-3"
-                                      href="#">Actualizar Ficha
+                                    href="{% url 'mascota:edit_ficha_medica' mascota.id %}">Actualizar Ficha
                                       Médica
                                   </a>
                               {% endif %}
@@ -225,139 +227,8 @@ a.dropdown-item:hover {
         $('input').on("cut copy paste",function(e) {
             e.preventDefault();
         });
-
-        var get_list = function (busqueda) {
-            $("#list_cliente").DataTable({
-                destroy: true,
-                //dom: 'Bfrtip',
-                // buttons: [                
-                //     {
-                //         extend: 'pdfHtml5',
-                //         text: 'Exportar PDF',
-                //         exportOptions: {
-                //             columns: [0,1]
-                //         }
-                //     },
-                // ],
-                searching: false,
-                pageLength: 10,
-                ajax: {
-                    url: "/cliente/get_list_client/",
-                    type: 'GET',
-                    datatype: 'json',
-                    data: {'busqueda': busqueda},
-                    error: function (data) {
-                        $.fn.DataTable.ext.errorMode = 'none'
-                    }
-                },
-                columns: [
-                    {
-                        name: 'Nombres',
-                        data: 'nombre',
-                    },
-                    {
-                        name: 'Apellidos',
-                        data: 'apellido',
-                    },
-                    {
-                        name: 'Cédula',
-                        data: 'cedula',
-                    },
-                    {
-                        name: 'Telefono',
-                        data: 'telefono',
-                    },
-                    {
-                        name: 'Dirección',
-                        data: 'direccion',
-                    },
-                    {
-                        name: 'Ciudad',
-                        data: 'ciudad',
-                    },
-                    {
-                        name: 'Acciones',
-                        data: 'id',
-                        render: function (data) {
-
-                            var buttons = "";
-
-                            buttons +=  '<button class="btn btn-warning mr-1" onclick="abrir_modal_edicion(\'/cliente/editCliente/' + data + '/\')">\
-                                            <a style="color: black"> Editar </a>\
-                                        </button>';
-                            buttons += '<button class="btn btn-danger"" onclick="abrir_modal_eliminacion(\'/cliente/bajaCliente/' + data + '/\');">\
-                                                        Dar de baja\
-                                        </button>';
-                            // {% if perms.cliente.change_cliente %}
-                            //     buttons +=  '<button class="btn btn-warning">\
-                            //                             <a href="/cliente/editCliente/' + data + '/" style="color: black">\
-                            //                                 Editar\
-                            //                             </a>\
-                            //                         </button>';
-                            // {% endif %}
-
-                            // {% if perms.cliente.delete_cliente %}
-                            //     buttons += '<button class="btn btn-danger">\
-                            //                             <a class="confirm-delete pointer" data-id="' + data + '" data-name-cliente="' + data + '"\
-                            //                                 data-toggle="modal" data-target="#confirmDeleteModal">\
-                            //                                 Baja\
-                            //                             </a>\
-                            //                         </button>';
-                            // {% endif %}
-
-                            return buttons;
-                        }
-                    }
-
-                ],
-                columnDefs: [{
-                    targets: [3, 4, 6], // column index (start from 0)
-                    orderable: false, // set orderable false for selected columns
-                }],
-                serverSide: false,
-                language: {                    
-                    decimal: "",
-                    emptyTable: "Sin resultados encontrados",
-                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    infoEmpty: "Mostrando 0 de 0 Entradas",
-                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
-                    infoPostFix: "",
-                    thousands: ",",
-                    lengthMenu: "Mostrar _MENU_ Entradas",
-                    loadingRecords: "Cargando...",
-                    processing: "Procesando...",
-                    search: "Buscar:",
-                    zeroRecords: "Sin resultados encontrados",
-                    paginate: {
-                        first: "Primero",
-                        last: "Ultimo",
-                        next: "Siguiente",
-                        previous: "Anterior",
-                    },
-                },
-
-            })
-        }
-
-        var query = ""
         
-        get_list(query);
 
-        $("#searchTerm").change(function(){
-            var busqueda = $("#searchTerm").val()
-            sessionStorage.setItem("busqueda", busqueda)
-        })
-
-        $("#busqueda").click(function(){
-            var busqueda = sessionStorage.getItem("busqueda")
-            if(busqueda == "" || busqueda == undefined || busqueda == null){
-                busqueda = "";
-                get_list(busqueda)
-            }
-            else{
-                get_list(busqueda)
-            }
-        }) 
 
         {% if messages %}
           {% for message in messages %}

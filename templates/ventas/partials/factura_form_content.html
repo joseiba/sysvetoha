@@ -199,13 +199,12 @@
                             <div class="d-flex">
                                 <label><strong>Efectivo:</strong></label>
                                 <input class="ml-2" type="checkbox"
-                                    value="C" name="contado"
-                                    >
+                                    value="C" name="contado" {%if venta.contado_pos == 'C'%} checked {% endif %}>
                             </div>
                             <div class="ml-4 d-flex">
                                 <label><strong>Pos:</strong></label>
                                 <input class="ml-2" type="checkbox"
-                                    value="P" name="pos">
+                                    value="P" name="pos" {%if venta.contado_pos == 'P'%} checked {% endif %}>
                             </div>
                             
                         </div>
@@ -251,7 +250,7 @@
                         <label><strong>Número Factura</strong></label>
 
                         <div class="field item">
-                            <input class="form-control" type="text" name="nro_factura" value="{{ nro_factura }}" readonly disabled>
+                            <input class="form-control" type="text" name="nro_factura" {%if accion == 'A'%} value="{{ nro_factura }}" {% else %} value="{{ venta.nro_factura }}" {% endif %}  readonly disabled>
                         </div>
 
                     </div>

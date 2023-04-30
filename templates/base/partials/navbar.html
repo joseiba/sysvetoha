@@ -70,40 +70,64 @@
                         </li>
                     </ul>
                 </li> -->
-                <li class="nav-item">
-                    <a href="{% url 'list_cliente' %}" class="nav-link">
-                    <i class="nav-icon far fa-id-card"></i>
-                        <p>Clientes</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-light fa-paw"></i>
-                        <p> Mascotas <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'mascota:list_especie' %}" class="nav-link">
-                                
-                                <p>Lista de Especies</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'mascota:list_raza' %}" class="nav-link">
-                                
-                                <p>Lista de Razas</p>
-                            </a>
-                        </li>
-                        {% comment %} <li class="nav-item">
-                            <a href="{% url 'mascota:list_mascotas' %}" class="nav-link">                                
-                                <p>Lista de Mascotas</p>
-                            </a>
-                        </li> {% endcomment %}
-                    </ul>
-                </li>
+                {% if perms.cliente.view_cliente %}
 
-                {% comment %} <li class="nav-item">
+                    <li class="nav-item">
+                        <a href="{% url 'list_cliente' %}" class="nav-link">
+                        <i class="nav-icon far fa-id-card"></i>
+                            <p>Clientes</p>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if perms.reserva.view_reserva %}
+                    <li class="nav-item">
+                        <a href="{% url 'reserva:list_reserva' %}" class="nav-link">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>Agendamientos</p>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.mascota.view_especie or perms.mascota.view_raza or perms.mascota.view_mascota %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-light fa-paw"></i>
+                            <p> Mascotas <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {% if perms.mascota.view_especie %}
+
+                                <li class="nav-item">
+                                    <a href="{% url 'mascota:list_especie' %}" class="nav-link">
+                                        
+                                        <p>Lista de Especies</p>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if perms.mascota.view_raza %} 
+                                <li class="nav-item">
+                                    <a href="{% url 'mascota:list_raza' %}" class="nav-link">
+                                        
+                                        <p>Lista de Razas</p>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if perms.mascota.view_mascota %}
+
+                                <li class="nav-item">
+                                    <a href="{% url 'mascota:list_mascotas' %}" class="nav-link">                                
+                                        <p>Lista de Mascotas</p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-shopping-cart"></i>
                         <p> Ventas <i class="right fas fa-angle-left"></i>
@@ -117,9 +141,9 @@
                             </a>
                         </li>
                     </ul>
-                </li> {% endcomment %}
+                </li>
 
-                {% comment %} <li class="nav-item">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-shopping-bag"></i>
                         <p> Inventario <i class="right fas fa-angle-left"></i>
@@ -136,12 +160,12 @@
                         {% endif %}
 
                         {% if perms.depositos.view_deposito %}
-                        <!-- <li class="nav-item">
+                            <li class="nav-item">
                             <a href="{% url 'deposito:list_deposito' %}" class="nav-link">
                                 <i class="fas fa-shopping-basket"></i>
                                 <p>Depósitos</p>
                             </a>
-                        </li> -->
+                        </li> 
                         {% endif %}
 
                         {% if perms.productos.view_producto %}
@@ -152,225 +176,167 @@
                             </a>
                         </li>
                         {% endif %}
+
+                        {% if perms.producto.view_inventario %}
+                        <li class="nav-item">
+                            <a href="{% url 'producto:list_ajustar_inventario' %}" class="nav-link">
+                                <i class="fas fa-shopping-basket"></i>
+                                <p>Ajustar Inventario</p>
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
-                </li> {% endcomment %}
-                <!-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fab fa-cc-amazon-pay"></i>
-                                <p>Deudas a Pagar</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-shopping-cart"></i>
-                        <p> Ventas <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-shopping-cart"></i>
-                                <p>Ventas</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <p>Deudas a Cobrar</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p> Mercaderias <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Telas</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Telas en Oferta</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Categorias</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Diseños</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                </li> 
+                {% if perms.compras.view_proveedor %}
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cash-register"></i>
-                        <p> Caja <i class="right fas fa-angle-left"></i>
+                        <i class="nav-icon fas fa-shopping-bag"></i>
+                        <p> Compras <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-cash-register"></i>
-                                <p>Apertura Caja</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-landmark"></i>
-                                <p>Registrar Banco</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-hand-holding-usd"></i>
-                                <p>Registrar Movimiento</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-clipboard-list"></i>
-                        <p> Inventario <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-clipboard-list"></i>
-                                <p>Realizar Inventario</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>-->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p> Usuarios <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'list_usuarios' %}" class="nav-link">
-                                <i class="fas fa-users"></i>
-                                <p>Usuarios</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'add_rol' %}" class="nav-link">
-                                <i class="fas fa-clipboard"></i>
-                                <p>Roles</p>
-                            </a>
-                        </li>
-                    </ul>
-                    {% if perms.usuario.change_user %}
-                        <ul class="nav nav-treeview">
+                        {% if perms.compras.view_proveedor  %}
                             <li class="nav-item">
-                                <a href="{% url 'change_password' user.id %}" class="nav-link">
-                                    <i class="fas fa-pen"></i>
-                                    <p>Cambiar Contraseña</p>
+                                <a href="{% url 'compra:list_proveedor' %}" class="nav-link">
+                                    <i class="fas fa-store-alt"></i>
+                                    <p>Lista de Proveedores</p>
+                                </a>
+                            </li>
+                        {% endif %}                                                             
+                    </ul>
+                </li> 
+                {% endif %}
+
+                {% if perms.usuario.view_user %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p> Usuarios <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        {% if perms.usuario.view_user %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'list_usuarios' %}" class="nav-link">
+                                        <i class="fas fa-users"></i>
+                                        <p>Usuarios</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if perms.usuario.add_user  %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'add_rol' %}" class="nav-link">
+                                        <i class="fas fa-clipboard"></i>
+                                        <p>Roles</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if perms.usuario.change_user %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'change_password' user.id %}" class="nav-link">
+                                        <i class="fas fa-pen"></i>
+                                        <p>Cambiar Contraseña</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </li> 
+                {% endif %}    
+                {% if perms.configuracion.add_confiempresa or perms.configuracion.view_confiempresa %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-box"></i>
+                            <p> Configuraciones <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        {% if perms.configuracion.view_confiempresa %}
+
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'list_ciudades' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Lista de Ciudades</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if perms.configuracion.view_confiempresa %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'list_servicio' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Lista de Servicios</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if perms.configuracion.view_confiempresa %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'list_empleado' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Lista de Empleados</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if perms.configuracion.view_confiempresa %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'tipo_vacuna:list_vacunas' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Lista de Vacunas</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if perms.configuracion.view_confiempresa %}
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'configuracion_inicial:confi_inicial' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Configuración Inicial</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                        <!--<ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>IVA's</p>
+                                </a>
+                            </li>
+                        </ul>-->
+                        <!-- <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Timbrado</p>
                                 </a>
                             </li>
                         </ul>
-                    {% endif %}
-                </li> 
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-box"></i>
-                        <p> Configuraciones <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'list_ciudades' %}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Lista de Ciudades</p>
-                            </a>
-                        </li>
-                    </ul>
-                    
-                    {% if perms.configuracion.view_servicio %}
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'list_servicio' %}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Lista de Servicios</p>
-                            </a>
-                        </li>
-                    </ul>
-                    {% endif %}
-
-                    {% if perms.empleado.view_empleado %}
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'list_empleado' %}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Lista de Empleados</p>
-                            </a>
-                        </li>
-                    </ul>
-                    {% endif %}
-
-                    {% if perms.configuracion.view_confiempresa %}
-                    {% comment %} <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'configuracion_inicial:confi_inicial' %}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Configuración Inicial</p>
-                            </a>
-                        </li>
-                    </ul> {% endcomment %}
-                    {% endif %}
-                    <!--<ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>IVA's</p>
-                            </a>
-                        </li>
-                    </ul>-->
-                    <!-- <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Timbrado</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Egreso Máximo</p>
-                            </a>
-                        </li>
-                    </ul> -->
-                </li>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Egreso Máximo</p>
+                                </a>
+                            </li>
+                        </ul> -->
+                    </li>
+                {% endif %}    
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -1,5 +1,7 @@
-from audioop import reverse
+from django.urls import reverse
 from django.db import models
+
+from apps.inventario.productos.models import Producto
 
 # Create your models here.
 class Servicio(models.Model):

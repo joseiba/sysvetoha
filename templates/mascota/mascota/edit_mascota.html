@@ -260,6 +260,13 @@
       $('form input').on("cut copy paste", function (e) {
           e.preventDefault();
       });
+
+      {% if messages %}
+      {% for message in messages %}
+        var text = "{{ message }}";
+        add_edit_registro(text);
+      {% endfor %}
+    {% endif %}
     })
 </script>
 

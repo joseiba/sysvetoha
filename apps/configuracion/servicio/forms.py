@@ -21,3 +21,7 @@ class ServicioForm(forms.ModelForm):
             'min_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'min_serv', 
                 'placeholder': 'Tiempo del servicio en minutos', 'autocomplete': 'off','required': 'required','onkeyup':'aceptarNumeros(this)'})
 		}
+        
+
+
+        

@@ -1,0 +1,181 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Agregar Ajuste {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Agregar Ajuste
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+          <li class="breadcrumb-item active">Agregar Ajuste</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="tile mb-4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <h6 class="card-header">Detalle Inventario</h6>
+                                <div class="card-body">
+                                    <div class="form-group" style="width: 100%;">
+                                        <label> <strong> Buscar Producto:</strong> </label>
+                                            <span class="input-group-append">
+                                                <select class="form-control" id="search">
+                                                    <option>Buscar productos</option>
+                                                </select>
+                                            </span>                                                    
+                                    </div>
+                                    <div class="table-responsive">
+                                        <button type="button"
+                                            class="mb-2 py-0 btn btn-danger btn-sm btnRemoveAll"
+                                            style="height: 20px; align-content: center">
+                                            <label>Eliminar todo</label>
+                                        </button>
+                                        <table class="table table-bordered" id="tblAjuste"
+                                            style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <td class="text-center">Cod</td>
+                                                    <td class="text-center">Nombre Producto</td>
+                                                    <td class="text-center">Descripción</td>
+                                                    <td class="text-center">Stock Sistema</td>
+                                                    <td class="text-center">Stock Fisico</td>
+                                                    <td class="text-center">Diferencia</td>
+                                                    <td>Eliminar</td>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile-footer mt-3">
+                        <button type="" class="btn btn-primary" style="color: white"><i
+                                class="fa fa-fw fa-lg fa-check-circle"></i>Registrar Ajuste
+                        </button>&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-secondary" href="{% url 'producto:list_ajustar_inventario' %}">
+                            <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
+                    </div>
+                </div>
+            </form>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script src="{% static 'base/js/sweetalert.min.js' %}"></script>
+<script src="{% static 'base/js/functions/functions.js' %} "></script>
+<script src="{% static 'base/js/inventario/form_ajuste.js' %} "></script>
+<script>
+  $(function () {
+    $('input').on("cut copy paste", function (e) {
+      e.preventDefault();
+    });
+
+    $('#tblAjuste').DataTable({
+        ordering: false,
+        language: {
+            decimal: "",
+            emptyTable: "No hay información",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            infoEmpty: "Mostrando 0 de 0 Entradas",
+            infoFiltered: "(Filtrado de _MAX_ total entradas)",
+            infoPostFix: "",
+            thousands: ",",
+            lengthMenu: "Mostrar _MENU_ Entradas",
+            loadingRecords: "Cargando...",
+            processing: "Procesando...",
+            search: "Buscar:",
+            zeroRecords: "Sin resultados encontrados",
+            paginate: {
+                first: "Primero",
+                last: "Ultimo",
+                next: "Siguiente",
+                previous: "Anterior",
+            },
+        },
+    });
+
+    $('#search').select2({
+        language: "es",
+        ajax: {
+            type: 'POST',
+            url: '/producto/get_producto_inventario/',
+            delay: 250,
+            data: function (params) {
+                return {
+                    term: params.term,
+                    action: 'search_products'
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                }
+            },
+        },
+        language: {
+            inputTooShort: function () {
+                return '';
+            },
+            searching: function () {
+                return 'Buscando...'
+            },
+            noResults: function(){
+                return 'No se ha encontrado ningún resultado'
+            }
+        }
+    })
+
+    {% if messages %}
+      {% for message in messages %}
+        var text = "{{ message }}";
+        add_edit_registro(text);
+      {% endfor %}
+    {% endif %}
+  })
+</script>
+{% endblock js_page %}

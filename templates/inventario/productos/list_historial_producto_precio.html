@@ -1,0 +1,202 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Historico Precio {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Historico Precio
+        </h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+          <li class="breadcrumb-item active">Historico Precio</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            {% if perms.productos.add_productos %}
+            <button class="btn btn-primary float-right" onclick="abrir_modal_creacion('/producto/add/');">
+              Agregar Producto
+            </button>
+            {% endif %}
+
+            <div class="float-left">
+              <div class="wrap">
+                <div class="input-group">
+                  <input type="search" class="form-control searchTerm" id="searchTerm"
+                    placeholder="Buscar" data-toggle="tooltip" data-placement="top"
+                    title="Busca por nombre de producto o fecha">
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-default searchButton" type="button" id="busqueda">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="list_producto" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                    <th>Nombre Producto</th>
+                    <th>Descripción</th>
+                    <th>Precio Compra</th>
+                    <th>Fecha Compra</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="creacion" role="dialog"></div>
+
+<div class="modal fade" id="edicion" role="dialog">
+</div>
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+<!-- Datatables -->
+<script>
+  $(function () {
+    $('input').on("cut copy paste", function (e) {
+      e.preventDefault();
+    });
+
+    var id = "{{ id_producto }}"
+
+    var get_list = function (busqueda) {
+        $("#list_producto").DataTable({
+            destroy: true,
+            dom: 'Bfrtip',
+            buttons: ['pdf'],
+            searching: false,
+            pageLength: 10,
+            ajax: {
+                url: "/producto/get_historico_producto/" + id,
+                type: 'GET',
+                datatype: 'json',
+                data: { 'busqueda': busqueda },
+                error: function (data) {
+                    $.fn.DataTable.ext.errorMode = 'none'
+
+                }
+            },
+            columns: [                  
+                {
+                    name: 'Nombre Producto',
+                    data: 'nombre',
+                },
+                {
+                    name: 'Descripción',
+                    data: 'descripcion',
+                },
+                {
+                    name: 'Precio Compra',
+                    data: 'precio_compra',
+                    render: function(data){
+                        return 'Gs. ' + data;
+                    },
+                },
+                {
+                    name: 'Fecha Compra',
+                    data: 'fecha_compra',
+                },
+            ],
+            columnDefs: [{
+                targets: [2], // column index (start from 0)
+                orderable: false, // set orderable false for selected columns
+            }],
+            serverSide: false,
+            language: {
+                decimal: "",
+                emptyTable: "No hay información",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
+                infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ Entradas",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar:",
+                zeroRecords: "Sin resultados encontrados",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Siguiente",
+                    previous: "Anterior",
+                },
+            },
+
+        })
+    }
+
+    var query = ""
+
+    get_list(query);
+
+
+    $("#searchTerm").change(function () {
+      var busqueda = $("#searchTerm").val()
+      sessionStorage.setItem("busqueda", busqueda)
+    })
+
+    $("#busqueda").click(function () {
+      var busqueda = sessionStorage.getItem("busqueda")
+      if (busqueda == "" || busqueda == undefined || busqueda == null) {
+        busqueda = "";
+        get_list(busqueda)
+      }
+      else {
+        get_list(busqueda)
+      }
+    })
+
+    {% if messages %}
+      {% for message in messages %}
+        var text = "{{ message }}";
+        add_edit_registro(text);
+      {% endfor %}
+    {% endif %}
+  })
+</script>
+{% endblock js_page %}

@@ -2,7 +2,8 @@ from django.db import models
 from datetime import date, datetime
 from apps.cliente.models import Cliente
 
-from vetoho.settings import MEDIA_URL, STATIC_URL
+from config.settings import MEDIA_URL, STATIC_URL
+from apps.configuracion.tipo_vacuna.models import TipoVacuna
 
 url_pets_image = 'base/img/test.jfif'
 
@@ -114,5 +115,123 @@ class Mascota(models.Model):
     def save(self, *args, **kwargs):
         is_new = not self.id
         super().save(*args, **kwargs)
-        # if is_new:
-        #     FichaMedica.objects.create(id_mascota=self)        
+        if is_new:
+            FichaMedica.objects.create(id_mascota=self)        
+        
+#Modelos de ficha medica
+
+class FichaMedica(models.Model):
+    """[summary]
+
+    Args:
+        models ([FichaMedica]): [Contiene la informacion de la fichas medicas]                
+    """    
+    fecha_create = models.DateTimeField(auto_now=True, blank=True)
+    id_mascota = models.ForeignKey('Mascota', on_delete=models.CASCADE, null=False)
+    
+    class Meta:
+        verbose_name = "Ficha Medica"
+        verbose_name_plural = "Fichas Medicas"
+
+    def __str__(self):
+        return self.id_mascota.nombre_mascota
+    
+    def save(self, *args, **kwargs):
+        is_new = not self.id
+        super().save(*args, **kwargs)
+        if is_new:
+            Vacuna.objects.create(id_ficha_medica=self)
+            Consulta.objects.create(id_ficha_medica=self)
+            Antiparasitario.objects.create(id_ficha_medica=self)
+
+
+
+class Vacuna(models.Model):
+    """[summary]
+
+    Args:
+        models ([Vacuna]): [Contiene la informacion de la Vacuna]                
+    """ 
+    proxima_vacuna = models.CharField(max_length=500,null = True, blank = True)
+    id_vacuna = models.ForeignKey(TipoVacuna, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_aplicacion = models.CharField(max_length=500, null = True, blank = True)
+    fecha_proxima_aplicacion = models.CharField(max_length=500,null = True, blank = True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        verbose_name = "Ficha Medica"
+        verbose_name_plural = "Fichas Medicas"
+
+    def __str__(self):
+        return self.id_ficha_medica.id_mascota.nombre_mascota
+
+
+class Consulta(models.Model):
+    """[summary]
+
+    Args:
+        models ([Consulta]): [Contiene la informacion de la Consulta]                        
+    """ 
+    diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=True)
+    
+    class Meta:
+        verbose_name = "Consulta"
+        verbose_name_plural = "Consultas"
+
+    def __str__(self):
+        return self.id_ficha_medica.id_mascota.nombre_mascota
+
+
+class Antiparasitario(models.Model):
+    """[summary]
+
+    Args:
+        models ([Antiparasitario]): [Contiene la informacion de los antiparasitarios]                        
+    """ 
+    antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_antiparasitario= models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=True)
+    
+    class Meta:
+        verbose_name = "Antiparasitario"
+        verbose_name_plural = "Antiparasitarios"
+
+    def __str__(self):
+        return self.id_ficha_medica.id_mascota.nombre_mascota
+
+
+class HistoricoFichaMedica(models.Model):
+    """[summary]
+
+    Args:
+        models ([HistoricoFichaMedica]): [Contiene la informacion del historico de la ficha medica]                        
+    """
+    vacuna = models.ForeignKey(TipoVacuna, on_delete=models.CASCADE, null=True, blank=True)
+    proxima_vacunacion = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    fecha_aplicacion = models.CharField(max_length=500,null = True, blank = True)
+    fecha_proxima_aplicacion = models.CharField(max_length=500,null = True, blank = True)
+    antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    peso = models.CharField(max_length = 200,default = '-', null = True, blank = True)
+    fecha_alta = models.CharField(max_length=500,null = True, blank = True)
+    historico_cargado_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    id_mascota = models.ForeignKey('Mascota', on_delete=models.CASCADE, null=True, blank=True)
+    id_ficha_medica = models.IntegerField(null = True, blank = True)
+
+    class Meta:
+        verbose_name = "Historico Ficha Medicas"
+        verbose_name_plural = "Historicos Fichas Medicas"
+
+    """def __str__(self):
+        return self.id_ficha_medica.id_mascota.nombre_mascota"""
+
+                

@@ -88,11 +88,12 @@ var factura = {
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {
-                        if(action === "A"){
+                        // if(action === "A"){
+                        //     return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
+                        // }else{
+                        //     return row.cantidad;
+                        // }
                             return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                        }else{
-                            return row.cantidad;
-                        }
                     }            
                 },
                 {
@@ -101,12 +102,13 @@ var factura = {
                     width: "5%",
                     orderable: false,
                     render: function (data, type, row) {
-                        if(action === "A"){
-                            return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
-                        }
-                        else{
-                            return "-"
-                        }
+                        // if(action === "A"){
+                        //     return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
+                        // }
+                        // else{
+                        //     return "-"
+                        // }
+                        return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
                     }
                 },
             ],
@@ -150,8 +152,17 @@ $(function () {
         var data = e.params.data;
 
         data['cantidad'] = 1
-                //se agrega los datos a la estructura
-        factura.add(data)
+        //se agrega los datos a la estructura
+        if (factura.items.products.find(product => product.codigo_producto === data.codigo_producto)){
+            Swal.fire({
+                icon: 'warning',
+                title: 'Atención!',
+                text: 'Por favor, debe seleccionar otro producto.',
+                confirmButtonColor:"#007bff",
+            });
+        } else {
+            factura.add(data)
+        }
         // borra luego de la seleccion
         $(this).val('').trigger('change.select2');
     });

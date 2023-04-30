@@ -103,6 +103,15 @@ urlpatterns = [
 
     #Utiles
     path('utiles/', include(('apps.utiles.urls','configuracion_inicial'), namespace='utiles')),
+    
+    #Vacunas
+    path('configuracion/', include(('apps.configuracion.tipo_vacuna.urls','tipo_vacuna'), namespace='tipo_vacuna')),
+    
+    #Vacunas
+    path('reserva/', include(('apps.agendamientos.urls','reserva'), namespace='reserva')),
+    
+    #Compras
+    path('compra/', include(('apps.compras.urls','compra'), namespace='compra')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

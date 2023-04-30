@@ -1,0 +1,72 @@
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Vacuna</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'tipo_vacuna:add_vacuna' %}" method="post" role="form" id="form">
+            {% csrf_token %}
+            <div class="p-2">
+                <div class="">
+                    <div class="form-group" style="display: grid">
+                        <label>Grupo<span class="required">*</span></label>
+                        {{ form.id_producto }}
+                    </div>
+
+                </div>
+                <div class="">
+                    <div class="form-group">
+                        <label>Nombre Vacuna Dosis<span class="required">*</span></label>
+                        {{ form.nombre_vacuna }}
+                    </div>
+
+                </div>
+                <div class="">
+                    <div class="form-group">
+                        <label>Periodo Aplicacion Meses<span class="required">*</span></label>
+                        {{ form.periodo_aplicacion }}
+                    </div>
+
+                </div>
+                <div class="">
+                    <div class="form-group">
+                        <label>Multiple Aplicaciones<span class="required">*</span></label>
+                        {{ form.multi_aplicaciones }}
+                    </div>
+
+                </div>
+                <div style="color:red;">(*) Campos a completar</div> 
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+        
+        $("#id_producto").select2({
+            language: {
+                    inputTooShort: function () {
+                        return '';
+                    },
+                    searching: function () {
+                        return 'Buscando...'
+                    },
+                    noResults: function(){
+                        return 'No se ha encontrado ningún resultado'
+                    }
+                }
+        })
+    });
+</script>

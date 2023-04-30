@@ -1,0 +1,107 @@
+{% load static %}
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders" style="background-color:#ffc107">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Mover Producto</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="form_edicion" action="{% url 'producto:mover_producto' producto.id %}" method="POST">
+            {% csrf_token %}
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Deposito<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    {{ form.id_deposito }}
+                </div>
+                <div id="alert_id_deposito">
+
+                </div>
+            </div>
+
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Cantidad<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    {{ form.stock }}
+                </div>
+                <div id="alert_stock">
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button id="submitbtn" type="submit" class="btn btn-primary d-none">Mover</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var stock_inicial = $('#stock').val()
+    var stock = $("#stock").val()
+    if ( parseInt(stock_inicial) < parseInt(stock))
+    {
+        $('#form_edicion').find('#submitbtn').addClass('d-none')
+    }
+    else
+    {
+        $('#form_edicion').find('#submitbtn').removeClass('d-none')
+    }
+    $('#id_deposito').change(function () {
+        var deposito = $("#id_deposito").val()
+        if (deposito !== "") 
+        {
+            $('#alert_id_deposito').empty()
+        } 
+        else {
+            if (nombre !== "") 
+            {
+                $('#alert_id_deposito').empty()
+            }
+            else 
+            {
+                $("#alert_id_deposito").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
+
+        }
+    })
+
+    $("input[name='stock']").change(function () {
+        var stock = $("#stock").val()
+        if (parseInt(stock_inicial) < parseInt(stock))
+        {
+            $('#form_edicion').find('#submitbtn').addClass('d-none')
+        }
+        else
+        {
+            $('#form_edicion').find('#submitbtn').removeClass('d-none')
+        }
+        if (stock !== "") 
+        {
+            $('#alert_stock').empty()
+        } 
+        else {
+            if (stock !== "") 
+            {
+                $('#alert_stock').empty()
+            }
+            else 
+            {
+                $("#alert_stock").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
+
+        }
+    })
+
+    $('form input').on("cut copy paste",function(e) {
+        e.preventDefault();
+    });
+</script>

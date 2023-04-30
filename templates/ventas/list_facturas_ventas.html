@@ -163,16 +163,16 @@
                         render: function (data) {
                             var buttons = ""
 
-                            /*{% if perms.venta.change_cabeceraventa and caja_abierta == "S" %}
-                                buttons += '<button class="btn btn-warning">\
-                                                        <a href="/factura/editFacturaVenta/' + data + '/" style="color: black">\
+                            {% if perms.factura.change_cabeceraventa %}
+                                buttons += '<button class="btn btn-warning btn-sm">\
+                                                        <a href="/ventas/editFacturaVenta/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>';
-                            {% endif %}*/
+                                                    </button> ';
+                            {% endif %}
 
                             {% if perms.factura.delete_facturacabeceraventa %}
-                                buttons += '<button class="btn btn-danger" style="color: white" onclick="anular_factura(\'/ventas/anularFacturaVenta/' + data + '/\',\'/ventas/listFacturasVentas\');">Anular\
+                                buttons += '<button class="btn btn-danger btn-sm" style="color: white" onclick="anular_factura(\'/ventas/anularFacturaVenta/' + data + '/\',\'/ventas/listFacturasVentas\');">Anular\
                                                     </button> ';
                             {% endif %}
                             
