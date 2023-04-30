@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-from config.settings import URL_BASE_TEST_FUNTIONAL
+from vetoho.settings import URL_BASE_TEST_FUNTIONAL
 
 class LoginFormTest(LiveServerTestCase):
 

@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 import time
 
 from apps.usuario.tests import LoginFormTest
-from config.settings import URL_BASE_TEST_FUNTIONAL
+from vetoho.settings import URL_BASE_TEST_FUNTIONAL
 
 class ProveedoresFormTest(LiveServerTestCase):
     
