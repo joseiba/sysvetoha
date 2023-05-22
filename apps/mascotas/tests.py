@@ -4,13 +4,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-from apps.usuario.tests import LoginFormTest
-from vetoho.settings import URL_BASE_TEST_FUNTIONAL
+#from vetoho.settings import 'http://127.0.0.1:8000/'
 
 class MAscotasFormTest(LiveServerTestCase):
     # def testEspecieForm(self):        
     #     driver = webdriver.Chrome()
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+    #     driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 		
     #     user_name = driver.find_element('name', 'username')
     #     user_password = driver.find_element('name','password')
@@ -25,7 +24,7 @@ class MAscotasFormTest(LiveServerTestCase):
     #     submit.send_keys(Keys.RETURN)
     #     time.sleep(2)	
 
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + '/mascota/listEspecie/')
+    #     driver.get('http://127.0.0.1:8000/' + '/mascota/listEspecie/')
     #     time.sleep(2)
 
     #     add = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-primary float-right']")
@@ -49,7 +48,7 @@ class MAscotasFormTest(LiveServerTestCase):
     # def testRazaForm(self):       
 
     #     driver = webdriver.Chrome()
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+    #     driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 
     #     user_name = driver.find_element('name', 'username')
     #     user_password = driver.find_element('name','password')
@@ -65,7 +64,7 @@ class MAscotasFormTest(LiveServerTestCase):
     #     time.sleep(2)	
 
 
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + '/mascota/listRaza/')
+    #     driver.get('http://127.0.0.1:8000/' + '/mascota/listRaza/')
     #     time.sleep(2)
 
     #     add = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-primary float-right']")
@@ -95,7 +94,7 @@ class MAscotasFormTest(LiveServerTestCase):
 
     def testMascotaForm(self):
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+        driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 
         user_name = driver.find_element('name', 'username')
         user_password = driver.find_element('name','password')
@@ -110,7 +109,7 @@ class MAscotasFormTest(LiveServerTestCase):
         submit.send_keys(Keys.RETURN)
         time.sleep(2)	       
 
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/mascota/add/')
+        driver.get('http://127.0.0.1:8000/' + '/mascota/add/')
         time.sleep(2)
 
         nombre = driver.find_element('name', 'nombre_mascota')
@@ -147,7 +146,7 @@ class MAscotasFormTest(LiveServerTestCase):
 
     # def testEditForm(self):
     #     driver = webdriver.Chrome()
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+    #     driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 
     #     user_name = driver.find_element('name', 'username')
     #     user_password = driver.find_element('name','password')
@@ -162,7 +161,7 @@ class MAscotasFormTest(LiveServerTestCase):
     #     submit.send_keys(Keys.RETURN)
     #     time.sleep(2)
 
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + 'mascota/edit/1/')
+    #     driver.get('http://127.0.0.1:8000/' + 'mascota/edit/1/')
     #     time.sleep(2)
 
     #     # submit = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-outline-primary ml-3 mr-3 mb-3']")

@@ -2,13 +2,14 @@ from django import forms
 
 from apps.cliente.models import Cliente, Ciudad
 
+aceptar_letas = 'aceptarLetras(this)'
 class CiudadForm(forms.ModelForm):
     class Meta:
         model = Ciudad
         exclude = ['is_active']
         widgets = {
 			'nombre_ciudad' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_ciudad', 
-                'placeholder': 'Nombre de la Ciudad', 'required': 'required','onkeyup':'aceptarLetras(this)', 
+                'placeholder': 'Nombre de la Ciudad', 'required': 'required','onkeyup':aceptar_letas, 
                 'autocomplete': 'off'}),
 		}
 
@@ -23,9 +24,9 @@ class ClienteForm(forms.ModelForm):
         exclude = ['is_active']
         widgets = {
 			'nombre_cliente' : forms.TextInput(attrs={'class':'form-control','autocomplete': 'off',
-                'name': 'nombre_cliente', 'placeholder': 'Nombre del Cliente', 'required': 'required','onkeyup':'aceptarLetras(this)'}),
+                'name': 'nombre_cliente', 'placeholder': 'Nombre del Cliente', 'required': 'required','onkeyup':aceptar_letas}),
 			'apellido_cliente' : forms.TextInput(attrs={'class':'form-control','autocomplete': 'off', 'name': 'apellido_cliente', 
-                'placeholder': 'Apellido del Cliente', 'required': 'required','onkeyup':'aceptarLetras(this)'}),
+                'placeholder': 'Apellido del Cliente', 'required': 'required','onkeyup':aceptar_letas}),
 			'direccion' : forms.TextInput(attrs={'class':'form-control','name': 'direccion', 'placeholder': 'Dirección',
                 'onkeyup':'aceptarNumerosYLetras(this)','type':'text', 'required': 'required', 'autocomplete': 'off'}),
 			'cedula' : forms.TextInput(attrs={'class':'form-control', 'name':'cedula', 'placeholder': 'Nro. Cédula', 

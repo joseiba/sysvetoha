@@ -20,6 +20,7 @@ import json
 from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm, ContraseñaChangeForm
 from apps.usuario.models import User
 from apps.configuracion.configuracion_inicial.models import ConfiEmpresa
+from apps.utiles.views import *
 
 # Create your views here.
 
@@ -80,18 +81,18 @@ def home_user(request):
             de donde se encuentra el template            
         ]
         """  
-    # context = {
-    #     'total_user': total_user(),
-    #     'total_cliente': total_cliente(),
-    #     'total_mascotas': total_mascotas(),
-    #     'total_productos': total_producto(),
-    #     'total_stock_minimo': total_stock_minimo(),
-    #     'total_pro_vencer': total_productos_a_vencer(),
-    #     'total_vacunas_aplicadas' : total_vacunas_aplicadas(),
-    #     'total_reservas_hoy': total_reservas_hoy(),
-    #     'total_proximas_vacunas': total_vacunas_proximas()
-    # }
-    return render(request, "home/index.html")    
+    context = {
+        'total_user': total_user(),
+        'total_cliente': total_cliente(),
+        'total_mascotas': total_mascotas(),
+        'total_productos': total_producto(),
+        'total_stock_minimo': total_stock_minimo(),
+        'total_pro_vencer': total_productos_a_vencer(),
+        'total_vacunas_aplicadas' : total_vacunas_aplicadas(),
+        'total_reservas_hoy': total_reservas_hoy(),
+        'total_proximas_vacunas': total_vacunas_proximas()
+    }
+    return render(request, "home/index.html", context)    
 
 
 @login_required()
@@ -117,8 +118,6 @@ def list_usuarios_ajax(request):
     if _start and _length:
         start = int(_start)
         length = int(_length)
-        page = math.ceil(start / length) + 1
-        per_page = length
 
         usuario = usuario[start:start + length]
 
@@ -158,9 +157,7 @@ def list_usuarios_baja_ajax(request):
     if _start and _length:
         start = int(_start)
         length = int(_length)
-        page = math.ceil(start / length) + 1
-        per_page = length
-
+     
         usuario = usuario[start:start + length]
 
     data = [{'id': usu.id,'nombre': usu.first_name, 'apellido': usu.last_name, 
@@ -177,14 +174,13 @@ def list_usuarios_baja_ajax(request):
 @permission_required('usuario.add_user')
 def add_usuario(request):
     form = UserForm()
-    group = Group.objects.all()
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
             print("Se ha agregado correctamente!")
             messages.success(request, "Se ha agregado correctamente!")
-            return redirect('/usuario/add/')
+            return redirect('/usuario/listUsuarios/')
     context = {'form': form}
     return render(request, 'usuario/add_usuario.html', context)
 
@@ -215,7 +211,6 @@ def edit_usuario(request, id):
 @permission_required('usuario.delete_user')
 def baja_usuario(request, id):
     user = User.objects.get(id=id)
-    confirm = True
     if request.method == 'POST':
         if request.user == user:
             messages.error(request, "¡No puedes eliminar este usuario! intentelo mas tarde.")

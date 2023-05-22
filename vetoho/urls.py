@@ -36,7 +36,6 @@ list_servicio_ajax, add_servicio_from_empleado)
 from apps.configuracion.empleado.views import (add_empleado, bajar_empleado, edit_empleado, get_list_empleados_ajax, 
 list_empleado, search_empleado)
 
-
 urlpatterns = [
     path('SuperAdminUserDev/', admin.site.urls),
     path('', home_user, name="index"),
@@ -93,7 +92,7 @@ urlpatterns = [
     path('configuracion/get_list_empleados_ajax/', get_list_empleados_ajax, name="get_list_empleados_ajax"),
 
     #Mascotas
-    path('mascota/', include(('apps.mascotas.urls','mascota'), namespace='mascota')),
+    path('mascota/', include(('apps.mascotas.urls','mascota'), namespace='mascota')),   
     
     #Ventas
     path('ventas/', include(('apps.ventas.urls','ventas'), namespace='venta')),
@@ -112,6 +111,11 @@ urlpatterns = [
     
     #Compras
     path('compra/', include(('apps.compras.urls','compra'), namespace='compra')),
+
+    #Reporte
+    path('reporte/', include(('apps.reportes.urls','reporte'), namespace='reporte')),
+    #Caja
+    path('caja/', include(('apps.caja.urls','caja'), namespace='caja')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

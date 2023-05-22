@@ -165,7 +165,7 @@ $(function () {
             parameters.append('ajuste', JSON.stringify(ajuste.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);
-            submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar este ajuste de inventario?', parameters, function () {
+            submit_with_ajax(window.location.pathname, 'Notificación', '¿Desea registrar este ajuste de inventario?', parameters, function () {
                 location.href = "/producto/addAjusteInventario/"
             });
         }

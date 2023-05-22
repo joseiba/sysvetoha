@@ -14,6 +14,11 @@
   .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     position: initial !important;
   }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__display { 
+    cursor: default; 
+    padding-left: 10px important; 
+    padding-right: 5px; 
+  }  
 </style>
 {% endblock stylesheets %}
 {% block content %}
@@ -111,6 +116,19 @@
         add_edit_registro(text);
       {% endfor %}
     {% endif %}
+
+    var mensaje_errores = ""
+    {% for field in form %}
+      {% if field.errors %}              
+            {% for error in field.errors %}
+              mensaje_errores += "\n{{ error }}"
+            {% endfor %}
+      {% endif %}
+    {% endfor %}
+
+    if(mensaje_errores !== ""){
+      warning_registro(mensaje_errores);
+    }
   })
 
 </script>

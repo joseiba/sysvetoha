@@ -4,8 +4,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
-from django.views.decorators.csrf import csrf_exempt
-
 from datetime import datetime
 import json
 from django.http import JsonResponse
@@ -247,7 +245,6 @@ def list_producto_general_ajax(request):
     return JsonResponse(response)
 
 
-@csrf_exempt
 def get_producto_antiparasitario(request):
     data = {}
     try:
@@ -549,7 +546,6 @@ def add_ajuste_inventario(request):
 
 
 @login_required()
-@csrf_exempt
 def get_producto_inventario(request):
     data = {}
     try:

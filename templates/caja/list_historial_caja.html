@@ -1,0 +1,235 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Caja {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Historial de Caja
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item active">Historial de Caja</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">            
+            <div class="card-header">
+              <div class="float-left">
+                <form >
+                  <div class="input-group">
+                      <input type="search" class="form-control form-control-lg" id="searchTerm"  data-toggle="tooltip" data-placement="top"
+                      title="Buscar por fecha de creacion" autocomplete="off"
+                      placeholder="Buscar"/>
+                      <div class="input-group-append">
+                          <button type="button" id="busqueda" class="btn btn-lg btn-default">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </div>
+                  </div>
+              </form>                  
+              </div>
+              <div class="float-right">
+                {% if perms.caja.add_caja %}
+                <button type="submit" class="btn btn-primary float-right" id="add_caja">
+                    <a style="color: white;" href="{% url 'caja:add_caja' %}">Abrir Caja</a>
+                </button>
+                {% endif %}
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="list_cajas" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha </br>Apertura</th>
+                    <th>Fecha </br>Cierre</th>
+                    <th>Saldo Inicial</th>
+                    <th>Total Ingreso </br> del Dia</th>
+                    <th>Saldo a Entregar</th>
+                    <th>Accion</th>
+                </tr>
+                </thead>
+                <tbody>                   
+                </tbody>   
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+
+<script>
+    $(function () {
+
+        $('input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        var get_list = function (busqueda) {
+            $("#list_cajas").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/caja/get_list_caja_historico/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: { 'busqueda': busqueda },
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Id',
+                        data: 'id',
+                    },
+                    {
+                        name: 'Fecha Apertura',
+                        data: 'fecha_alta',
+                    },
+                    {
+                        name: 'Fecha Cierre',
+                        data: 'fecha_cierre',                    
+                    },
+                    {
+                        name: 'Saldo Inicial',
+                        data: 'saldo_inicial',
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
+
+                        }
+                    },
+                    {
+                        name: 'Total Ingreso del Dia',
+                        data: 'total_ingreso',
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
+
+                        }
+                    },
+                    {
+                        name: 'Saldo a Entregar',
+                        data: 'saldo_entregar',
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
+
+                        }
+                    },
+                    {
+                        name: 'Accion',
+                        data: 'id',
+                        render: function (data) {
+                            {% if perms.caja.view_caja %}
+                            return '<button class="btn btn-primary">\
+                                        <a href="/caja/reporteCaja/' + data + '/" style="color: white" target="_blank">\
+                                            Ver Detalle PDF\
+                                        </a>\
+                                    </button>';
+                            {% endif %}
+
+                            return '-';                                                   
+                            /*<button class="btn btn-danger" onclick="abrir_modal_eliminacion();">\
+                                Baja\
+                            </button>*/
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [6], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+
+        get_list(query);
+
+        $("#searchTerm").change(function () {
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function () {
+          var busqueda = sessionStorage.getItem("busqueda")
+          if (busqueda == "" || busqueda == undefined || busqueda == null) {
+            busqueda = "";
+            get_list(busqueda)
+          }
+          else {
+            get_list(busqueda)
+          }
+        })
+    });
+
+    function add_miles(value) {
+        return value.toString().replace(/\D/g, "")
+            .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+    }
+
+</script>
+
+
+{% endblock js_page %}

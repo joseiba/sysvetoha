@@ -2,7 +2,7 @@ import os
 import sys
 from distutils.util import strtobool
 
-# Cambiar el valor de acuerdo a la vetohouración de tu proyecto.
+# Cambiar el valor de acuerdo a la configuración de tu proyecto.
 APPS_FOLDER = "apps"  # <- Ruta de nuestra carpeta contenedora de apps
 
 

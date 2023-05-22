@@ -111,6 +111,9 @@
 <script src="{% static 'base/js/inventario/form_ajuste.js' %} "></script>
 <script>
   $(function () {
+
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
     $('input').on("cut copy paste", function (e) {
       e.preventDefault();
     });
@@ -145,6 +148,8 @@
             type: 'POST',
             url: '/producto/get_producto_inventario/',
             delay: 250,
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin', // Do not send CSRF token to another domain.,
             data: function (params) {
                 return {
                     term: params.term,

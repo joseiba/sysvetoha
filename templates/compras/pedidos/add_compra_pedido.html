@@ -1,0 +1,162 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Agregar Pedido {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel" style="margin: 1rem">
+                    <div class="x_title">
+                        <h2>Realizar Pedido</h2>
+                        
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="tile mb-4">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">                                            
+                                            <h4 class="card-header">Detalle Pedido</h4>
+                                            <div class="card-body">
+                                                <div class="form-group" style="width: 100%;">
+                                                    <label> <strong> Buscar Producto:</strong> </label>
+                                                        <span class="input-group-append">
+                                                            <select class="form-control" id="search">
+                                                                <option>Buscar productos</option>
+                                                            </select>
+                                                        </span>                                                    
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <button type="button"
+                                                        class="mb-2 py-0 btn btn-danger btn-sm btnRemoveAll"
+                                                        style="height: 20px; align-content: center">
+                                                        <label>Eliminar todo</label>
+                                                    </button>
+                                                    <table  class="table table-bordered table-hover"  id="tblPedido">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-center">Cod</td>
+                                                                <td class="text-center">Nombre Producto</td>
+                                                                <td class="text-center">Descripción</td>
+                                                                <td class="text-center">Cantidad</td>
+                                                                <td>Eliminar</td>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="tile-footer"  style="margin: 1rem">
+                                                <button type="" id="add_pedido_compra" class="btn btn-primary" style="color: white"><i
+                                                        class="fa fa-fw fa-lg fa-check-circle"></i>Registrar Pedido
+                                                </button>&nbsp;&nbsp;&nbsp;
+                                                <a class="btn btn-secondary" href="{% url 'compra:list_pedido_compra' %}">
+                                                    <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                           
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+
+<script src="{% static 'base/js/compras/form_pedido.js' %}"></script>
+<!-- Datatables -->
+<script>
+    var action = '{{ accion|safe }}';
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    $(function () {   
+        
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        })
+
+        $('#tblPedido').DataTable({
+            ordering: false,
+            language: {
+                decimal: "",
+                emptyTable: "No hay información",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
+                infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ Entradas",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar:",
+                zeroRecords: "Sin resultados encontrados",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Siguiente",
+                    previous: "Anterior",
+                },
+            },
+        });
+
+        $('#search').select2({
+            placeholder: 'Buscar un Producto',
+            ajax: {
+                type: 'POST',
+                url: '/compra/get_pedido_factura/',
+                delay: 250,
+                headers: {'X-CSRFToken': csrftoken},
+                mode: 'same-origin', // Do not send CSRF token to another domain.,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        action: 'search_products'
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    }
+                },
+            },
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function(){
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
+    })
+
+</script>
+
+
+
+{% endblock js_page %}"
+  

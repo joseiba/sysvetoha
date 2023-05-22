@@ -69,7 +69,7 @@
                     </div>                    
                     <div>
 
-                        {% if perms.factura.view_facturacabeceraventa %}
+                        {% if perms.ventas.view_cabeceraventa %}
                             <button type="submit" class="btn btn-success float-right">
                                 <a href="{% url 'ventas:list_factura_ventas' %}" style="color: white;">Volver</a>
                             </button>
@@ -213,7 +213,7 @@
                         data: 'id',
                         render: function (data) {
                             var buttons = ""
-                            {% if perms.factura.view_facturacabeceraventa %}
+                            {% if perms.ventas.view_cabeceraventa %}
                                 buttons += '<button class="btn btn-primary">\
                                                         <a href="/factura/verDetalleFacturaAnulada/' + data + '/" style="color: white">\
                                                             ver detalle\
@@ -221,7 +221,7 @@
                                                     </button>'
                             {% endif %}
 
-                            {% if perms.factura.view_facturacabeceraventa %}
+                            {% if perms.ventas.view_cabeceraventa %}
                                 buttons += '<button class="btn btn-secondary">\
                                                         <a target="_blank" href="/factura/reporteFactura/' + data + '/" style="color: white">\
                                                             PDF\

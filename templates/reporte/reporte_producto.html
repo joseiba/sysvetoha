@@ -1,0 +1,132 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Reporte {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Productos más vendidos
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item active">Productos más vendidos</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">                    
+            <!-- /.card-header -->
+            <div class="card-body" id="vendidos">
+                <canvas id="produc-vendi"></canvas>
+            </div>
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+
+<script>
+   
+    $(function () {
+        $('input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        //Productos mas vendidos
+        var get_product_vendido = function(busqueda){
+            $.ajax({
+                url: "/reporte/get_productos_vendidos/",
+                type: 'GET',
+                datatype: 'json',
+                data: {'busqueda': busqueda},
+                success: function(response) {
+                    if(response.mensaje != ""){
+                        $('#produc-vendi').remove(); // this is my <canvas> element
+                        $('#vendidos').append('<canvas id="produc-vendi"><canvas>');
+                        var ctx = document.getElementById('produc-vendi').getContext('2d');
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                datasets:[{
+                                    data: response.data_producto_ven,
+                                    backgroundColor: "#73879c",
+                                    label: 'Cantidad',
+                                }],
+                                labels: response.label_producto_ven,
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+                    }
+                },
+                error: function(error){
+
+                }
+            })
+        }
+
+        var query = ""
+
+        get_product_vendido(query);
+
+        $("#searchTermVendidos").change(function(){
+            var busqueda = $("#searchTermVendidos").val()
+            sessionStorage.setItem("busquedaVendido", busqueda)
+        })
+
+        $("#busquedaVendido").click(function(){
+            var busqueda = sessionStorage.getItem("busquedaVendido")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_product_vendido(busqueda)
+            }
+            else{
+                get_product_vendido(busqueda)
+            }
+        }) 
+
+        //End Productos mas vendidos
+    })
+
+
+</script>
+
+
+{% endblock js_page %}

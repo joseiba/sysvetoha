@@ -109,17 +109,7 @@
 
         var get_list = function (busqueda) {
             $("#list_cliente").DataTable({
-                destroy: true,
-                //dom: 'Bfrtip',
-                // buttons: [                
-                //     {
-                //         extend: 'pdfHtml5',
-                //         text: 'Exportar PDF',
-                //         exportOptions: {
-                //             columns: [0,1]
-                //         }
-                //     },
-                // ],
+                destroy: true,               
                 searching: false,
                 pageLength: 10,
                 ajax: {
@@ -173,24 +163,7 @@
                                                         Dar de baja\
                                         </button>';
 
-                                        {% endif %}
-                            // {% if perms.cliente.change_cliente %}
-                            //     buttons +=  '<button class="btn btn-warning">\
-                            //                             <a href="/cliente/editCliente/' + data + '/" style="color: black">\
-                            //                                 Editar\
-                            //                             </a>\
-                            //                         </button>';
-                            // {% endif %}
-
-                            // {% if perms.cliente.delete_cliente %}
-                            //     buttons += '<button class="btn btn-danger">\
-                            //                             <a class="confirm-delete pointer" data-id="' + data + '" data-name-cliente="' + data + '"\
-                            //                                 data-toggle="modal" data-target="#confirmDeleteModal">\
-                            //                                 Baja\
-                            //                             </a>\
-                            //                         </button>';
-                            // {% endif %}
-
+                                        {% endif %}                         
                             return buttons;
                         }
                     }

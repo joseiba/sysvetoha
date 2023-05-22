@@ -47,29 +47,7 @@
                     <i class="nav-icon fas fa-chart-line"></i>
                         <p>Dashboard</p>
                     </a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-map-marked"></i>
-                        <p> Ubicaciones <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Departamentos</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ciudades</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li> -->
+                </li>               
                 {% if perms.cliente.view_cliente %}
 
                     <li class="nav-item">
@@ -88,7 +66,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if perms.mascota.view_especie or perms.mascota.view_raza or perms.mascota.view_mascota %}
+                {% if perms.mascotas.view_especie or perms.mascotas.view_raza or perms.mascotas.view_mascota %}
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-light fa-paw"></i>
@@ -142,7 +120,6 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-shopping-bag"></i>
@@ -153,7 +130,7 @@
                         {% if perms.productos.view_tipoproducto %}
                             <li class="nav-item">
                                 <a href="{% url 'producto:list_tipo_producto' %}" class="nav-link">
-                                    <i class="fas fa-store-alt"></i>
+                                    <i class="fas fa-shopping-bag"></i>
                                     <p>Tipos de Productos</p>
                                 </a>
                             </li>
@@ -162,7 +139,7 @@
                         {% if perms.depositos.view_deposito %}
                             <li class="nav-item">
                             <a href="{% url 'deposito:list_deposito' %}" class="nav-link">
-                                <i class="fas fa-shopping-basket"></i>
+                                <i class="fas fa-shopping-bag"></i>
                                 <p>Depósitos</p>
                             </a>
                         </li> 
@@ -171,7 +148,7 @@
                         {% if perms.productos.view_producto %}
                         <li class="nav-item">
                             <a href="{% url 'producto:list_productos_general' %}" class="nav-link">
-                                <i class="fas fa-shopping-basket"></i>
+                                <i class="fas fa-shopping-bag"></i>
                                 <p>Productos</p>
                             </a>
                         </li>
@@ -180,7 +157,7 @@
                         {% if perms.producto.view_inventario %}
                         <li class="nav-item">
                             <a href="{% url 'producto:list_ajustar_inventario' %}" class="nav-link">
-                                <i class="fas fa-shopping-basket"></i>
+                                <i class="fas fa-shopping-bag"></i>
                                 <p>Ajustar Inventario</p>
                             </a>
                         </li>
@@ -189,9 +166,9 @@
                 </li> 
                 {% if perms.compras.view_proveedor %}
 
-                <li class="nav-item">
+                    <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-shopping-bag"></i>
+                        <i class="nav-icon fas fa-store-alt"></i>
                         <p> Compras <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -203,9 +180,84 @@
                                     <p>Lista de Proveedores</p>
                                 </a>
                             </li>
-                        {% endif %}                                                             
+                        {% endif %}
+                        
+                        {% if perms.compras.view_pedidocabecera %}
+                        <li class="nav-item">
+                            <a href="{% url 'compra:list_pedido_compra' %}" class="nav-link">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Lista de Pedidos</p>
+                            </a>
+                        </li>
+                    {% endif %}     
+
+                    {% if perms.compras.view_facturacompra %}
+                    <li class="nav-item">
+                        <a href="{% url 'compra:list_factura_compra' %}" class="nav-link">
+                            <i class="fas fa-store-alt"></i>
+                            <p>Lista de Facturas Compra</p>
+                        </a>
+                    </li>
+                {% endif %}     
+                                             
                     </ul>
                 </li> 
+                {% endif %}
+
+                {% if perms.reportes.view_reporte %}
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-light fa-clipboard"></i>
+                        <p> Reportes <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'reporte:reporte_producto' %}" class="nav-link">                                    
+                                    <p>Productos total vendidos</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{% url 'reporte:reporte_stock_minimo' %}" class="nav-link">                                    
+                                    <p>Stock minimo</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{% url 'reporte:reporte_stock_a_vencer' %}" class="nav-link">                                    
+                                    <p>Productos a vencer</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{% url 'reporte:reporte_servicio_vendido' %}" class="nav-link">                                    
+                                    <p>Servicios mas vendidos</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{% url 'reporte:list_proximas_vacunas' %}" class="nav-link">                                    
+                                    <p>Próximas Vacunaciones</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{% url 'reporte:reporte_vacunas_aplicadas' %}" class="nav-link">                                    
+                                    <p>Vacunas Aplicadas</p>
+                                </a>
+                            </li>
+                    </ul>
+                </li>
+            {% endif %}
+
+                {% if perms.caja.view_caja %}
+                <li class="nav-item">
+                    <a href="{% url 'caja:list_cajas' %}" class="nav-link">
+                    <i class="nav-icon far fa-credit-card"></i>
+                        <p>Caja</p>
+                    </a>
+                </li>
                 {% endif %}
 
                 {% if perms.usuario.view_user %}
@@ -310,31 +362,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        {% endif %}
-                        <!--<ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>IVA's</p>
-                                </a>
-                            </li>
-                        </ul>-->
-                        <!-- <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Timbrado</p>
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Egreso Máximo</p>
-                                </a>
-                            </li>
-                        </ul> -->
+                        {% endif %}                      
                     </li>
                 {% endif %}    
             </ul>

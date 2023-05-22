@@ -9,6 +9,7 @@ import math
 
 from apps.configuracion.servicio.forms import ServicioForm
 from apps.configuracion.servicio.models import Servicio
+from apps.inventario.productos.models import Producto
 
 
 # Create your views here.
@@ -21,7 +22,19 @@ def add_servicio(request):
         form = ServicioForm(request.POST) 
         if form.is_valid():           
             ser = form.save(commit=False)
-            ser.save()        
+            ser.save()
+            pro = Producto()
+            pro.codigo_producto = request.POST.get("cod_serv")
+            pro.nombre_producto = request.POST.get("nombre_servicio")
+            pro.descripcion = request.POST.get("nombre_servicio")
+            pro.precio_compra = request.POST.get("precio_servicio")
+            pro.precio_venta = request.POST.get("precio_servicio")
+            pro.stock_minimo = 0
+            pro.stock = 1
+            pro.stock_total = 1000
+            pro.servicio_o_producto = 'S'
+            pro.id_servicio = ser.id
+            pro.save()        
             messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/configuracion/listServicio')
     context = {'form' : form}
@@ -35,7 +48,7 @@ def add_servicio_from_empleado(request):
         form = ServicioForm(request.POST) 
         if form.is_valid():           
             ser = form.save(commit=False)
-            ser.save()        
+            ser.save()                    
             messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/configuracion/listEmpleado/')
     context = {'form' : form, 'from_add': 'S'}
@@ -53,7 +66,15 @@ def edit_servicio(request, id):
             return redirect('/configuracion/listServicio/')
         if form.is_valid():
             servicios = form.save(commit=False)
-            servicios.save()            
+            servicios.save()
+            pro = Producto.objects.get(id_servicio=id)
+            pro.codigo_producto = request.POST.get("cod_serv")
+            pro.nombre_producto = request.POST.get("nombre_servicio")
+            pro.descripcion = request.POST.get("nombre_servicio")
+            pro.precio_compra = request.POST.get("precio_servicio")
+            pro.precio_venta = request.POST.get("precio_servicio")
+            pro.id_servicio = servicios.id
+            pro.save()           
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/configuracion/listServicio/')
     context = {'form' : form, 'servicios': servicios}

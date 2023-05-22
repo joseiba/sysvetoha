@@ -4,14 +4,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-from apps.usuario.tests import LoginFormTest
-from vetoho.settings import URL_BASE_TEST_FUNTIONAL
+
+#from vetoho.settings import 'http://127.0.0.1:8000/'
 
 class InventarioFormTest(LiveServerTestCase):
     
     def testAddInventarioForm(self):
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+        driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 
         user_name = driver.find_element('name', 'username')
         user_password = driver.find_element('name','password')
@@ -26,7 +26,7 @@ class InventarioFormTest(LiveServerTestCase):
         submit.send_keys(Keys.RETURN)
         time.sleep(2)
 
-        driver.get(URL_BASE_TEST_FUNTIONAL + 'producto/list_ajustar_inventario/')
+        driver.get('http://127.0.0.1:8000/' + 'producto/list_ajustar_inventario/')
         time.sleep(2)
 
         add = driver.find_element(By.CSS_SELECTOR,"body > div > div.content-wrapper > section.content > div > div > div > div > div.card-header > button.btn.btn-primary.float-right.mr-1")

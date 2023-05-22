@@ -229,7 +229,7 @@ $(function () {
             success: function (response) {  
                 console.log(response)
                 if(response.mensaje == "OK"){                
-                    submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
+                    submit_with_ajax(window.location.pathname, 'Notificación', '¿Desea registrar esta factura?', parameters, function () {
                         location.href = "/ventas/listFacturasVentas/"
                     });
                 }
@@ -243,7 +243,7 @@ $(function () {
 
                     products += "\n¿Desea igualmente registrar esta factura?";
 
-                    submit_with_ajax(window.location.pathname, 'Noticicación', products, parameters, function () {
+                    submit_with_ajax(window.location.pathname, 'Notificación', products, parameters, function () {
                         location.href = "/ventas/listFacturasVentas/"
                     });
                 }

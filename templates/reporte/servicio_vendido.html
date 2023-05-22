@@ -1,0 +1,126 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %} Reporte {% endblock title %}
+
+{% block css %}
+{{ block.super }}
+
+<style>
+
+</style>
+{% endblock css %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Total de servicios vendidos
+          </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+            <li class="breadcrumb-item active">Total de servicios vendidos</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">            
+            <!-- /.card-header -->
+            <div class="card-body" id="productos">
+                <canvas id="produc"></canvas>
+            </div>
+            <!-- /.card-body -->
+          </div>                    
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+
+
+
+{% endblock content %}
+
+{% block js_page %}
+{{ block.super }}
+
+<script>
+    $(function () {
+        $('input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        var get_produc = function(busqueda){
+            $.ajax({
+                url: "/reporte/get_servicio_vendido/",
+                type: 'GET',
+                datatype: 'json',
+                data: {'busqueda': busqueda},
+                success: function(response) {
+                    if(response.mensaje != ""){
+                        $('#produc').remove(); // this is my <canvas> element
+                        $('#productos').append('<canvas id="produc"><canvas>');
+                        var ctx = document.getElementById('produc').getContext('2d');
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                datasets:[{
+                                    data: response.data,
+                                    backgroundColor: "#73879c",
+                                    label: 'Cantidad',
+                                }],
+                                labels: response.label,
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+                    }
+                },
+                error: function(error){
+
+                }
+            })
+        }
+        var query = ""
+        get_produc(query);
+
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_produc(busqueda)
+            }
+            else{
+                get_produc(busqueda)
+            }
+        }) 
+    })
+
+
+</script>
+
+
+{% endblock js_page %}

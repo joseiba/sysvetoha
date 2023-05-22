@@ -6,17 +6,439 @@
 {% block stylesheets %}
 {{ block.super }}
 <style>
-
-</style>
+    .text_align_center {
+      text-align-last: center;
+    }
+  
+    .card-pets:hover {
+      box-shadow: 0px 0px 10px 5px #a6a6a6;
+      /* please set the shadow color conveniently */
+    }
+  
+    .card-pets {
+      border-radius: 10px !important;
+    }
+  
+    .card-img-div {
+      background-color: #278094eb;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+  
+    .rd-card-img {
+      height: 8rem;
+      width: 8rem;
+      border-radius: 4rem;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid rgba(52, 73, 94, 0.44);
+      background: #fff;
+      padding: 4px;
+    }
+  
+    .edit-property {
+      font-size: 18px;
+      margin-right: 7px;
+      position: relative;
+      margin-top: .5rem;
+      color: #ffff;
+    }
+  
+    /*.dropdown-item {
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+    }
+  
+    a.dropdown-item {
+        color: #45474a;
+        padding: 0rem .5rem;
+    }
+  
+    a.dropdown-item:hover {
+        background: rgba(0, 0, 0, .1);
+    }*/
+  
+    .card-option {
+      background-color: #fff;
+      position: absolute;
+      right: 1rem;
+      top: 2.5rem;
+      width: 8.5rem;
+      height: auto;
+      border-radius: 5px;
+      -webkit-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+      -moz-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+      box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+    }
+  
+    .select2 {
+      width: 100% !important;
+    }
+  
+    #tblAgenda_wrapper {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
+  
+    .table.dataTable {
+      margin-bottom: 3rem !important;
+    }
+  
+    .card_align_center{
+      align-items: center;
+    }
+  </style>
 {% endblock stylesheets %}
 
 {% block content %}
 <div class="content">
-    <h1>Procesando...</h1>
-
+    <div>
+        <div class="row">
+            <div class="col-12 row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-8 row">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'list_usuarios' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #5f1e1eeb;">
+                              <div class="ml-2">
+                                <div class="d-flex">
+                                  <i class="fas fa-users mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-2" style="align-self: center; color: white; font-size: 38px;">{{ total_user }}</h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Usuarios
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'list_cliente' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #845e5eeb;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-restroom mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_cliente }}</h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Clientes
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'mascota:list_mascotas' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #c0702ceb;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-paw  mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_mascotas}}</h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Mascotas
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'producto:list_productos_general' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #a57a2beb;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-box-open mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_productos}}</h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Productos
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'reporte:reporte_stock_minimo' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #655935eb;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-cart-arrow-down mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_stock_minimo }}
+                                  </h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Stock minimo
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'reporte:reporte_stock_a_vencer' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #385323db;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-calendar-minus mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_pro_vencer }}</h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2" style="text-align: center !important;">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Productos a vencer
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'reporte:reporte_vacunas_aplicadas' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #656d61eb;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-syringe mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_vacunas_aplicadas }}
+                                  </h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2" style="text-align: center !important;">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Vacunas Aplicadas
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'reserva:list_reserva' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #232b4aeb;">
+                              <div class="ml-2" >
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-calendar-check mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_reservas_hoy }}
+                                  </h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2" style="text-align: center !important;">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Reservas para hoy
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+                          <a href="{% url 'reporte:list_proximas_vacunas' %}">
+                            <div class="card card-pets card_align_center" style="background-color: #4b4667eb;">
+                              <div class="ml-2">
+                  
+                                <div class="d-flex">
+                                  <i class="fas fa-syringe mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                                  <h3 class="ml-3 content" style="align-self: center; color: white; font-size: 38px;">
+                                    {{total_proximas_vacunas}}
+                                  </h3>
+                                </div>
+                  
+                              </div>
+                  
+                              <div class="card-body card-body-pets p-0 ml-2" style="text-align: center !important;">
+                                <h5 class="" style="margin-top: 1.3rem; color: white;">Próximas Vacunaciones
+                                </h5>
+                              </div>
+                  
+                              <div class="d-contents" style="display: contents;">
+                  
+                              </div>
+                            </div>
+                          </a>
+                
+                        </div>
+                      </div>
+             
+              <div class="col-12 col-md-6 col-lg-6 col-xl-4 ">
+                <div class="row">
+                  <div class="" style="width: 100%;">
+                    <div class="card card-pets">
+                      <h4 class="ml-3 mt-3">Agenda del dia de hoy</h4>
+                      <div class="card-body">
+                        <select class="form-control" name="select_event" id="select_event">
+                          <option value="1" selected>Reservas</option>
+                          <option value="2">Aplicaciones para Vacunas</option>
+                        </select>
+                        <div class="mt-4 mb-4">
+                          <div style="width: auto; height: 1px; background-color: black;"></div>
+                          <table aria-labelledby="agenda" class="table table-bordered mb-4" id="tblAgenda">
+                            <thead>
+                              <tr>
+                                <td>Cliente</td>
+                                <td>Mascota</td>
+                                <td>Evento</td>
+                              </tr>
+                            </thead>
+                          </table>
+                        </div>
+                        <p class="card-tex" style="margin-bottom: 5rem;"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          
+              </div>    
+            </div>
+          </div>
+    </div>
 </div>
 {% endblock content %}
 
-{% block javascripts %}
+{% block js_page %}
 {{ block.super}}
-{% endblock javascripts %}
+
+<script>
+  $(function () {
+    $("#select_event").select2({
+      language: {
+        inputTooShort: function () {
+          return '';
+        },
+        searching: function () {
+          return 'Buscando...'
+        },
+        noResults: function () {
+          return 'No se ha encontrado ningún resultado'
+        }
+      }
+    })
+
+    var get_list = function (url) {
+      $("#tblAgenda").DataTable({
+        destroy: true,      
+        searching: false,
+        responsive: true,
+        pageLength: 5,
+        ajax: {
+          url: url,
+          type: 'GET',
+          datatype: 'json',
+          error: function (data) {
+            $.fn.DataTable.ext.errorMode = 'none'
+
+          }
+        },
+        columns: [
+          {
+            name: 'Cliente',
+            data: 'cliente',
+          },
+          {
+            name: 'Mascota',
+            data: 'mascota',
+          },
+          {
+            name: 'Evento',
+            data: 'evento',
+          },
+        ],
+        columnDefs: [{
+          targets: [0], // column index (start from 0)
+          orderable: false, // set orderable false for selected columns
+        }],
+        serverSide: false,
+        language: {
+          decimal: "",
+          emptyTable: "Sin resultados encontrados",
+          info: "",
+          infoEmpty: "",
+          infoFiltered: "(Filtrado de _MAX_ total entradas)",
+          infoPostFix: "",
+          thousands: ",",
+          lengthMenu: "",
+          loadingRecords: "Cargando...",
+          processing: "Procesando...",
+          search: "Buscar:",
+          zeroRecords: "Sin resultados encontrados",
+          paginate: {
+            first: "Primero",
+            last: "Ultimo",
+            next: "Siguiente",
+            previous: "Anterior",
+          },
+        },
+
+      })
+    }
+
+    $("#select_event").change(function () {
+      var event = $(this).val()
+      if (event === "1") {
+        var url = "/utiles/get_reserva_today/";
+        get_list(url)
+      }
+      else {
+        var url = "/utiles/get_vacunas_today/";
+        get_list(url)
+      }
+    });
+    
+    var url = "/utiles/get_reserva_today/";
+    get_list(url)
+  })
+</script>
+
+{% endblock js_page %}

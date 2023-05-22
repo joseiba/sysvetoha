@@ -43,7 +43,7 @@
 <script src="{% static 'base/js/ventas/forms.js' %}"></script>
 <script>
     var action = '{{ accion|safe }}';
-
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '< Ant',
@@ -153,7 +153,6 @@
 
         $('#cliente_select').select2({
             placeholder: 'Seleccione un Cliente',
-            language: "es",
             language: {
                 inputTooShort: function () {
                     return '';
@@ -172,6 +171,8 @@
                 type: 'POST',
                 url: '/ventas/get_producto_servicio_factura/',
                 delay: 250,
+                headers: {'X-CSRFToken': csrftoken},
+                mode: 'same-origin', // Do not send CSRF token to another domain.,
                 data: function (params) {
                     return {
                         term: params.term,

@@ -22,7 +22,7 @@ class TipoProducto(models.Model):
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
 
-    class Mwta:
+    class Meta:
         verbose_name = "Tipo Producto"
         verbose_name_plural = "Tipo Productos"
         default_permissions =  ()
@@ -72,7 +72,7 @@ class Producto(models.Model):
     id_deposito = models.ForeignKey(Deposito, on_delete=models.CASCADE, null=True)
 
     
-    class Mwta:
+    class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         default_permissions =  ()

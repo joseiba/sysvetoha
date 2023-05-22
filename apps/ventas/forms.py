@@ -19,7 +19,8 @@ class CabeceraVentaForm(forms.ModelForm):
 class DetalleVentaForm(forms.ModelForm):
     class Meta:
         model = DetalleVenta
-        fields = ['cantidad']
+        fields = ['cantidad', 'id_producto']
         widgets = {
-            'cantidad': forms.NumberInput(attrs={'class': 'form-control'})
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
+            'id_producto' : forms.Select(attrs={'class':'form-control', 'id': 'search'}),
         }

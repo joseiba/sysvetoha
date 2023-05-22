@@ -21,7 +21,6 @@
   <link rel="stylesheet" href="{% static 'base/plugins/icheck-bootstrap/icheck-bootstrap.css' %}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'base/css/adminlte.css' %}">
-  <!--<link href="//cdn.syncfusion.com/ej2/ej2-base/styles/material.css" rel="stylesheet">-->
   <link href="{% static 'base/plugins/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
   <link href="{% static 'base/plugins/calendar/main.css' %}" rel="stylesheet">
 
@@ -107,27 +106,11 @@
     <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="{% static 'base/plugins/jquery-timepicker-1.3.5/jquery.timepicker.min.js' %}"></script>
-
+    <script src="{% static 'base/plugins/Chart.js/dist/Chart.min.js' %}"></script>
 
     <script src="{% static 'base/js/common.js' %}"></script>
     
     {% endblock js_page %}
-    
-    <!--<script>
-        {% if messages %}
-            var html = '<p>';
-            {% for message in messages %}
-                html+='{{ message }}<br>';
-            {% endfor %}
-            html+='</p>';
-            Swal.fire({
-                title: 'Error!',
-                html: html,
-                icon: 'error',
-                confirmButtonColor: '#007bff'
-            });
-        {% endif %}
-    </script>-->
 </body>
 {% endblock body %}
 </html>

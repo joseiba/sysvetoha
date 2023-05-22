@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.views.decorators.http import require_POST, require_GET, require_http_methods, require_safe
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
@@ -19,12 +19,13 @@ hora_entrada = "08:00"
 hora_salida_lun_vie = "18:00"
 hora_salida_sab = "15:00"
 today = date.today()
+url_reserva_list = '/reserva/listReserva/'
 #Reservas
+@require_http_methods(["POST","GET"])
 @login_required()
 @permission_required('reserva.add_reserva')
 def add_reserva(request):
     form = ReservaForm
-    servicios = Servicio.objects.exclude(is_active="N").order_by('-last_modified')
     if request.method == 'POST':
         form = ReservaForm(request.POST) 
         if form.is_valid():           
@@ -39,12 +40,13 @@ def add_reserva(request):
                 masc.fecha_reservada = request.POST.get('fecha_reserva')
                 masc.hora_reserva = request.POST.get('hora_reserva')
                 masc.save()
-            except Exception as e:
+            except Exception:
                 pass
-            return redirect('/reserva/listReserva/')
+            return redirect(url_reserva_list)
     context = {'form' : form}
     return render(request, 'reserva/add_reserva_modal.html', context)
 
+@require_http_methods(["POST","GET"])
 @login_required()
 @permission_required('reserva.change_reserva')
 def edit_reserva(request, id):
@@ -54,7 +56,7 @@ def edit_reserva(request, id):
         form = ReservaForm(request.POST, instance=reserva)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
-            return redirect('/reserva/listReserva/')
+            return redirect(url_reserva_list)
         if form.is_valid():
             reserva = form.save(commit=False)
             emp = Empleado.objects.get(id=request.POST.get('id_empleado'))
@@ -70,10 +72,11 @@ def edit_reserva(request, id):
             emp.save()
             masc.save()
             messages.success(request, 'Se ha editado correctamente!')
-            return redirect('/reserva/listReserva/')
+            return redirect(url_reserva_list)
     context = {'form' : form, 'reserva': reserva}
     return render(request, 'reserva/edit_reserva_modal.html', context)
 
+@require_http_methods(["GET"])
 @login_required()
 @permission_required('reserva.view_reserva')
 def list_reserva(request):
@@ -103,15 +106,17 @@ def list_reserva(request):
     return render(request, "reserva/list_reserva.html", context)
 
 #Metodo para eliminar servicio
+@require_http_methods(["GET"])
 @login_required()
 @permission_required('reserva.delete_reserva')
 def delete_reserva(request, id):
     reserva = Reserva.objects.get(id=id)
     reserva.delete()
     messages.success(request, 'La reserva se ha eliminado!')
-    return redirect('/reserva/listReserva/')
+    return redirect(url_reserva_list)
 
 @login_required()
+@require_http_methods(["GET"])
 def search_reserva(request):
     query = request.GET.get('q')
     if query:
@@ -124,7 +129,7 @@ def search_reserva(request):
     context = { 'page_obj': page_obj}
     return render(request, "reserva/list_reserva.html", context)
         
-
+@require_http_methods(["GET"])
 def validar_fecha_hora(request):
     fecha = request.GET.get('fecha')
     hora = request.GET.get('hora')
@@ -141,15 +146,16 @@ def validar_fecha_hora(request):
     diaCompare = str(diaActual.year) + "-" + mesActual + "-" + dayActual
     messageReponse = ""
     isFalse = True
-    isFalseOtherDay = True
     isFalseMascota = True   
     isFalseEmpleado = True
     splitHoraActual = diaActual.hour
     empe_dispo = Empleado.objects.get(id=emp)
-    serviEmpleado = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False)
     countEmpleadoServi = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False).count()
     countEmpleadoDiaServi = Reserva.objects.filter(id_servicio=servicio, fecha_reserva=fecha, hora_reserva=hora).exclude(disponible_emp='S').count()
     mas_disponible = Mascota.objects.get(id=mascota)
+    mensaje_empe = "El empleado ya esta asignado a un trabajo para esa hora y dia"
+    mensaje_mas = "Esta mascota ya tiene una reserva para este dia y hora"
+    mensaje_clie = "Este cliente ya tiene una reserva para ese dia y hora"
     try:        
         reserva_compare = Reserva.objects.get(id=id_reserva_r)
     except:
@@ -180,7 +186,7 @@ def validar_fecha_hora(request):
                         else: 
                             isFalseEmpleado = False
                     if isFalseEmpleado:
-                        messageReponse = "El empleado ya esta asignado a un trabajo para esa hora y dia"
+                        messageReponse = mensaje_empe
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response) 
 
@@ -205,7 +211,7 @@ def validar_fecha_hora(request):
                                 isFalseMascota = True
                         
                     if isFalseMascota:                    
-                        messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                        messageReponse = mensaje_mas
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response)
                     try:
@@ -213,7 +219,7 @@ def validar_fecha_hora(request):
                     except:
                         isFalse = False
                     if isFalse:
-                        messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
+                        messageReponse = mensaje_clie
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response) 
             else:
@@ -236,7 +242,7 @@ def validar_fecha_hora(request):
                         else: 
                             isFalseEmpleado = False
                     if isFalseEmpleado:
-                        messageReponse = "El empleado ya esta asignado a un trabajo para esa hora y dia"
+                        messageReponse = mensaje_empe
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response)
                 if (int(reserva_compare.id_servicio.id) != int(servicio)):
@@ -261,7 +267,7 @@ def validar_fecha_hora(request):
                                 else:
                                     isFalseMascota = True                            
                         if isFalseMascota:
-                            messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                            messageReponse = mensaje_mas
                             response = { 'mensaje': messageReponse}
                             return JsonResponse(response)
                         try:
@@ -269,7 +275,7 @@ def validar_fecha_hora(request):
                         except:
                             isFalse = False
                         if isFalse:
-                            messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
+                            messageReponse = mensaje_clie
                             response = { 'mensaje': messageReponse}
                             return JsonResponse(response)
                 if(int(reserva_compare.id_cliente.id) != int(cliente) and int(reserva_compare.id_mascota.id != int(mascota))):
@@ -294,7 +300,7 @@ def validar_fecha_hora(request):
                                 isFalseMascota = True
                         
                     if isFalseMascota:
-                        messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                        messageReponse = mensaje_mas
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response)
                     try:
@@ -302,7 +308,7 @@ def validar_fecha_hora(request):
                     except:
                         isFalse = False
                     if isFalse:
-                        messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
+                        messageReponse = mensaje_clie
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response)
         else:
@@ -333,7 +339,7 @@ def validar_fecha_hora(request):
                     else: 
                         isFalseEmpleado = False
                 if isFalseEmpleado:
-                    messageReponse = "El empleado ya esta asignado a un trabajo para esa hora y dia"
+                    messageReponse = mensaje_empe
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)            
                 try: 
@@ -355,7 +361,7 @@ def validar_fecha_hora(request):
                             else: 
                                 isFalseMascota = False
                 if isFalseMascota:
-                    messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                    messageReponse = mensaje_mas
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
                 try:
@@ -363,7 +369,7 @@ def validar_fecha_hora(request):
                 except:
                     isFalse = False
                 if isFalse:
-                    messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
+                    messageReponse = mensaje_clie
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
         else:
@@ -386,7 +392,7 @@ def validar_fecha_hora(request):
                     else: 
                         isFalseEmpleado = False
                 if isFalseEmpleado:
-                    messageReponse = "El empleado ya esta asignado a un trabajo para esa hora y dia"
+                    messageReponse = mensaje_empe
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
             if (int(reserva_compare.id_servicio.id) != int(servicio)):
@@ -410,7 +416,7 @@ def validar_fecha_hora(request):
                                 else: 
                                     isFalseMascota = False                   
                     if isFalseMascota:
-                        messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                        messageReponse = mensaje_mas
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response)
                     try:
@@ -418,7 +424,7 @@ def validar_fecha_hora(request):
                     except:
                         isFalse = False
                     if isFalse:
-                        messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
+                        messageReponse = mensaje_clie
                         response = { 'mensaje': messageReponse}
                         return JsonResponse(response)
             if(int(reserva_compare.id_cliente.id) != int(cliente) and int(reserva_compare.id_mascota.id != int(mascota))):
@@ -442,7 +448,7 @@ def validar_fecha_hora(request):
                                 isFalseMascota = False
                     
                 if isFalseMascota:
-                    messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                    messageReponse = mensaje_mas
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
                 try:
@@ -450,13 +456,13 @@ def validar_fecha_hora(request):
                 except:
                     isFalse = False
                 if isFalse:
-                    messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
+                    messageReponse = mensaje_clie
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
     response = { 'mensaje': messageReponse}
     return JsonResponse(response)
 
-
+@require_http_methods(["GET"])
 def get_mascota_cliente(request):
     cliente = request.GET.get('id_cliente')
 
@@ -471,6 +477,7 @@ def get_mascota_cliente(request):
     response = { 'mascota': listJsonMascotas, 'mensaje': ""}       
     return JsonResponse(response)
 
+@require_http_methods(["GET"])
 def get_min_service(request):
     servicio = request.GET.get('servicio')
     emp = Empleado.objects.filter(id_servicio=servicio)
@@ -488,6 +495,7 @@ def get_min_service(request):
     response = { 'tiempo': minService.min_serv, 'mensaje': "", 'empleado': listJsonEmpleado}       
     return JsonResponse(response)
 
+@require_http_methods(["GET"])
 def get_mascota_selected(request):
     id_reserva = request.GET.get('id_reserva')
     cliente = request.GET.get('id_cliente')
@@ -507,5 +515,3 @@ def get_mascota_selected(request):
         return JsonResponse(response)
     response = { 'mascota': listJsonMascotas, 'mensaje': ""}       
     return JsonResponse(response)
-
-

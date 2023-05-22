@@ -5,8 +5,8 @@ from selenium.webdriver.common.by import By
 import time
 
 from apps.usuario.tests import LoginFormTest
-from vetoho.settings import URL_BASE_TEST_FUNTIONAL
 
+url = 'http://127.0.0.1:8000/'
 class ClienteFormTest(LiveServerTestCase):
 
     def testCiudadForm(self):
@@ -15,7 +15,7 @@ class ClienteFormTest(LiveServerTestCase):
         time.sleep(2)
 
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/configuracion/listCiudades/')
+        driver.get(url + '/configuracion/listCiudades/')
         time.sleep(2)
 
         add = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-block btn-primary']")
@@ -39,7 +39,7 @@ class ClienteFormTest(LiveServerTestCase):
         time.sleep(2)
 
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/cliente/listCliente/')
+        driver.get(url + '/cliente/listCliente/')
         time.sleep(2)
 
         add = driver.find_element('id', 'button_addCliente')
@@ -88,7 +88,7 @@ class ClienteFormTest(LiveServerTestCase):
         time.sleep(2)
 
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/cliente/listCliente/')
+        driver.get(url + '/cliente/listCliente/')
         time.sleep(2)
 
         edit = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-warning mr-1']")
@@ -115,7 +115,7 @@ class ClienteFormTest(LiveServerTestCase):
         time.sleep(2)
 
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + '/cliente/listCliente/')
+        driver.get(url + '/cliente/listCliente/')
         time.sleep(2)
 
         edit = driver.find_element(By.CSS_SELECTOR,"button[class='btn btn-danger']")

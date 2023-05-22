@@ -43,7 +43,7 @@
                                     <input type="search" class="form-control form-control-lg" id="searchTerm"
                                         data-toggle="tooltip" data-placement="top" autocomplete="off"
                                         title="Busca por nº de factura, nº timbrado, nombre del cliente, ruc o cedula"
-                                        placeholder="Busca por nº de factura, nº timbrado, nombre del cliente, ruc o cedula" />
+                                        placeholder="Buscar" />
                                     <div class="input-group-append">
                                         <button type="button" id="busqueda" class="btn btn-lg btn-default">
                                             <i class="fa fa-search"></i>
@@ -53,17 +53,17 @@
                             </form>
                         </div>
                         <div class="float-right">
-                            {% comment %} {% if perms.factura.view_facturacabeceraventa %}
+                            {% comment %} {% if perms.ventas.view_cabeceraventa %}
                                 <button type="submit" class="btn btn-success">
                                     <a href="{% url 'ventas:list_facturas_ventas_anuladas' %}" style="color: white;">Ver facturas anuladas</a>
                                 </button>
 
-                            {% endif %}
-                            {% if perms.factura.add_facturacabeceraventa and caja_abierta == "S" %} {% endcomment %}
+                            {% endif %} {% endcomment %}
+                            {% if perms.ventas.add_cabeceraventa and caja_abierta == "S" %}
                                 <button type="submit" class="btn btn-primary">
                                     <a href="{% url 'ventas:add_factura_venta' %}" style="color: white;">Agregar nueva factura</a>
                                 </button>
-                            {% comment %} {% endif %} {% endcomment %}
+                            {% endif %}
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -163,7 +163,7 @@
                         render: function (data) {
                             var buttons = ""
 
-                            {% if perms.factura.change_cabeceraventa %}
+                            {% if perms.factura.change_cabeceraventa and caja_abierta == 'S' %}
                                 buttons += '<button class="btn btn-warning btn-sm">\
                                                         <a href="/ventas/editFacturaVenta/' + data + '/" style="color: black">\
                                                             Editar\
@@ -171,19 +171,11 @@
                                                     </button> ';
                             {% endif %}
 
-                            {% if perms.factura.delete_facturacabeceraventa %}
+                            {% if perms.factura.delete_cabeceraventa and caja_abierta == 'S' %}
                                 buttons += '<button class="btn btn-danger btn-sm" style="color: white" onclick="anular_factura(\'/ventas/anularFacturaVenta/' + data + '/\',\'/ventas/listFacturasVentas\');">Anular\
                                                     </button> ';
                             {% endif %}
-                            
-                            /*{% if perms.factura.view_facturacabeceraventa %}
-                                buttons += '<button class="btn btn-primary">\
-                                                        <a target="_blank" style="color: white">\
-                                                            PDF\
-                                                        </a>\
-                                                    </button>';
-                            {% endif %}*/
-                                                    
+                                                                                               
                             return buttons;                                                                                                   
                         }
                     }
