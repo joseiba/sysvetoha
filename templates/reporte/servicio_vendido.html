@@ -65,7 +65,7 @@
         $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
-
+              
         var get_produc = function(busqueda){
             $.ajax({
                 url: "/reporte/get_servicio_vendido/",
@@ -79,11 +79,11 @@
                         var ctx = document.getElementById('produc').getContext('2d');
 
                         new Chart(ctx, {
-                            type: 'bar',
+                            type: 'pie',
                             data: {
                                 datasets:[{
                                     data: response.data,
-                                    backgroundColor: "#73879c",
+                                    backgroundColor: return_colors(),
                                     label: 'Cantidad',
                                 }],
                                 labels: response.label,

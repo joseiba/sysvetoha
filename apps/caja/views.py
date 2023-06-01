@@ -150,22 +150,24 @@ def sum_factura_compra():
 
 def sum_efectivo_factura_venta():
     try:
-        factura = CabeceraVenta.objects.exclude(factura_caja="S").filter(fecha_alta=today)
+        factura_sin_anular = CabeceraVenta.objects.exclude(is_active="N").filter(fecha_alta=today)
+        factura = factura_sin_anular.exclude(factura_caja="S")        
         su_efectivo = 0
         for fac in factura:
             if fac.contado_pos == "C":
-                su_efectivo += fac.total
+                su_efectivo += fac.total                
         return su_efectivo
     except Exception as e:
         return 0
 
 def sum_pos_factura_venta():
     try:
-        factura = CabeceraVenta.objects.exclude(factura_caja="S").filter(fecha_alta=today)
+        factura_sin_anular = CabeceraVenta.objects.exclude(is_active="N").filter(fecha_alta=today)
+        factura = factura_sin_anular.exclude(factura_caja="S")
         su_pos = 0
         for fac in factura:
             if fac.contado_pos == "P":
-                su_pos += fac.total
+                su_pos += fac.total                
         return su_pos
     except Exception as e:
         return 0
@@ -173,7 +175,8 @@ def sum_pos_factura_venta():
 
 def sum_factura_venta():
     try:
-        factura = CabeceraVenta.objects.exclude(factura_caja="S").filter(fecha_alta=today)
+        factura_sin_anular = CabeceraVenta.objects.exclude(is_active="N").filter(fecha_alta=today)
+        factura = factura_sin_anular.exclude(factura_caja="S")        
         sum_total = 0
         for fac in factura:
             sum_total += fac.total

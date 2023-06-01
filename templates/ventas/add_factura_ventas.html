@@ -43,6 +43,8 @@
 <script src="{% static 'base/js/ventas/forms.js' %}"></script>
 <script>
     var action = '{{ accion|safe }}';
+    var productos = '{{ productos |safe}}'
+    console.log(productos)
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
@@ -167,27 +169,11 @@
         });
         
         $('#search').select2({
-            ajax: {
-                type: 'POST',
-                url: '/ventas/get_producto_servicio_factura/',
-                delay: 250,
-                headers: {'X-CSRFToken': csrftoken},
-                mode: 'same-origin', // Do not send CSRF token to another domain.,
-                data: function (params) {
-                    return {
-                        term: params.term,
-                        action: 'search_products'
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    }
-                },
-            },
+            placeholder: "Escriba el nombre del producto que desea agregar",
+            data: JSON.parse(productos),
             language: {
                 inputTooShort: function () {
-                    return '';
+                    return 'Por favor escriba un nombre de un producto';
                 },
                 searching: function () {
                     return 'Buscando...'

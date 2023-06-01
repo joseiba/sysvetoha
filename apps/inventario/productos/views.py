@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 
+from apps.ventas.views import return_product
 from apps.inventario.productos.forms import TipoProductoForm
 from apps.inventario.productos.models import TipoProducto
 from apps.inventario.depositos.models import Deposito
@@ -230,9 +231,6 @@ def list_producto_general_ajax(request):
     if _start and _length:
         start = int(_start)
         length = int(_length)
-        page = math.ceil(start / length) + 1
-        per_page = length
-
         productos = productos[start:start + length]
 
     data =[{'codigo': p.id, 'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_total': p.stock} for p in productos]        
@@ -541,7 +539,7 @@ def add_ajuste_inventario(request):
         except Exception as e:
             mensaje = 'error'
             response = {'mensaje':mensaje }
-            return JsonResponse(response)
+            return JsonResponse(response)        
     return render(request, 'inventario/productos/add_ajuste_inventario.html')
 
 

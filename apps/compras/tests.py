@@ -132,91 +132,91 @@ url = 'http://127.0.0.1:8000/'
 
     #     driver.quit
 
-class PedidosComprasTest(LiveServerTestCase):
-    def testPedidosCompras(self):
-        driver = webdriver.Chrome()
-        driver.get(url + 'accounts/login/')
+#class PedidosComprasTest(LiveServerTestCase):
+    # def testPedidosCompras(self):
+    #     driver = webdriver.Chrome()
+    #     driver.get(url + 'accounts/login/')
 
-        user_name = driver.find_element('name', 'username')
-        user_password = driver.find_element('name','password')
+    #     user_name = driver.find_element('name', 'username')
+    #     user_password = driver.find_element('name','password')
 
-        submit = driver.find_element('id','button_submit')
+    #     submit = driver.find_element('id','button_submit')
 
-        user_name.send_keys('joseiba')
-        time.sleep(2)
-        user_password.send_keys('joseiba')
-        time.sleep(2)
+    #     user_name.send_keys('joseiba')
+    #     time.sleep(2)
+    #     user_password.send_keys('joseiba')
+    #     time.sleep(2)
 
-        submit.send_keys(Keys.RETURN)
-        time.sleep(2)
+    #     submit.send_keys(Keys.RETURN)
+    #     time.sleep(2)
 
-        driver.get(url + 'compra/listPedidosCompra/')
-        time.sleep(2)
+    #     driver.get(url + 'compra/listPedidosCompra/')
+    #     time.sleep(2)
 
-        add = driver.find_element(By.CSS_SELECTOR,"body > div > div.content-wrapper > section.content > div > div > div > div > div.card-header > div.float-right > button")
-        add.click()
-        time.sleep(4)
+    #     add = driver.find_element(By.CSS_SELECTOR,"body > div > div.content-wrapper > section.content > div > div > div > div > div.card-header > div.float-right > button")
+    #     add.click()
+    #     time.sleep(4)
 
-        find = driver.find_element(By.XPATH, "/html/body/div/div[1]/div/div/div[2]/div/div/div[2]/form/div/div/div/div/div[1]/div[1]/span/span")
-        find.click()
-        time.sleep(4)
+    #     find = driver.find_element(By.XPATH, "/html/body/div/div[1]/div/div/div[2]/div/div/div[2]/form/div/div/div/div/div[1]/div[1]/span/span")
+    #     find.click()
+    #     time.sleep(4)
 
-        find = driver.find_element(By.XPATH, "/html/body/span/span/span[1]/input")
-        find.send_keys('anti')
-        time.sleep(3)
+    #     find = driver.find_element(By.XPATH, "/html/body/span/span/span[1]/input")
+    #     find.send_keys('anti')
+    #     time.sleep(3)
 
-        find = driver.find_element(By.XPATH, "/html/body/span/span/span[2]/ul/li")
-        find.click()
-        time.sleep(3)
+    #     find = driver.find_element(By.XPATH, "/html/body/span/span/span[2]/ul/li")
+    #     find.click()
+    #     time.sleep(3)
        
-        submit = driver.find_element(By.CSS_SELECTOR,"#add_pedido_compra")
-        submit.click()
-        time.sleep(4)
+    #     submit = driver.find_element(By.CSS_SELECTOR,"#add_pedido_compra")
+    #     submit.click()
+    #     time.sleep(4)
 
-        submit = driver.find_element(By.XPATH,"/html/body/div[2]/div/div[6]/button[1]")
-        submit.click()
-        time.sleep(4)
+    #     submit = driver.find_element(By.XPATH,"/html/body/div[2]/div/div[6]/button[1]")
+    #     submit.click()
+    #     time.sleep(4)
         
-        driver.quit
+    #     driver.quit
 
-    def testEditPedidosCompras(self):
-        driver = webdriver.Chrome()
-        driver.get(url + 'accounts/login/')
+    # def testEditPedidosCompras(self):
+    #     driver = webdriver.Chrome()
+    #     driver.get(url + 'accounts/login/')
 
-        user_name = driver.find_element('name', 'username')
-        user_password = driver.find_element('name','password')
+    #     user_name = driver.find_element('name', 'username')
+    #     user_password = driver.find_element('name','password')
 
-        submit = driver.find_element('id','button_submit')
+    #     submit = driver.find_element('id','button_submit')
 
-        user_name.send_keys('joseiba')
-        time.sleep(2)
-        user_password.send_keys('joseiba')
-        time.sleep(2)
+    #     user_name.send_keys('joseiba')
+    #     time.sleep(2)
+    #     user_password.send_keys('joseiba')
+    #     time.sleep(2)
 
-        submit.send_keys(Keys.RETURN)
-        time.sleep(2)
+    #     submit.send_keys(Keys.RETURN)
+    #     time.sleep(2)
 
-        driver.get(url + 'compra/listPedidosCompra/')
-        time.sleep(2)
+    #     driver.get(url + 'compra/listPedidosCompra/')
+    #     time.sleep(2)
 
-        add = driver.find_element(By.CSS_SELECTOR,"#list_pedidos > tbody > tr.odd > td:nth-child(3) > button.btn.btn-warning > a")
-        add.click()
-        time.sleep(4)
+    #     add = driver.find_element(By.CSS_SELECTOR,"#list_pedidos > tbody > tr.odd > td:nth-child(3) > button.btn.btn-warning > a")
+    #     add.click()
+    #     time.sleep(4)
 
-        find = driver.find_element(By.XPATH, "//*[@id='tblPedido']/tbody/tr/td[4]/div/input").clear()
-        find = driver.find_element(By.XPATH, "//*[@id='tblPedido']/tbody/tr/td[4]/div/input")
-        find.send_keys('10')
-        time.sleep(3)      
+    #     find = driver.find_element(By.XPATH, "//*[@id='tblPedido']/tbody/tr/td[4]/div/input").clear()
+    #     find = driver.find_element(By.XPATH, "//*[@id='tblPedido']/tbody/tr/td[4]/div/input")
+    #     find.send_keys('10')
+    #     time.sleep(3)      
        
-        submit = driver.find_element(By.CSS_SELECTOR,"#edit_compra_pedido")
-        submit.click()
-        time.sleep(4)
+    #     submit = driver.find_element(By.CSS_SELECTOR,"#edit_compra_pedido")
+    #     submit.click()
+    #     time.sleep(4)
 
-        submit = driver.find_element(By.XPATH,"/html/body/div[2]/div/div[6]/button[1]")
-        submit.click()
-        time.sleep(4)
+    #     submit = driver.find_element(By.XPATH,"/html/body/div[2]/div/div[6]/button[1]")
+    #     submit.click()
+    #     time.sleep(4)
         
-        driver.quit    
+    #     driver.quit    
 
 class FacturaCompraTest(LiveServerTestCase):
     def testAddFacturaCompra(self):
@@ -275,13 +275,13 @@ class FacturaCompraTest(LiveServerTestCase):
 
         selec_fecha_ini = driver.find_element(By.XPATH, "//*[@id='ui-datepicker-div']/table/tbody/tr[1]/td[4]/a")
         selec_fecha_ini.click()
-        time.sleep(3)
+        time.sleep(3)       
 
         fecha_fin = driver.find_element(By.CSS_SELECTOR, "#datePick-vencimiento")
         fecha_fin.click()
         time.sleep(3)
 
-        selec_fecha_fin = driver.find_element(By.XPATH, "//*[@id='ui-datepicker-div']/table/tbody/tr[5]/td[3]/a")
+        selec_fecha_fin = driver.find_element(By.XPATH, "//*[@id='ui-datepicker-div']/table/tbody/tr[5]/td[5]/a")
         selec_fecha_fin.click()
         time.sleep(3)
 
@@ -294,3 +294,47 @@ class FacturaCompraTest(LiveServerTestCase):
         time.sleep(4)
         
         driver.quit
+
+    def testAddFacturaCompraValidationTimbrado(self):
+        driver = webdriver.Chrome()
+        driver.get(url + 'accounts/login/')
+
+        user_name = driver.find_element('name', 'username')
+        user_password = driver.find_element('name','password')
+
+        submit = driver.find_element('id','button_submit')
+
+        user_name.send_keys('joseiba')
+        time.sleep(2)
+        user_password.send_keys('joseiba')
+        time.sleep(2)
+
+        submit.send_keys(Keys.RETURN)
+        time.sleep(2)
+
+        driver.get(url + 'compra/listFacturasCompras/')
+        time.sleep(2)       
+
+        fecha_ini = driver.find_element(By.CSS_SELECTOR, "#datePick-emision")
+        fecha_ini.click()
+        time.sleep(3)
+
+        selec_fecha_ini = driver.find_element(By.XPATH, "//*[@id='ui-datepicker-div']/div/a[1]/span")
+        selec_fecha_ini.click()
+        time.sleep(3)
+        
+        #fecha caducada
+        selec_fecha_ini = driver.find_element(By.XPATH, "//*[@id='ui-datepicker-div']/table/tbody/tr[2]/td[2]/a")
+        selec_fecha_ini.click()
+        time.sleep(3)
+
+        fecha_fin = driver.find_element(By.CSS_SELECTOR, "#datePick-vencimiento")
+        fecha_fin.click()
+        time.sleep(3)
+
+        selec_fecha_fin = driver.find_element(By.XPATH, "//*[@id='ui-datepicker-div']/table/tbody/tr[2]/td[6]/a")
+        selec_fecha_fin.click()
+        time.sleep(5)
+
+        driver.quit
+

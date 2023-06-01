@@ -1,10 +1,7 @@
-import json
-from django.shortcuts import render
 from django.http import JsonResponse
-from datetime import datetime, date
+from datetime import date, datetime
 
 from apps.utiles.models import Timbrado
-
 from apps.ventas.models import CabeceraVenta, DetalleVenta
 from apps.cliente.models import Cliente
 from apps.compras.models import Proveedor
@@ -15,7 +12,6 @@ from apps.agendamientos.models import Reserva
 from apps.mascotas.models import Mascota
 from apps.usuario.models import User
 from apps.utiles.models import VacunasAplicadas, ServicioVendido, ProductoVendido
-
 
 hoy = date.today()
 # Create your views here.

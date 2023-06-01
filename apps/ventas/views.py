@@ -13,6 +13,7 @@ from django.views.generic import View
 #from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 #from reportlab.lib.units import cm
 #from reportlab.lib import colors
+from django.core import serializers
 
 from apps.ventas.models import CabeceraVenta, DetalleVenta
 from apps.ventas.forms import DetalleVentaForm, CabeceraVentaForm
@@ -114,7 +115,6 @@ def try_exception_cliente(id):
 @permission_required('venta.add_cabeceraventa')
 def add_factura_venta(request):
     form = CabeceraVentaForm()
-    form_detalle = DetalleVentaForm()
     confi = get_confi()
     mensaje = ""
     confi_initial = ConfiEmpresa.objects.get(id=1)
@@ -123,7 +123,6 @@ def add_factura_venta(request):
         abierto = "S"
     else:
         abierto = "N" 
-    productos = Producto.objects.exclude(is_active="N").all()
     if request.method == 'POST':
         try:
             confi = ConfiEmpresa.objects.get(id=1) 
@@ -169,7 +168,7 @@ def add_factura_venta(request):
         return JsonResponse(response)
     nro_factura_initial = reset_nro_timbrado(confi_initial.nro_timbrado)
     context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi, 
-               'nro_factura': str(nro_factura_initial), 'productos': productos, 'caja_abierta': abierto}
+               'nro_factura': str(nro_factura_initial), 'productos': json.dumps(return_product()), 'caja_abierta': abierto}
     return render(request, 'ventas/add_factura_ventas.html', context)
 
 @login_required()
@@ -218,7 +217,8 @@ def edit_factura_venta(request, id):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi, 'venta':factVenta}
+    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi, 'venta':factVenta,
+               'productos': json.dumps(return_product())}
     return render(request, 'ventas/edit_factura_venta.html', context)
 
 
@@ -228,7 +228,6 @@ def ver_factura_anulada_venta(request, id):
     factVenta = CabeceraVenta.objects.get(id=id)
     form = CabeceraVentaForm(instance=factVenta)
     confi = get_confi()
-    mensaje = ""
     context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'ANU', 'confi': confi, 'factVenta': factVenta}
     return render(request, 'ventas/ver_factura_anulada_venta.html', context)
 
@@ -238,6 +237,7 @@ def anular_factura_venta(request, id):
     try:
         factVenta = CabeceraVenta.objects.get(id=id)
         factVenta.is_active = "N"
+        factVenta.factura_caja = "S"
         factVenta.save()
         data = {
             'error':False, 
@@ -316,3 +316,15 @@ def validate_producto_stock(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
             return JsonResponse(response)
+        
+def return_product():
+    data = []
+    prods = Producto.objects.exclude(is_active='N').all()
+    for p in prods:
+        item = p.obtener_dict()
+        item['id'] = p.id
+        producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto, 
+                                'Descripción: ' + p.descripcion)
+        item['text'] = producto_desc
+        data.append(item)
+    return data 

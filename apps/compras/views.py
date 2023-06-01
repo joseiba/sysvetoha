@@ -12,10 +12,11 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import  Table, TableStyle
 from reportlab.lib.units import cm
 from reportlab.lib import colors
+
+from apps.ventas.views import return_product
 from apps.configuracion.configuracion_inicial.models import ConfiEmpresa
 from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, PedidoCabecera, PedidoDetalle
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm
-
 from apps.inventario.productos.models import Producto
 from apps.caja.models import Caja
 

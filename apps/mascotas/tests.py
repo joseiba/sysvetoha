@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-#from vetoho.settings import 'http://127.0.0.1:8000/'
+#from config.settings import 'http://127.0.0.1:8000/'
 
 class MAscotasFormTest(LiveServerTestCase):
     # def testEspecieForm(self):        

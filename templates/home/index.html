@@ -438,6 +438,13 @@
     
     var url = "/utiles/get_reserva_today/";
     get_list(url)
+
+    {% if messages %}
+      {% for message in messages %}
+        var text = "{{ message }}";
+        warning_registro(text);
+      {% endfor %}
+    {% endif %}
   })
 </script>
 

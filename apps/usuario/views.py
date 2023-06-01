@@ -1,6 +1,5 @@
 import math
 from django.shortcuts import render
-
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
@@ -11,18 +10,19 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
-from datetime import time, datetime
+from datetime import datetime
 from django.db.models import Q
 from django.contrib.auth.models import Group
-from django.contrib.auth.forms import PasswordChangeForm
-import json
 
 from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm, ContraseñaChangeForm
 from apps.usuario.models import User
 from apps.configuracion.configuracion_inicial.models import ConfiEmpresa
 from apps.utiles.views import *
+from apps.caja.models import Caja
 
 # Create your views here.
+date_time = datetime.now()
+today = date_time.strftime("%d/%m/%Y")
 
 class Login(FormView):
     """[summary]
@@ -81,6 +81,10 @@ def home_user(request):
             de donde se encuentra el template            
         ]
         """  
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() == 0:
+        messages.success(request, 'Se debe realizar la apertura de caja para hacer los registros de facturas.')
+
     context = {
         'total_user': total_user(),
         'total_cliente': total_cliente(),

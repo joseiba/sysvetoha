@@ -65,7 +65,7 @@
     $(function () {
         $('input').on("cut copy paste", function (e) {
             e.preventDefault();
-        });
+        });      
 
         //Productos mas vendidos
         var get_product_vendido = function(busqueda){
@@ -81,11 +81,11 @@
                         var ctx = document.getElementById('produc-vendi').getContext('2d');
 
                         new Chart(ctx, {
-                            type: 'bar',
+                            type: 'pie',
                             data: {
                                 datasets:[{
                                     data: response.data_producto_ven,
-                                    backgroundColor: "#73879c",
+                                    backgroundColor: return_colors(),
                                     label: 'Cantidad',
                                 }],
                                 labels: response.label_producto_ven,

@@ -4,13 +4,13 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-from apps.usuario.tests import LoginFormTest
-from vetoho.settings import URL_BASE_TEST_FUNTIONAL
+#from config.settings import 'http://127.0.0.1:8000/'
+
 # Create your tests here.
 class AgendamientosFormTest(LiveServerTestCase):
     def testAddAgendamiento(self):
         driver = webdriver.Chrome()
-        driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+        driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 
         user_name = driver.find_element('name', 'username')
         user_password = driver.find_element('name','password')
@@ -25,7 +25,7 @@ class AgendamientosFormTest(LiveServerTestCase):
         submit.send_keys(Keys.RETURN)
         time.sleep(2)
 
-        driver.get(URL_BASE_TEST_FUNTIONAL + 'reserva/listReserva/')
+        driver.get('http://127.0.0.1:8000/' + 'reserva/listReserva/')
         time.sleep(2)
 
         ##cambiar en el dia de la evaluacion
@@ -70,7 +70,7 @@ class AgendamientosFormTest(LiveServerTestCase):
 
     # def testEditAgendamiento(self):
     #     driver = webdriver.Chrome()
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + 'accounts/login/')
+    #     driver.get('http://127.0.0.1:8000/' + 'accounts/login/')
 
     #     user_name = driver.find_element('name', 'username')
     #     user_password = driver.find_element('name','password')
@@ -85,10 +85,10 @@ class AgendamientosFormTest(LiveServerTestCase):
     #     submit.send_keys(Keys.RETURN)
     #     time.sleep(2)
 
-    #     driver.get(URL_BASE_TEST_FUNTIONAL + 'reserva/listReserva/')
+    #     driver.get('http://127.0.0.1:8000/' + 'reserva/listReserva/')
     #     time.sleep(2)
 
-    #     #cambiar en el dia de la evaluacion
+    #     cambiar en el dia de la evaluacion
     #     submit = driver.find_element(By.XPATH,"//*[@id='calendar']/div[2]/div/table/tbody/tr/td/div/div/div/table/tbody/tr[6]/td[3]")
     #     submit.click()
     #     time.sleep(3)        
@@ -108,5 +108,4 @@ class AgendamientosFormTest(LiveServerTestCase):
     #     time.sleep(3)
 
     #     driver.quit
-
 

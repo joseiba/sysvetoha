@@ -102,6 +102,10 @@
             $("#list_producto").DataTable({
                 destroy: true,
                 searching: false,
+                dom: 'Bfrtip',
+                buttons: [
+                     'excel', 'pdf', 'print'
+                ],
                 pageLength: 10,
                 ajax: {
                     url: "/reporte/get_proximas_vacunas/",

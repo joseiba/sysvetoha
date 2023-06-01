@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 import time
 
 
-#from vetoho.settings import 'http://127.0.0.1:8000/'
+#from config.settings import 'http://127.0.0.1:8000/'
 
 class InventarioFormTest(LiveServerTestCase):
     

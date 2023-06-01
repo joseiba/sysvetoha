@@ -518,9 +518,6 @@ def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplica
         vacunaGet.fecha_proxima_aplicacion = None
         antiparasitarioGet.antiparasitario = "-"
         antiparasitarioGet.proximo_antiparasitario = "-"
-        formVacuna = VacunaForm(instance=vacunaGet)
-        formConsulta = ConsultaForm(instance=consultaGet)
-        formAntiparasitario = AntiparasitarioForm(instance=antiparasitarioGet)
         vacunaGet.save()
         consultaGet.save()
         antiparasitarioGet.save()
