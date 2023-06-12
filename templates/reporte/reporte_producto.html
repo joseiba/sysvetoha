@@ -7,7 +7,42 @@
 {{ block.super }}
 
 <style>
+  .search {
+    width: 100%;
+    position: relative;
+    display: flex;
+}
 
+.searchTerm {
+    width: 100%;
+    border: 3px solid #00B4CC;
+    border-right: none;
+    padding: 5px;
+    height: 36px;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    color: #212529;
+}
+
+.searchTerm:focus {
+    color: #212529;
+}
+
+.searchButton {
+    width: 40px;
+    height: 36px;
+    border: 1px solid #00B4CC;
+    background: #00B4CC;
+    text-align: center;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.dataTables_info {
+    width: 0 !important;
+}
 </style>
 {% endblock css %}
 
@@ -17,7 +52,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Productos más vendidos
+          <h1>Mes con cantidad de productos mas vendidos
           </h1>
         </div>
         <div class="col-sm-6">
@@ -36,7 +71,23 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">                    
+          <div class="card"> 
+            <div class="card-header">
+                <div class="d-flex">
+                    <div>
+                      <label>Fecha desde:</label>
+                      <input class="form-control" id='fecha_desde' 
+                        placeholder='Fecha desde'
+                        name='fecha_desde'/>
+                    </div>
+                    <div class="ml-4">
+                      <label>Fecha hasta:</label>
+                      <input class="form-control" id='fecha_hasta' 
+                        placeholder='Fecha hasta'
+                        name='fecha_hasta'/>
+                    </div>                                     
+                </div>
+              </div>      
             <!-- /.card-header -->
             <div class="card-body" id="vendidos">
                 <canvas id="produc-vendi"></canvas>
@@ -62,20 +113,52 @@
 
 <script>
    
-    $(function () {
-        $('input').on("cut copy paste", function (e) {
-            e.preventDefault();
-        });      
+  $(function () {
+    $('input').on("cut copy paste", function (e) {
+        e.preventDefault();
+    });
 
-        //Productos mas vendidos
-        var get_product_vendido = function(busqueda){
+    $('#fecha_desde').datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+    }).datepicker("setDate", new Date());
+
+    $('#fecha_hasta').datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+    }).datepicker("setDate", new Date());
+
+    var desde = $("input[name='fecha_desde']").val()
+    var hasta = $("input[name='fecha_hasta']").val()
+
+    $("input[name='fecha_desde'], input[name='fecha_hasta']").change(function () {
+      var fecha_emision = $("input[name='fecha_desde']").val()
+
+      var fecha_vencimiento = $("input[name='fecha_hasta']").val()
+      if (fecha_emision != "" && fecha_vencimiento != "") {
+          if(!compareDateReporte(fecha_emision, fecha_vencimiento)){
+              Swal.fire({
+                  title: "Notificación",
+                  text: "La fecha hasta no puede ser menor a la fecha desde",
+                  icon: "warning",
+                  button: "Ok",
+              })
+          }else{
+            send_form(fecha_emision, fecha_vencimiento);
+          }
+      }
+  })
+   
+  
+    var send_form = function(desde, hasta){
+        if(desde != "" && hasta != ""){
             $.ajax({
-                url: "/reporte/get_productos_vendidos/",
+                url: "/reporte/get_rango_mes_pro_vendido/",
                 type: 'GET',
-                datatype: 'json',
-                data: {'busqueda': busqueda},
-                success: function(response) {
-                    if(response.mensaje != ""){
+                data: {'desde': desde, 'hasta': hasta},
+                success: function(response){
+                    console.log(response)
+                    if(response.mensaje != "NA"){            
                         $('#produc-vendi').remove(); // this is my <canvas> element
                         $('#vendidos').append('<canvas id="produc-vendi"><canvas>');
                         var ctx = document.getElementById('produc-vendi').getContext('2d');
@@ -84,47 +167,47 @@
                             type: 'pie',
                             data: {
                                 datasets:[{
-                                    data: response.data_producto_ven,
+                                    data: response.data,
                                     backgroundColor: return_colors(),
-                                    label: 'Cantidad',
+                                    label: '',
                                 }],
-                                labels: response.label_producto_ven,
+                                labels: response.label,
                             },
                             options: {
                                 responsive: true
                             }
                         });
+                    }else{
+                        if(response.mensaje == "NA"){
+                            Swal.fire({
+                                title: "Notificación",
+                                text: "No hay ninguna información en esos rangos de fechas",
+                                icon: "warning",
+                                button: "Ok",
+                            })
+                        }else{
+                            Swal.fire({
+                                title: "Notificación",
+                                text: "ha ocurrido un error, intentelo mas tarde!",
+                                icon: "error",
+                            })
+                        }                       
                     }
+
                 },
                 error: function(error){
-
-                }
+                        Swal.fire({
+                            title: "Notificación",
+                            text: "ha ocurrido un error, intentelo mas tarde!",
+                            icon: "error",
+                        })
+                },
             })
         }
+    }
 
-        var query = ""
-
-        get_product_vendido(query);
-
-        $("#searchTermVendidos").change(function(){
-            var busqueda = $("#searchTermVendidos").val()
-            sessionStorage.setItem("busquedaVendido", busqueda)
-        })
-
-        $("#busquedaVendido").click(function(){
-            var busqueda = sessionStorage.getItem("busquedaVendido")
-            if(busqueda == "" || busqueda == undefined || busqueda == null){
-                busqueda = "";
-                get_product_vendido(busqueda)
-            }
-            else{
-                get_product_vendido(busqueda)
-            }
-        }) 
-
-        //End Productos mas vendidos
-    })
-
+    send_form(desde, hasta);
+})
 
 </script>
 

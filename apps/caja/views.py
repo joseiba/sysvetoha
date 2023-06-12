@@ -17,6 +17,7 @@ from apps.configuracion.configuracion_inicial.models import ConfiEmpresa
 #from apps.compras.models import FacturaCompra
 from apps.ventas.models import CabeceraVenta
 from apps.compras.models import PedidoDetalle
+from apps.usuario.models import User
 
 # Create your views here.
 date = datetime.now()
@@ -78,7 +79,8 @@ def get_list_caja_historico(request):
         caja = caja[start:start + length]
 
     data = [{'id': ca.id, 'fecha_alta': ca.fecha_hora_alta, 'fecha_cierre': ca.fecha_cierre, 'saldo_inicial': ca.saldo_inicial, 
-    'total_ingreso': ca.total_ingreso, 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar, 'estado': ca.apertura_cierre } for ca in caja]        
+    'total_ingreso': ca.total_ingreso, 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar, 'estado': ca.apertura_cierre,
+    'usuario_cierre': get_usuario(ca.id_usuario_cierre_id)  } for ca in caja]        
 
     response = {
         'data': data,
@@ -87,6 +89,13 @@ def get_list_caja_historico(request):
     }
     return JsonResponse(response)
 
+def get_usuario(id):
+    try:
+        usuario = User.objects.get(id=id)
+        
+        return usuario.username
+    except Exception as e:
+        return '-'
 
 @login_required()
 @permission_required('caja.add_caja')
@@ -132,6 +141,7 @@ def cerrar_caja(request, id):
                 caja_cierre.saldo_a_entregar_formateado = "Gs. " + "{:,}".format(0).replace(",",".")
             caja_cierre.apertura_cierre = "C"
             caja_cierre.fecha_cierre = date.strftime("%d/%m/%Y %H:%M:%S hs")
+            caja_cierre.id_usuario_cierre_id = request.user.id
             caja_cierre.save()
             messages.success(request, 'Cierre de caja correctamente!')
             return redirect('/caja/listCajas/')
@@ -237,8 +247,6 @@ def reporte_caja_pdf(request, id):
     pdf.drawString(50, 580, u"Total a Ingreso del Dia: ")
     pdf.drawString(200, 580, u"" + caja.total_ingreso_formateado)
 
-    pdf.drawString(50, 550, u"Saldo a entregar: ")
-    pdf.drawString(200, 550, u"" + caja.saldo_a_entregar_formateado)
 
     #tabla_report(pdf, y, caja)
 

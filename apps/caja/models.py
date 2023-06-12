@@ -1,6 +1,7 @@
 from django.db import models
 
 from datetime import datetime
+from apps.usuario.models import User
 
 
 # Create your models here.
@@ -27,7 +28,8 @@ class Caja(models.Model):
     saldo_a_entregar = models.FloatField(max_length=1000, null=True, blank=True, default=0)
     saldo_a_entregar_formateado = models.CharField(max_length=800, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
-    apertura_cierre = models.CharField(max_length=2, default="A", blank=True, null=True)        
+    apertura_cierre = models.CharField(max_length=2, default="A", blank=True, null=True) 
+    id_usuario_cierre = models.ForeignKey(User, on_delete=models.CASCADE, null=True)       
 
     class Meta:
         default_permissions =  ()

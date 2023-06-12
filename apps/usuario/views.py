@@ -182,7 +182,6 @@ def add_usuario(request):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            print("Se ha agregado correctamente!")
             messages.success(request, "Se ha agregado correctamente!")
             return redirect('/usuario/listUsuarios/')
     context = {'form': form}

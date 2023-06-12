@@ -29,5 +29,8 @@ class ConfiEmpresaForm(forms.ModelForm):
 			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'aceptarLetras(this)'}),
             'dias_a_vencer' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'dias_a_vencer', 'placeholder': 'Dias Productos a Vencer', 'required': 'required','onkeyup':'aceptarNumeros(this)'}),
             'dias_alert_vacunas' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'dias_alert_vacunas', 'placeholder': 'Dias aviso proximas vacunaciones', 'required': 'required','onkeyup':'aceptarNumeros(this)'}),
+            'nro_sucursal' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'nro_sucursal', 'required': 'required','onkeyup':'aceptarNumeros(this)'}),
+            'nro_caja' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'nro_caja', 'required': 'required','onkeyup':'aceptarNumeros(this)'}),
+            'nro_factura' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'nro_factura','required': 'required','onkeyup':'aceptarNumeros(this)'}),
 
 		}

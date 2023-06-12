@@ -99,7 +99,6 @@ def delete_proveedor(request, id):
     proveedor = Proveedor.objects.get(id=id)    
     if request.method == 'POST':          
         proveedor.is_active = "N"
-        print(proveedor.is_active)
         proveedor.save()
         return redirect('/compra/listProveedor')
     context = {"proveedor": proveedor}
@@ -408,12 +407,10 @@ def agregar_factura_compra(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print("B try"+str(e))
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print("A try"+str(e))
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -445,7 +442,6 @@ def add_factura_compra():
                             detalle.descripcion = i.descripcion
                             detalle.save()                           
             except Exception as e:
-                print("PenUltimo try"+str(e))
                 try:        
                     factura = FacturaCompra()
                     factura.id_pedido_cabecera = pediCabecera
@@ -461,7 +457,6 @@ def add_factura_compra():
                         detalle.descripcion = i.descripcion
                         detalle.save()                        
                 except Exception as e:
-                    print("Ultimo try"+str(e))
                     pass
 
 @require_http_methods(["GET","POST"])
@@ -488,9 +483,10 @@ def edit_factura_compra(request, id):
                 factura.factura_cargada_pedido = 'S'
                 factura.facturado = 'S'              
                 factura.save()
-                pedido_cabecera = PedidoCabecera.objects.get(id=factura.id_pedido_cabecera.id)
-                pedido_cabecera.is_active = 'N'
-                pedido_cabecera.save()
+                if (factura.id_pedido_cabecera):
+                    pedido_cabecera = PedidoCabecera.objects.get(id=factura.id_pedido_cabecera)
+                    pedido_cabecera.is_active = 'N'
+                    pedido_cabecera.save()
                 detailFact = FacturaDet.objects.filter(id_factura=id)
                 detailFact.delete()
                 for i in factura_dict['products']:

@@ -169,7 +169,7 @@ $(function () {
 
     $('.btnRemoveAll').on('click', function () {
         if (factura.items.products.length === 0) return false;
-        alert_delete('Notificación', '¿Estás seguro de eliminar todos los detalles de la factura', function () {
+        all_delete('Notificación', '¿Estás seguro de eliminar todos los detalles de la factura?', function () {
             factura.items.products = [];
             factura.list();
         });
@@ -261,6 +261,24 @@ $(function () {
         });
     }
 });
+
+function all_delete(title, content, callback) {
+    Swal.fire({
+        title: title,
+        text: content,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#dc3545',
+        cancelButtonText:"Cancelar",
+        confirmButtonText: 'Eliminar'
+    })
+    .then((result) => {
+        if (result.isConfirmed) {
+            callback();
+        } 
+    });
+}
 
 // validar entrada
 function validate_form_text(type, event, regex) {

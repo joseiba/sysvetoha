@@ -119,12 +119,10 @@ def edit_cliente(request, id):
 def inactivar_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
     if request.method == 'POST':
-        print("post")
         cliente.is_active = "N"
         cliente.save()
         return redirect('/cliente/listCliente/')
     context = {'cliente': cliente}
-    print("pantalla")
     return render(request, 'cliente/baja_cliente.html', context)
     
 

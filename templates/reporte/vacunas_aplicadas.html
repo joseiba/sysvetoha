@@ -36,7 +36,23 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">            
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex">
+                  <div>
+                    <label>Fecha desde:</label>
+                    <input class="form-control" id='fecha_desde' 
+                      placeholder='Fecha desde'
+                      name='fecha_desde'/>
+                  </div>
+                  <div class="ml-4">
+                    <label>Fecha hasta:</label>
+                    <input class="form-control" id='fecha_hasta' 
+                      placeholder='Fecha hasta'
+                      name='fecha_hasta'/>
+                  </div>                                     
+              </div>
+            </div>    
             <!-- /.card-header -->
             <div class="card-body" id="vacunas_aplicadas">
                 <canvas id="vacuna-aplicada"></canvas>
@@ -63,19 +79,52 @@
 <script>
    
     $(function () {
-        $('input').on("cut copy paste", function (e) {
-            e.preventDefault();
-        });
+      $('input').on("cut copy paste", function (e) {
+          e.preventDefault();
+      });
+
+      $('#fecha_desde').datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+      }).datepicker("setDate", new Date());
+  
+      $('#fecha_hasta').datepicker({
+          format: "dd/mm/yyyy",
+          autoclose: true,
+      }).datepicker("setDate", new Date());
+
+    var desde = $("input[name='fecha_desde']").val()
+    var hasta = $("input[name='fecha_hasta']").val()
+
+    $("input[name='fecha_desde'], input[name='fecha_hasta']").change(function () {
+      var fecha_emision = $("input[name='fecha_desde']").val()
+
+      var fecha_vencimiento = $("input[name='fecha_hasta']").val()
+      if (fecha_emision != "" && fecha_vencimiento != "") {
+          if(!compareDateReporte(fecha_emision, fecha_vencimiento)){
+              Swal.fire({
+                  title: "Notificación",
+                  text: "La fecha hasta no puede ser menor a la fecha desde",
+                  icon: "warning",
+                  button: "Ok",
+              })
+          }else{
+            vaget_vacunas_aplicada(fecha_emision, fecha_vencimiento);
+          }
+      }
+  })
+  
        
         //Productos mas comprados
-        var vaget_vacunas_aplicada = function(busqueda){
+        var vaget_vacunas_aplicada = function(desde, hasta){
             $.ajax({
                 url: "/reporte/get_vacunas_aplicadas/",
                 type: 'GET',
                 datatype: 'json',
-                data: {'busqueda': busqueda},
+                data: {'desde': desde, 'hasta': hasta},
                 success: function(response) {
-                    if(response.mensaje != ""){
+                  console.log(response)
+                    if(response.mensaje != "NA"){
                         $('#vacuna-aplicada').remove(); // this is my <canvas> element
                         $('#vacunas_aplicadas').append('<canvas id="vacuna-aplicada"><canvas>');
                         var ctx = document.getElementById('vacuna-aplicada').getContext('2d');
@@ -86,7 +135,7 @@
                                 datasets:[{
                                     data: response.data,
                                     backgroundColor: return_colors(),
-                                    label: 'Cantidad',
+                                    label: '',
                                 }],
                                 labels: response.label,
                             },
@@ -94,31 +143,29 @@
                                 responsive: true
                             }
                         });
-                    }
+                    }else{
+                      if(response.mensaje == "NA"){
+                          Swal.fire({
+                              title: "Notificación",
+                              text: "No hay ninguna información en esos rangos de fechas",
+                              icon: "warning",
+                              button: "Ok",
+                          })
+                      }else{
+                          Swal.fire({
+                              title: "Notificación",
+                              text: "ha ocurrido un error, intentelo mas tarde!",
+                              icon: "error",
+                          })
+                      }                       
+                  }
                 },
                 error: function(error){
 
                 }
             })
         }
-        var query = ""
-        vaget_vacunas_aplicada(query);
-
-        $("#searchTerm").change(function(){
-            var busqueda = $("#searchTerm").val()
-            sessionStorage.setItem("busqueda", busqueda)
-        })
-
-        $("#busqueda").click(function(){
-            var busqueda = sessionStorage.getItem("busqueda")
-            if(busqueda == "" || busqueda == undefined || busqueda == null){
-                busqueda = "";
-                vaget_vacunas_aplicada(busqueda)
-            }
-            else{
-                vaget_vacunas_aplicada(busqueda)
-            }
-        }) 
+        vaget_vacunas_aplicada(desde, hasta);       
     })
 
 

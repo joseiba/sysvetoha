@@ -19,6 +19,9 @@ class ConfiEmpresa(models.Model):
     ruc_empresa = models.CharField(max_length=500, blank=True, null=True)
     dias_a_vencer = models.IntegerField(blank=True, null=True, default=30)
     dias_alert_vacunas = models.IntegerField(blank=True, null=True, default=30)
+    nro_sucursal = models.IntegerField(blank=True, null=True)
+    nro_caja = models.IntegerField(blank=True, null=True)
+    nro_factura = models.IntegerField(blank=True, null=True)
     class Meta:
         verbose_name = "Configuracion Empresa"
         verbose_name_plural = "Configuraciones Empresas"

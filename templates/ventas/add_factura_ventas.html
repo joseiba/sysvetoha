@@ -44,7 +44,6 @@
 <script>
     var action = '{{ accion|safe }}';
     var productos = '{{ productos |safe}}'
-    console.log(productos)
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',

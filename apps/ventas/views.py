@@ -154,22 +154,37 @@ def add_factura_venta(request):
                     producto.stock_total -= int(i['cantidad'])
                     producto.stock -= int(i['cantidad'])
                     producto.save()
+                
+                configuracion = ConfiEmpresa.objects.get(id=1)
+                configuracion.nro_factura += 1
+                configuracion.save()
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print('segundo try: '+ str(e))
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
     nro_factura_initial = reset_nro_timbrado(confi_initial.nro_timbrado)
+    nro_factura = obtener_factura_formateada()
     context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi, 
-               'nro_factura': str(nro_factura_initial), 'productos': json.dumps(return_product()), 'caja_abierta': abierto}
+               'nro_factura': nro_factura, 'productos': json.dumps(return_product()), 'caja_abierta': abierto}
     return render(request, 'ventas/add_factura_ventas.html', context)
+
+def obtener_factura_formateada():
+    try:
+        configuracion = ConfiEmpresa.objects.get(id=1)
+        numero = str(configuracion.nro_factura)
+        cantidad_digito = 7 - len(numero)
+        prefijo = '0' * cantidad_digito
+        result = '00'+str(configuracion.nro_sucursal)+'-00'+str(configuracion.nro_caja)+'-'+prefijo+''+str(configuracion.nro_factura)
+        return result
+    except Exception as e:
+        mensaje = 'Error'
+
 
 @login_required()
 @permission_required('venta.change_cabeceraventa')
@@ -179,6 +194,12 @@ def edit_factura_venta(request, id):
     confi = get_confi()
     data = {}
     mensaje = ""
+    confi_initial = ConfiEmpresa.objects.get(id=1)
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N" 
     if request.method == 'POST':
         try:        
             factura_dict = json.loads(request.POST['factura'])
@@ -218,7 +239,7 @@ def edit_factura_venta(request, id):
             response = {'mensaje':mensaje }
         return JsonResponse(response)
     context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi, 'venta':factVenta,
-               'productos': json.dumps(return_product())}
+               'productos': json.dumps(return_product()), 'caja_abierta': abierto}
     return render(request, 'ventas/edit_factura_venta.html', context)
 
 

@@ -12,6 +12,7 @@ from apps.agendamientos.models import Reserva
 from apps.mascotas.models import Mascota
 from apps.usuario.models import User
 from apps.utiles.models import VacunasAplicadas, ServicioVendido, ProductoVendido
+from apps.utiles.models import ProductoVendidoMes
 
 hoy = date.today()
 # Create your views here.
@@ -113,7 +114,6 @@ def total_producto():
         productos = Producto.objects.exclude(is_active="N").all()        
         productos = productos.exclude(servicio_o_producto="S")
         productos = productos.exclude(producto_vencido="S")
-        print(productos.count())
         return productos.count()
     except Exception as e:
         return 0
@@ -204,10 +204,11 @@ def cargar_vacunas_aplicadas():
                     produc = VacunasAplicadas.objects.get(id_producto=va.vacuna.id_producto.id)
                     produc.cantidad_aplicadas += 1
                     produc.save()
-                except Exception as e:
+                except Exception:
                     produc = VacunasAplicadas()
                     pro_id = Producto.objects.get(id=va.vacuna.id_producto.id)
                     produc.id_producto = pro_id
+                    produc.date = hoy
                     produc.cantidad_aplicadas = 1
                     produc.save()
     except Exception as e:
@@ -216,7 +217,6 @@ def cargar_vacunas_aplicadas():
 
 def rest_dates(fecha_vencimiento):
     try:
-        fechaDate = date(hoy.year, hoy.month, hoy.day)
         fecha_vencimiento_split = fecha_vencimiento.split('/')          
         fecha_vencimiento_compare = date(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
         return (fecha_vencimiento_compare - hoy).days if (fecha_vencimiento_compare - hoy).days >= 0 else 0
@@ -292,7 +292,7 @@ def get_vacunas_today(request):
     
 
 def cargar_servicios_vendidos():
-    facturaVenta = CabeceraVenta.objects.exclude(factura_anulada='S')
+    facturaVenta = CabeceraVenta.objects.exclude(is_active='N')
     try:
         if facturaVenta is not None:
             for fv in facturaVenta:
@@ -310,6 +310,7 @@ def cargar_servicios_vendidos():
                                 produc = ServicioVendido()
                                 pro_id = Producto.objects.get(id=factDet.id_producto.id)
                                 produc.id_producto = pro_id
+                                produc.date = hoy
                                 produc.cantidad_vendida_total = factDet.cantidad
                                 produc.save()
     except Exception as e:
@@ -339,3 +340,35 @@ def cargar_productos_vendidos():
                                 produc.save()
     except Exception as e:
         pass
+
+def cargar_producto_vendido_mes():
+    facturaVenta = CabeceraVenta.objects.exclude(is_active='N')
+    try:
+        if facturaVenta is not None:
+            for fv in facturaVenta:
+                facturaDetalle = DetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facturaDetalle:
+                    if factDet.tipo != 'S':
+                        if factDet.detalle_cargado_mes == 'N':
+                            factDet.detalle_cargado_mes = "S"
+                            factDet.save()
+                            try:
+                                produc = ProductoVendidoMes.objects.get(id_producto=factDet.id_producto.id)
+                                produc.cantidad_vendida_total += factDet.cantidad
+                                produc.save()
+                            except Exception as e:
+                                produc = ProductoVendidoMes()
+                                pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                                produc.id_producto = pro_id
+                                produc.date = hoy
+                                produc.cantidad_vendida_total = factDet.cantidad
+                                produc.save()
+    except Exception as e:
+        pass
+
+def convert_dates(desde, hasta):
+    fecha_desde = "{}-{}-{}".format(desde.split('/')[2], desde.split('/')[1],
+                                    desde.split('/')[0])
+    fecha_hasta = "{}-{}-{}".format(hasta.split('/')[2], hasta.split('/')[1],
+                                    hasta.split('/')[0])
+    return "{}?{}".format(fecha_desde, fecha_hasta)

@@ -209,6 +209,8 @@
     };
     $.datepicker.setDefaults($.datepicker.regional['es']);
 
+    $('#id_nro_factura').inputmask('999-999-9999999',{ 'placeholder': 'XXX-XXX-XXXXXXX'});
+
     $(function () {
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();

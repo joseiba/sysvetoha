@@ -1,3 +1,22 @@
+$.datepicker.regional['es'] = {
+    closeText: 'Cerrar',
+    prevText: '< Ant',
+    nextText: 'Sig >',
+    currentText: 'Hoy',
+    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+    dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+    weekHeader: 'Sm',
+    dateFormat: 'dd/mm/yy',
+    firstDay: 1,
+    isRTL: false,
+    showMonthAfterYear: false,
+    yearSuffix: ''
+};
+$.datepicker.setDefaults($.datepicker.regional['es']);
+
 function abrir_modal_edicion(url) {
 	$('#edicion').load(url, function () {
 		$(this).modal('show');
@@ -226,4 +245,34 @@ function return_colors(){
 		colors.push("#" + ("000000" + color.toString(16)).slice(-6));
 	}
 	return colors;
+}
+
+
+var compareDate = function(fecha_emision, fecha_vencimiento){
+	debugger
+	console.log("entro")
+	var d1 = fecha_emision.split("/");
+	var d2 = fecha_vencimiento.split("/");
+	var c = new Date();
+
+	var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+	var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+	var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+	if(check >= from && check <= to){
+		return true
+	}
+	return false
+}
+
+var compareDateReporte = function(fecha_emision, fecha_vencimiento){
+	var d1 = fecha_emision.split("/");
+	var d2 = fecha_vencimiento.split("/");
+
+	var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+	var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+
+	if(from <= to){
+		return true
+	}
+	return false
 }

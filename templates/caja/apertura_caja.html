@@ -69,12 +69,10 @@
               <table id="list_cajas" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                  <th>Id</th>
                   <th>Fecha </br>Apertura</th>
                   <th>Fecha </br>Cierre</th>
                   <th>Saldo Inicial</th>
                   <th>Total Ingreso </br> del Dia</th>
-                  <th>Saldo a Entregar</th>
                   <th>Estado</th>
                   <th>Acción</th>
                 </tr>
@@ -124,10 +122,6 @@
                 },
                 columns: [
                     {
-                        name: 'Id',
-                        data: 'id',
-                    },
-                    {
                         name: 'Fecha Apertura',
                         data: 'fecha_alta',
                     },
@@ -146,14 +140,6 @@
                     {
                         name: 'Total Ingreso del Dia',
                         data: 'total_ingreso',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
-                    },
-                    {
-                        name: 'Saldo a Entregar',
-                        data: 'saldo_entregar',
                         render: function (data) {
                             return ' Gs.' + add_miles(data)
 
@@ -191,7 +177,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [7], // column index (start from 0)
+                    targets: [5], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

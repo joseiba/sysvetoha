@@ -234,7 +234,6 @@ def list_producto_general_ajax(request):
         productos = productos[start:start + length]
 
     data =[{'codigo': p.id, 'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_total': p.stock} for p in productos]        
-    print(data)
     response = {
         'data': data,
         'recordsTotal': total,
