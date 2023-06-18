@@ -4,6 +4,7 @@ from datetime import datetime
 from apps.inventario.productos.models import Producto
 from apps.configuracion.servicio.models import Servicio
 from apps.cliente.models import Cliente
+from apps.caja.models import Caja
 date = datetime.now()
 # Create your models here.
 
@@ -37,6 +38,7 @@ class CabeceraVenta(models.Model):
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
+    id_caja = models.ForeignKey(Caja, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return 'Factura Venta: %s - Cliente: %s' % (self.nro_factura, self.id_cliente)

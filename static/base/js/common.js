@@ -17,6 +17,8 @@ $.datepicker.regional['es'] = {
 };
 $.datepicker.setDefaults($.datepicker.regional['es']);
 
+$('[data-toggle="tooltip"]').tooltip()
+
 function abrir_modal_edicion(url) {
 	$('#edicion').load(url, function () {
 		$(this).modal('show');

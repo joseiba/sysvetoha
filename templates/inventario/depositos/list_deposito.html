@@ -7,7 +7,11 @@
 {{ block.super }}
 
 <style>
-
+  .icon-info {
+    left: 169px !important;
+    bottom: 4px !important;
+      z-index: 1;
+  }
 </style>
 {% endblock css %}
 
@@ -49,6 +53,7 @@
                 <div class="input-group">
                   <input type="search" class="form-control searchTerm" id="searchTerm" placeholder="Buscar por depósito"
                     data-toggle="tooltip" data-placement="top" title="Buscar por depósito">
+                    {% include 'base/partials/info_search.html' %}
                   <div class="input-group-append">
                     <button type="button" class="btn btn-default searchButton" type="button" id="busqueda">
                       <i class="fa fa-search"></i>

@@ -151,10 +151,11 @@ queryset = [
     "facturacompra",
     "proveedor",
     "pedidocabecera",
-    "facturacabeceraventa",
+    "cabeceraventa",
     "inventario",
     "tipovacuna",
-    "reporte"
+    "reporte",
+    "caja"
 ]
 
 class GroupForm(ModelForm):
@@ -168,6 +169,7 @@ class GroupForm(ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class':'form-control', 'autocomplete': 'off',
+                'placeholder':'Agregar nombre del rol',
             }),
             'permissions': forms.CheckboxSelectMultiple(),
         }

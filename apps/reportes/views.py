@@ -65,8 +65,7 @@ def get_rango_mes_pro_vendido(request):
                                                                       fecha_convertida.split('?')[1]])
         if pro.count() > 0:
             for p in pro:
-                fecha_producto = "Fecha: {} Producto:{}".format(p.date.strftime("%d/%m/%Y"), 
-                                                            p.id_producto.nombre_producto)
+                fecha_producto = "Producto:{}".format(p.id_producto.nombre_producto)
                 label.append(fecha_producto)
                 data.append(p.cantidad_vendida_total)
             
@@ -195,8 +194,7 @@ def get_servicio_vendido(request):
         produc_vendidos = ServicioVendido.objects.filter(date__range=[fecha_convertida.split('?')[0], 
                                                                       fecha_convertida.split('?')[1]])
         for pv in produc_vendidos:
-            fecha_producto = "Fecha: {} Producto:{}".format(pv.date.strftime("%d/%m/%Y"), 
-                                                            pv.id_producto.nombre_producto)
+            fecha_producto = "Servicio:{}".format(pv.id_producto.nombre_producto)
             label.append(fecha_producto)
             data.append(pv.cantidad_vendida_total)
 
@@ -274,11 +272,10 @@ def reporte_get_vacunas_aplicada(request):
     mensaje = ""
     try:    
         vacunas = VacunasAplicadas.objects.filter(date__range=[fecha_convertida.split('?')[0], 
-                                                                      fecha_convertida.split('?')[1]])
+                                                                fecha_convertida.split('?')[1]])
         if vacunas.count() > 0:    
             for va in vacunas:
-                fecha_vacuna = "Fecha: {} Producto:{}".format(va.date.strftime("%d/%m/%Y"), 
-                                                            va.id_producto.nombre_producto)
+                fecha_vacuna = "Vacuna:{}".format(va.id_producto.nombre_producto)
                 label.append(fecha_vacuna)
                 data.append(va.cantidad_aplicadas)
 

@@ -42,9 +42,10 @@
                 <form >
                   <div class="input-group">
                       <input type="search" class="form-control form-control-lg" id="searchTerm"
-                      ata-toggle="tooltip" data-placement="top"
+                      data-toggle="tooltip" data-placement="top"
                       title="Buscar por nombre de servicio"
                       placeholder="Buscar">
+                      {% include 'base/partials/info_search.html' %}
                       <div class="input-group-append">
                           <button type="button" id="busqueda" class="btn btn-lg btn-default">
                               <i class="fa fa-search"></i>

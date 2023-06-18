@@ -43,6 +43,7 @@
                       <input type="search" class="form-control form-control-lg" id="searchTerm"  data-toggle="tooltip" data-placement="top"
                       title="Buscar por fecha de creacion" autocomplete="off"
                       placeholder="Buscar"/>
+                      {% include 'base/partials/info_search.html' %}
                       <div class="input-group-append">
                           <button type="button" id="busqueda" class="btn btn-lg btn-default">
                               <i class="fa fa-search"></i>
@@ -59,7 +60,7 @@
                 {% endif %}
                 {% if perms.caja.add_caja %}
                 <button type="submit" class="btn btn-primary" id="add_caja">
-                    <a style="color: white;" href="{% url 'caja:add_caja' %}">Abrir Caja</a>
+                    <a style="color: white;">Abrir Caja</a>
                 </button>
                 {% endif %}
               </div>
@@ -91,6 +92,7 @@
     </div>
     <!-- /.container-fluid -->
   </section>
+  <div class="modal fade" id="creacion" role="dialog"></div>
 {% endblock content %}
 
 {% block js_page %}
@@ -224,6 +226,32 @@
             else {
                 get_list(busqueda)
             }
+        })
+
+        $("#add_caja").click(function () {
+          $.ajax({
+            url: "{% url 'caja:add_caja' %}",
+            type: 'GET',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              if(response.error){
+                Swal.fire({
+                  title: 'Notificación',
+                  text: response.message,
+                  icon: 'error',
+                  confirmButtonColor: '#007bff',
+                });
+              } else {
+                console.log('Debe pasar al formulario')
+                abrir_modal_creacion('/caja/add/confirm/');
+              }                                     
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              swal("Error", xhr + ' ' + ajaxOptions + ' ' + thrownError, "error");
+            }
+          });
         })
 
         {% if messages %}

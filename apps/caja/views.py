@@ -13,11 +13,13 @@ from reportlab.lib.units import cm
 from reportlab.lib import colors
 
 from apps.caja.models import Caja
+from apps.caja.forms import CajaForm
 from apps.configuracion.configuracion_inicial.models import ConfiEmpresa
 #from apps.compras.models import FacturaCompra
 from apps.ventas.models import CabeceraVenta
 from apps.compras.models import PedidoDetalle
 from apps.usuario.models import User
+from django.db.models import Sum
 
 # Create your views here.
 date = datetime.now()
@@ -46,7 +48,7 @@ def list_caja_ajax(request):
         caja = caja[start:start + length]
 
     data = [{'id': ca.id, 'fecha_alta': ca.fecha_hora_alta, 'fecha_cierre': ca.fecha_cierre, 'saldo_inicial': ca.saldo_inicial, 
-    'total_ingreso': ca.total_ingreso, 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar, 'estado': ca.apertura_cierre } for ca in caja]        
+    'total_ingreso': obtener_total_ingreso(ca.id), 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar, 'estado': ca.apertura_cierre } for ca in caja]        
 
     response = {
         'data': data,
@@ -54,6 +56,11 @@ def list_caja_ajax(request):
         'recordsFiltered': total,
     }
     return JsonResponse(response)
+
+def obtener_total_ingreso(id_caja):
+    ventas = CabeceraVenta.objects.filter(is_active="S", id_caja_id=id_caja).aggregate(Sum('total'))['total__sum']
+    return ventas if (ventas) else 0
+
 
 @login_required()
 @permission_required('caja.view_caja')
@@ -97,26 +104,50 @@ def get_usuario(id):
     except Exception as e:
         return '-'
 
-@login_required()
-@permission_required('caja.add_caja')
+
 def add_caja(request):
     monto_initial = get_config()
     caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
     if caja_abierta.count() > 0:
-        messages.success(request, 'Ya tienes una caja abierta!')
-        return redirect('/caja/listCajas/')
+        data = {
+            'error':True, 
+            'message':"Ya tienes una caja abierta!"
+        }
     else:
         caja_cerrada = Caja.objects.exclude(apertura_cierre="A").filter(fecha_alta=today)
         if caja_cerrada.count() > 0:
-            messages.success(request, 'Ya has hecho una apertura de caja en el dia!')
-            return redirect('/caja/listCajas/')
+            data = {
+                'error':True, 
+                'message':"Ya has hecho una apertura de caja en el dia!"
+            }
         else:
-            apertura = Caja()
-            apertura.saldo_inicial = monto_initial
-            apertura.saldo_inicial_formateado = "Gs. " + "{:,}".format(int(monto_initial)).replace(",",".")
-            apertura.save()
-            messages.success(request, 'Apertura de caja correctamente!')
+            data = {
+                'error':False, 
+                'message':""
+            }
+    return JsonResponse(data, safe=False)
+            
+        
+
+@login_required()
+@permission_required('caja.add_caja')
+def add_caja_confirm(request):
+    form = CajaForm
+    if request.method == 'POST':
+        try:
+            caja = Caja()
+            caja.saldo_inicial = str(request.POST['saldo_inicial']).replace(".","")
+            caja.saldo_inicial_formateado = "Gs. " + "{:,}".format(int(caja.saldo_inicial)).replace(",",".")
+            caja.save()
+            messages.success(request,"Apertura de caja correctamente!")
+            return redirect('/caja/listCajas')
+        except Exception as e:
+            messages.success(request, 'Ha ocurrido un error!')
             return redirect('/caja/listCajas/')
+    context = {'form' : form}
+    return render(request, 'caja/add_caja_modal.html', context)
+    
+    
 
 def cerrar_caja(request, id):
     try:

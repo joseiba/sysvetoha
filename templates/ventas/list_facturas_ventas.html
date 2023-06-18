@@ -44,6 +44,7 @@
                                         data-toggle="tooltip" data-placement="top" autocomplete="off"
                                         title="Busca por nº de factura, nº timbrado, nombre del cliente, ruc o cedula"
                                         placeholder="Buscar" />
+                                        {% include 'base/partials/info_search.html' %}
                                     <div class="input-group-append">
                                         <button type="button" id="busqueda" class="btn btn-lg btn-default">
                                             <i class="fa fa-search"></i>
@@ -52,13 +53,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="float-right">
-                            {% comment %} {% if perms.ventas.view_cabeceraventa %}
-                                <button type="submit" class="btn btn-success">
-                                    <a href="{% url 'ventas:list_facturas_ventas_anuladas' %}" style="color: white;">Ver facturas anuladas</a>
-                                </button>
-
-                            {% endif %} {% endcomment %}
+                        <div class="float-right">                            
                             {% if perms.ventas.add_cabeceraventa and caja_abierta == "S" %}
                                 <button type="submit" class="btn btn-primary">
                                     <a href="{% url 'ventas:add_factura_venta' %}" style="color: white;">Agregar nueva factura</a>

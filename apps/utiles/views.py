@@ -201,9 +201,18 @@ def cargar_vacunas_aplicadas():
                 va.historico_cargado_reporte = 'S'
                 va.save()
                 try:
-                    produc = VacunasAplicadas.objects.get(id_producto=va.vacuna.id_producto.id)
-                    produc.cantidad_aplicadas += 1
-                    produc.save()
+                    produc = VacunasAplicadas.objects.get(id_producto=va.vacuna.id_producto.id,
+                                                          date=hoy)
+                    if produc is not None:
+                        produc.cantidad_aplicadas += 1
+                        produc.save()
+                    else:
+                        produc = VacunasAplicadas()
+                        pro_id = Producto.objects.get(id=va.vacuna.id_producto.id)
+                        produc.id_producto = pro_id
+                        produc.date = hoy
+                        produc.cantidad_aplicadas = 1
+                        produc.save()
                 except Exception:
                     produc = VacunasAplicadas()
                     pro_id = Producto.objects.get(id=va.vacuna.id_producto.id)
@@ -303,9 +312,18 @@ def cargar_servicios_vendidos():
                             factDet.detalle_cargado_servicio = "S"
                             factDet.save()
                             try:
-                                produc = ServicioVendido.objects.get(id_producto=factDet.id_producto.id)
-                                produc.cantidad_vendida_total += factDet.cantidad
-                                produc.save()
+                                produc = ServicioVendido.objects.get(id_producto=factDet.id_producto.id,
+                                                                     date=hoy)
+                                if produc is not None:
+                                    produc.cantidad_vendida_total += factDet.cantidad
+                                    produc.save()
+                                else:
+                                    produc = ServicioVendido()
+                                    pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                                    produc.id_producto = pro_id
+                                    produc.date = hoy
+                                    produc.cantidad_vendida_total = factDet.cantidad
+                                    produc.save() 
                             except Exception as e:
                                 produc = ServicioVendido()
                                 pro_id = Producto.objects.get(id=factDet.id_producto.id)
@@ -353,9 +371,18 @@ def cargar_producto_vendido_mes():
                             factDet.detalle_cargado_mes = "S"
                             factDet.save()
                             try:
-                                produc = ProductoVendidoMes.objects.get(id_producto=factDet.id_producto.id)
-                                produc.cantidad_vendida_total += factDet.cantidad
-                                produc.save()
+                                produc = ProductoVendidoMes.objects.get(id_producto=factDet.id_producto.id,
+                                                                           date=hoy)
+                                if produc is not None:
+                                    produc.cantidad_vendida_total += factDet.cantidad
+                                    produc.save()
+                                else:
+                                    produc = ProductoVendidoMes()
+                                    pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                                    produc.id_producto = pro_id
+                                    produc.date = hoy
+                                    produc.cantidad_vendida_total = factDet.cantidad
+                                    produc.save()
                             except Exception as e:
                                 produc = ProductoVendidoMes()
                                 pro_id = Producto.objects.get(id=factDet.id_producto.id)

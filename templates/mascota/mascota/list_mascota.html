@@ -110,6 +110,7 @@ a.dropdown-item:hover {
                       title="Buscar por nombre mascota, nombre o apellido cliente"
                       name="q" value="{{ request.GET.q }}"
                       placeholder="Buscar"/>
+                      {% include 'base/partials/info_search.html' %}
                       <div class="input-group-append">
                           <button type="submit" id="busqueda" class="btn btn-lg btn-default">
                               <i class="fa fa-search"></i>

@@ -7,7 +7,11 @@
 {{ block.super }}
 
 <style>
-
+  .icon-info {
+    left: 169px !important;
+    bottom: 4px !important;
+      z-index: 1;
+  }
 </style>
 {% endblock css %}
 
@@ -58,6 +62,7 @@
                   <input type="search" class="form-control searchTerm" id="searchTerm"
                     placeholder="Buscar" data-toggle="tooltip" data-placement="top"
                     title="Buscar por nombre de producto, codigo y tipo de producto">
+                    {% include 'base/partials/info_search.html' %}
                   <div class="input-group-append">
                     <button type="button" class="btn btn-default searchButton" type="button" id="busqueda">
                       <i class="fa fa-search"></i>

@@ -44,12 +44,13 @@
                       <input type="search" class="form-control form-control-lg" id="searchTerm"  data-toggle="tooltip" data-placement="top"
                       title="Buscar por cedula, nombre, apellido y ciudad"
                       placeholder="Buscar"/>
+                      {% include 'base/partials/info_search.html' %}
                       <div class="input-group-append">
                           <button type="button" id="busqueda" class="btn btn-lg btn-default">
-                              <i class="fa fa-search"></i>
+                              <i class="fa fa-search"></i>                              
                           </button>
-                      </div>
-                  </div>
+                      </div>                     
+                    </div>
               </form>                  
               </div>
               <div class="float-right">
@@ -106,7 +107,7 @@
         $('input').on("cut copy paste",function(e) {
             e.preventDefault();
         });
-
+        
         var get_list = function (busqueda) {
             $("#list_cliente").DataTable({
                 destroy: true,               

@@ -127,6 +127,7 @@ def add_factura_venta(request):
         try:
             confi = ConfiEmpresa.objects.get(id=1) 
             factura_dict = json.loads(request.POST['factura'])
+            caja = Caja.objects.filter(apertura_cierre="A").first()
             try:
                 factura = CabeceraVenta()
                 factura.nro_factura = factura_dict['nro_factura']
@@ -140,6 +141,7 @@ def add_factura_venta(request):
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])
                 factura.total_formateado = factura_dict['total_formated']
+                factura.id_caja_id = caja.id
                 factura.save()
                 for i in factura_dict['products']:
                     detalle = DetalleVenta()

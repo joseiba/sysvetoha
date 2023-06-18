@@ -35,6 +35,6 @@ class Caja(models.Model):
         default_permissions =  ()
         permissions = (
             ('add_caja', 'Agregar Caja'),
-            ('change_caja', 'Cierre Caja'),
+            ('change_caja', 'Cierre Caja'),            
             ('delete_caja', 'Eliminar Caja'),
             ('view_caja', 'Listar Cajas'))     
