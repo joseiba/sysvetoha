@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'vetoho.wsgi.application'
 # }
 
 DATABASES = {
-     'default': dj_database_url.parse('postgres://vetohaprd_user:OsgRxpuhGuXNMVDLbjysAz4izxyHHob3@dpg-cgbovhg2qv267u9rb890-a.ohio-postgres.render.com/vetohaprd')
+     'default': dj_database_url.parse('postgres://vetoho_prd_f9ft_user:5EjVv3kf1hAFk7Haa2BsKumvpQyLAQip@dpg-ci7npimnqql0ldclosvg-a.ohio-postgres.render.com/vetoho_prd_f9ft')
 }
 
 
