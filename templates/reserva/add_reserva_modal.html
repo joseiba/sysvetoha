@@ -25,7 +25,8 @@
                 <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
                 <div class="col-md-12 col-sm-6">
                     <textarea class="form-control optional" name="descripcion" id="descripcion"
-                        placeholder="Descripción de la reserva" onkeyup="aceptarNumerosYLetras(this)"></textarea>
+                        placeholder="Descripción de la reserva" onchange= 'validateSpaceBlank(this)' 
+                        onkeyup="aceptarNumerosYLetras(this)"></textarea>
                 </div>
             </div>
             <div id="id_fecha_reserva">
@@ -253,7 +254,6 @@
                     data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado, 'action': 'A' },
                     url: urlValidate,
                     success: function (response) {
-                        debugger;
                         if (response.mensaje != "") {                
                             warning_registro(response.mensaje) 
 

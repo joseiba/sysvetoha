@@ -16,7 +16,8 @@ class EspecieForm(forms.ModelForm):
         }     
         widgets = {
             'nombre_especie' : forms.TextInput(attrs={'class':'form-control','onkeyup':'aceptarLetras(this)' ,'id': 'nombre_especie',
-                'name': 'nombre_especie', 'placeholder': 'Nombre de la Especie', 'required': 'required',  'autocomplete': 'off',}),
+                'name': 'nombre_especie', 'placeholder': 'Nombre de la Especie', 'required': 'required',  
+                'autocomplete': 'off','onchange': 'validateSpaceBlank(this)'}),
 		}
 
 
@@ -35,7 +36,8 @@ class RazaForm(forms.ModelForm):
         }        
         widgets = {
             'nombre_raza' : forms.TextInput(attrs={'class':'form-control', 'id': 'nombre_raza','autocomplete': 'off',
-                'name': 'nombre_raza','onkeyup':'aceptarLetras(this)','placeholder': 'Nombre de la Raza', 'required': 'required'}),
+                'name': 'nombre_raza','onkeyup':'aceptarLetras(this)',
+                'placeholder': 'Nombre de la Raza', 'required': 'required','onchange': 'validateSpaceBlank(this)'}),
             'id_especie' : forms.Select(attrs={'class':'form-control', 'id': 'id_especie','required':'required' ,'name':'id_especie'}),
 		}        
 
@@ -51,9 +53,11 @@ class MascotaForm(forms.ModelForm):
         fields = '__all__'   
         widgets = {
             'nombre_mascota': forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_mascota',
-                'onkeyup':'aceptarLetras(this)','placeholder': 'Nombre de la mascota', 'required': 'required','autocomplete': 'off'}),
+                'onkeyup':'aceptarLetras(this)','placeholder': 'Nombre de la mascota', 
+                'required': 'required','autocomplete': 'off','onchange': 'validateSpaceBlank(this)'}),
             'tatuaje': forms.TextInput(attrs={'class':'form-control optional', 'onkeyup':'aceptarLetras(this)',
-                'name': 'tatuaje', 'placeholder': 'Tatuaje', 'autocomplete': 'off'}),
+                'name': 'tatuaje', 'placeholder': 'Tatuaje', 'autocomplete': 'off'
+                ,'onchange': 'validateSpaceBlank(this)'}),
             'edad': forms.TextInput(attrs={'class':'form-control optional', 'name': 'edad', 'placeholder': 'Edad',
                 'onkeyup':'aceptarNumeros(this)', 'autocomplete': 'off'}),
             'sexo' : forms.Select(attrs={'class':'form-control', 'id': 'sexo','required':'required' ,'name':'sexo', 'autocomplete': 'off'}),

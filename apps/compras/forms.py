@@ -13,18 +13,20 @@ class ProveedorForm(forms.ModelForm):
         widgets = {
 			'nombre_proveedor' : forms.TextInput(attrs={'class':'form-control','name': 'nombre_proveedor', 
                 'autocomplete': 'off', 'placeholder': 'Nombre del Proveedor', 'required': 'required',
-                'onkeyup':'replaceCaratect(this)'}),		
+                'onkeyup':'replaceCaratect(this)', 'onchange': 'validateSpaceBlank(this)'}),		
 			'direccion' : forms.TextInput(attrs={'class':'form-control','name': 'direccion', 'placeholder': 'Dirección',
-                'onkeyup':'replaceDirection(this)','type':'text', 'required': 'required', 'autocomplete': 'off'}),
+                'onkeyup':'replaceDirection(this)','type':'text', 'required': 'required', 'autocomplete': 'off',
+                'onchange': 'validateSpaceBlank(this)'}),
 			'cedula' : forms.TextInput(attrs={'class':'form-control', 'name':'cedula', 'placeholder': 'Nro. Cédula', 
                 'required':'required','onkeyup':replace_abc, 'autocomplete': 'off'}),
 			'ruc_proveedor' : forms.TextInput(attrs={'class':'form-control', 'name': 'ruc_proveedor', 
-                'placeholder': 'RUC', 'required': 'required','type':'text','onkeyup':replace_abc, 'autocomplete': 'off'}),
+                'placeholder': 'RUC', 'required': 'required','type':'text','onkeyup':replace_abc, 'autocomplete': 'off',
+                'onchange': 'validateSpaceBlank(this)'}),
 			'telefono' : forms.TextInput(attrs={'class':'form-control tel','placeholder': 'Telefono','type': 'tel', 
                 'name':'telefono', 'required':'required','autocomplete': 'off','onkeyup':replace_abc,
                 'pattern':'[^a-zA-Z\x22]+','title':'Evitar usar letras'}),
             'email' : forms.EmailInput(attrs={'class':'form-control optional', 'placeholder': 'Email','name':'email', 
-                'type':'email', 'id':'email', 'autocomplete': 'off'}),
+                'type':'email', 'id':'email', 'autocomplete': 'off', 'onchange': 'validateSpaceBlank(this)'}),
 		}
 
 class PedidoForm(forms.ModelForm):
@@ -49,7 +51,8 @@ class FacturaCompraForm(forms.ModelForm):
         exclude = ['is_active', 'estado']
         widgets = {
 			'nro_factura': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off','name':'nro_factura',
-                                         'placeholder': 'Escriba el nro de factura','required':'required','onkeyup':replace_abc}),
+                                         'placeholder': 'Escriba el nro de factura','required':'required','onkeyup':replace_abc, 
+                                         'onchange': 'validateSpaceBlank(this)'}),
             'id_proveedor' : forms.Select(attrs={'class':'form-control', 'id': 'proveedor_select' ,'name':'id_proveedor'}),
             'fecha_emision_factura': forms.TextInput(attrs={'class': 'form-control',
                                             'id': 'datePick-emision-factura',
@@ -68,7 +71,7 @@ class FacturaCompraForm(forms.ModelForm):
                                             'autocomplete': 'off'}),
             'nro_timbrado': forms.TextInput(attrs={'class': 'form-control', 'name': 'nro_timbrado','autocomplete': 'off',
                                                    'placeholder': 'Escriba el nro del timbrado','required':'required',
-                                                   'onkeyup':replace_abc}),
+                                                   'onkeyup':replace_abc, 'onchange': 'validateSpaceBlank(this)'}),
 		}
 
 

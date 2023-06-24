@@ -122,7 +122,6 @@
           {% if field.errors %}              
                 {% for error in field.errors %}
                   mensaje_errores += "\n{{ error }}"
-                  console.log(mensaje_errores)
                 {% endfor %}
           {% endif %}
         {% endfor %}

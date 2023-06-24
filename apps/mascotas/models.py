@@ -2,7 +2,7 @@ from django.db import models
 from datetime import date, datetime
 from apps.cliente.models import Cliente
 
-from config.settings import MEDIA_URL, STATIC_URL
+from vetoho.settings import MEDIA_URL, STATIC_URL
 from apps.configuracion.tipo_vacuna.models import TipoVacuna
 
 url_pets_image = 'base/img/test.jfif'

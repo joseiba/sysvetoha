@@ -157,7 +157,6 @@
                 type: 'GET',
                 data: {'desde': desde, 'hasta': hasta},
                 success: function(response){
-                    console.log(response)
                     if(response.mensaje != "NA"){            
                         $('#produc-vendi').remove(); // this is my <canvas> element
                         $('#vendidos').append('<canvas id="produc-vendi"><canvas>');

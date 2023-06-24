@@ -14,7 +14,7 @@ class ReservaForm(forms.ModelForm):
         widgets = {
 			'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 
                                           'placeholder': 'Descripción de la reserva','onkeyup':'aceptarNumerosYLetras(this)',
-                'autocomplete': 'off'}),
+                'autocomplete': 'off','onchange': 'validateSpaceBlank(this)'}),
             'fecha_reserva' :forms.HiddenInput(attrs={'id':'fecha_reserva'}),
             'hora_reserva' : forms.TextInput(attrs={'class':'form-control timepicker d-none', 'type': 'text',
                                                     'name':'hora_reserva','id':'hora_reserva' ,'required': 'required'}),

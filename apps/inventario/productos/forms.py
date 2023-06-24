@@ -16,7 +16,9 @@ class TipoProductoForm(forms.ModelForm):
             'vence' : 'Vence'
         }
         widgets = {
-            'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required', 'onkeyup':'aceptarLetras(this)'}),
+            'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'nombre_tipo', 
+                                                   'placeholder': 'Nombre Tipo Producto', 'required': 'required', 'onkeyup':'aceptarLetras(this)'
+                                                   ,'onchange': 'validateSpaceBlank(this)'}),
             'vence' : forms.Select(attrs={'class':'form-control', 'id': 'vence','required':'required' ,'name':'vence'}),
 			'fecha_alta' : forms.TextInput(attrs={'class':'form-control','type':'datetime',
             'name': 'fecha_alta', 'placeholder': 'Fecha de Alta', 'readonly': 'readonly'}),
@@ -37,9 +39,11 @@ class ProductoForm(forms.ModelForm):
 			 'codigo_producto' : forms.TextInput(attrs={'class':'form-control', 'name': 'codigo_producto',
                 'autocomplete': 'off' ,'placeholder': 'Codigo Producto', 'onkeyup':'aceptarNumerosYLetras(this)'}),
             'nombre_producto': forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_producto', 
-                'autocomplete': 'off' ,'placeholder': 'Nombre del producto', 'required': 'required', 'onkeyup':'aceptarNumerosYLetras(this)'}),
+                'autocomplete': 'off' ,'placeholder': 'Nombre del producto', 'required': 'required', 
+                'onkeyup':'aceptarNumerosYLetras(this)','onchange': 'validateSpaceBlank(this)'}),
             'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 
-                'autocomplete': 'off' ,'placeholder': 'Descripcion', 'required': 'required', 'onkeyup':'aceptarNumerosYLetras(this)'}),
+                'autocomplete': 'off' ,'placeholder': 'Descripcion', 'required': 'required', 
+                'onkeyup':'aceptarNumerosYLetras(this)','onchange': 'validateSpaceBlank(this)'}),
             'fecha_vencimiento' : forms.TextInput(attrs={'class':'form-control fecha_vencimiento','type':'text', 
                 'autocomplete': 'off' ,'id':'datepicker' ,'name': 'fecha_vencimiento', 'placeholder': 'Fecha de Vencimiento'}),
             'fecha_baja' : forms.TextInput(attrs={'class':'form-control','type':'text', 

@@ -209,7 +209,6 @@ $(function () {
             factura.items.nro_timbrado = $('input[name="nro_timbrado"]').val();
             factura.items.contado_pos = factura.items.contado_pos == '' ? 'C' : factura.items.contado_pos;
             var parameters = new FormData();
-            console.log(factura.items.contado_pos)
             parameters.append('factura', JSON.stringify(factura.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);
@@ -227,7 +226,6 @@ $(function () {
             processData: false,
             contentType: false,
             success: function (response) {  
-                console.log(response)
                 if(response.mensaje == "OK"){                
                     submit_with_ajax(window.location.pathname, 'Notificación', '¿Desea registrar esta factura?', parameters, function () {
                         location.href = "/ventas/listFacturasVentas/"

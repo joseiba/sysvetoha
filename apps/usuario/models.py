@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from config.settings import STATIC_URL, MEDIA_URL
+from vetoho.settings import STATIC_URL, MEDIA_URL
 
 
 class User(AbstractUser):

@@ -81,7 +81,6 @@
 
 <script>
     $(function () {
-        console.log("{{cliente.id_ciudad_id}}")
         $('#id_ciudad').val("{{ cliente.id_ciudad_id }}").change();
         $('#id_ciudad').select2({
             width: '100%',
@@ -128,7 +127,6 @@
                 }
             },
             errorPlacement: function (error, element) {
-                console.log(element);
                 if(element.hasClass("select2-hidden-accessible")) {
                     $(element).closest('.form-control').addClass('select2-error');
                     error.insertAfter(element.next('span'));

@@ -13,9 +13,11 @@ class ServicioForm(forms.ModelForm):
         exclude = ['is_active']
         widgets = {
             'cod_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'cod_serv', 'placeholder': 'Nombre del Servicio', 
-                'autocomplete': 'off','required': 'required','onkeyup':'aceptarLetras(this)'}),
+                'autocomplete': 'off','required': 'required','onkeyup':'aceptarLetras(this)'
+                ,'onchange': 'validateSpaceBlank(this)'}),
 			'nombre_servicio' : forms.TextInput(attrs={'class':'form-control','autocomplete': 'off', 'name': 'nombre_servicio',
-                'placeholder': 'Nombre del Servicio', 'required': 'required','onkeyup':'aceptarLetras(this)'}),
+                'placeholder': 'Nombre del Servicio', 'required': 'required','onkeyup':'aceptarLetras(this)'
+                ,'onchange': 'validateSpaceBlank(this)'}),
 			'precio_servicio' : forms.TextInput(attrs={'class':'form-control', 'name': 'precio_servicio', 
                 'placeholder': 'Precio del Servicio', 'autocomplete': 'off','required': 'required','onkeyup':'aceptarNumeros(this)'}),
             'min_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'min_serv', 

@@ -16,5 +16,6 @@ class DepositoForm(forms.ModelForm):
         }
         widgets = {
 			'descripcion' : forms.TextInput(attrs={'class':'form-control','autocomplete': 'off', 
-            'name': 'descripcion', 'placeholder': 'Descripcion', 'required': 'required', 'onkeyup':'aceptarLetras(this)'}),
+            'name': 'descripcion', 'placeholder': 'Descripcion', 'required': 'required', 
+            'onkeyup':'aceptarLetras(this)','onchange': 'validateSpaceBlank(this)'}),
 		}

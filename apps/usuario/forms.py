@@ -31,22 +31,26 @@ class UserForm(UserCreationForm):
         widgets = {
             'first_name': forms.TextInput(
                 attrs={
-                    'class': 'form-control','name': 'first_name', 'placeholder': 'Ingrese el nombre del usuario','onkeyup':'aceptarLetras(this)', 'required': 'required', 'autocomplete':"off"
+                    'class': 'form-control','name': 'first_name', 'placeholder': 'Ingrese el nombre del usuario','onkeyup':'aceptarLetras(this)', 'required': 'required', 
+                    'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
             'last_name': forms.TextInput(
                 attrs={
-                    'class': 'form-control','name': 'last_name', 'placeholder': 'Ingrese el apellido del usuario','onkeyup':'aceptarLetras(this)', 'required': 'required', 'autocomplete':"off"
+                    'class': 'form-control','name': 'last_name', 'placeholder': 'Ingrese el apellido del usuario','onkeyup':'aceptarLetras(this)', 
+                    'required': 'required', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
             'email': forms.TextInput(
                 attrs={
-                    'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 'id':'email', 'autocomplete':"off"
+                    'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 
+                    'id':'email', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
             'username': forms.TextInput(
                 attrs={
-                    'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'aceptarNumerosYLetras(this)', 'required': 'required', 'autocomplete':"off"
+                    'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'aceptarNumerosYLetras(this)', 
+                    'required': 'required', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
         }
@@ -97,22 +101,26 @@ class UserFormChange(UserChangeForm):
         widgets = {
             'first_name': forms.TextInput(
                 attrs={
-                    'class': 'form-control','name': 'first_name', 'placeholder': 'Ingrese el nombre del usuario','onkeyup':'aceptarLetras(this)', 'required': 'required', 'autocomplete':"off"
+                    'class': 'form-control','name': 'first_name', 'placeholder': 'Ingrese el nombre del usuario','onkeyup':'aceptarLetras(this)', 
+                    'required': 'required', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
             'last_name': forms.TextInput(
                 attrs={
-                    'class': 'form-control','name': 'last_name', 'placeholder': 'Ingrese el apellido del usuario','onkeyup':'aceptarLetras(this)', 'required': 'required', 'autocomplete':"off"
+                    'class': 'form-control','name': 'last_name', 'placeholder': 'Ingrese el apellido del usuario','onkeyup':'aceptarLetras(this)', 
+                    'required': 'required', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
             'email': forms.TextInput(
                 attrs={
-                    'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 'id':'email', 'autocomplete':"off"
+                    'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 
+                    'id':'email', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
             'username': forms.TextInput(
                 attrs={
-                    'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'aceptarNumerosYLetras(this)', 'required': 'required', 'autocomplete':"off"
+                    'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'aceptarNumerosYLetras(this)', 
+                    'required': 'required', 'autocomplete':"off",'onchange': 'validateSpaceBlank(this)'
                 }
             ),
         }
@@ -169,7 +177,7 @@ class GroupForm(ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class':'form-control', 'autocomplete': 'off',
-                'placeholder':'Agregar nombre del rol',
+                'placeholder':'Agregar nombre del rol' ,'onchange': 'validateSpaceBlank(this)'
             }),
             'permissions': forms.CheckboxSelectMultiple(),
         }

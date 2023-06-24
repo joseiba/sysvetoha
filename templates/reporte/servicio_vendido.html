@@ -94,7 +94,6 @@
 
       var desde = $("input[name='fecha_desde']").val()
       var hasta = $("input[name='fecha_hasta']").val()
-      console.log(desde, hasta)
 
       $("input[name='fecha_desde'], input[name='fecha_hasta']").change(function () {
         var fecha_emision = $("input[name='fecha_desde']").val()
@@ -121,12 +120,10 @@
                 datatype: 'json',
                 data: {'desde': desde, 'hasta': hasta},
                 success: function(response) {
-                  console.log(response)
                     if(response.mensaje != "NA"){
                         $('#produc').remove(); // this is my <canvas> element
                         $('#productos').append('<canvas id="produc"><canvas>');
                         var ctx = document.getElementById('produc').getContext('2d');
-                        console.log(response)
                         new Chart(ctx, {
                             type: 'pie',
                             data: {
@@ -159,7 +156,6 @@
                     }
                 },
                 error: function(error){
-                  console.log(error)
                   Swal.fire({
                     title: "Notificación",
                     text: "ha ocurrido un error, intentelo mas tarde!",
